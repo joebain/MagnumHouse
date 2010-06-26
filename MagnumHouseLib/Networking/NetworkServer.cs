@@ -15,6 +15,7 @@ namespace MagnumHouseLib
 			listener = new TcpListener(localAddr, NetworkUtil.port);
 			listener.Start();
 			listener.BeginAcceptTcpClient(new AsyncCallback(AcceptConnection), null);
+			Console.WriteLine("accepting connections");
 		}
 		
 		public void AcceptConnection(IAsyncResult ar) {
