@@ -9,7 +9,7 @@ namespace MagnumHouseLib
 	public class NetworkUtil
 	{
 		
-		public const int port = 1000;
+		public const int port = 13000;
 
 //		private static Socket ConnectSocket(string server, int port)
 //	    {
