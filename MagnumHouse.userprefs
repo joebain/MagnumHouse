@@ -1,0 +1,33 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" ctype="Workspace" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="MagnumHouse/Launcher.cs" ctype="Workbench">
+    <Files>
+      <File FileName="Tools/Main.cs" Line="1" Column="1" />
+      <File FileName="MagnumHouse/PhysicsAdjuster.cs" Line="1" Column="1" />
+      <File FileName="MagnumHouseLib/Game.cs" Line="1" Column="1" />
+      <File FileName="MagnumHouse/Launcher.cs" Line="5" Column="1" />
+      <File FileName="MagnumHouseLib/SyncList.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="MagnumHouse" selected="True" />
+          <Node name="MagnumHousePlusAdjuster">
+            <Option id="ShowAllFiles" value="False" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True">
+          <Node name="MagnumHousePlusAdjuster" expanded="True" />
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+</Properties>

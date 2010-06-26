@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F4C742C8-6DB0-435E-AFD3-CA31FABD3D98}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>MagnumHouseLib</RootNamespace>
+    <AssemblyName>MagnumHouseLib</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="SdlDotNet, Version=6.1.0.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\SdlDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.OpenGl, Version=3.0.0.0, Culture=neutral, PublicKeyToken=1ca010269a4501ef">
+      <Package>tao-opengl</Package>
+    </Reference>
+    <Reference Include="Tao.Sdl, Version=1.2.13.0, Culture=neutral, PublicKeyToken=9c7a200e36c0094e">
+      <Package>tao-sdl</Package>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libs\SdlDotNet.dll" />
+    <None Include="pictures\targetlevel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="pictures\testlevel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="pictures\title.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="sounds\explosion.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="sounds\fire.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="sounds\jump.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="sounds\land.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Background.cs" />
+    <Compile Include="BoundingBox.cs" />
+    <Compile Include="BumblingThing.cs" />
+    <Compile Include="Floor.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="Gangster.cs" />
+    <Compile Include="Hero.cs" />
+    <Compile Include="IDeadable.cs" />
+    <Compile Include="IDrawable.cs" />
+    <Compile Include="IShootable.cs" />
+    <Compile Include="IUpdateable.cs" />
+    <Compile Include="Magnum.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="ObjectHouse.cs" />
+    <Compile Include="Phony.cs" />
+    <Compile Include="RangeAttribute.cs" />
+    <Compile Include="Screen.cs" />
+    <Compile Include="Slug.cs" />
+    <Compile Include="Sound.cs" />
+    <Compile Include="Sprite.cs" />
+    <Compile Include="SyncList.cs" />
+    <Compile Include="Target.cs" />
+    <Compile Include="Text.cs" />
+    <Compile Include="Thing2D.cs" />
+    <Compile Include="Tile.cs" />
+    <Compile Include="TileMap.cs" />
+    <Compile Include="TileProximity.cs" />
+    <Compile Include="UserInput.cs" />
+    <Compile Include="Vector2f.cs" />
+    <Compile Include="Vector2i.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

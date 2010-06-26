@@ -1,0 +1,19 @@
+fric: 10
+grav: 14
+jump: 11
+walk: 14
+max: 20
+airtracmult : 0.5
+airfricmult : 0.1
+frictionsizemult: 1
+groundtime: 0.2
+maxspeedsizemult: 0.23
+
+ - magnum -
+sizestep: 0.13
+fireRateSizeMult: 0.09
+minSize: 0.2
+kickback: 12
+kickbacksizemult: 1.36
+max size: 10
+min size: 0.2
