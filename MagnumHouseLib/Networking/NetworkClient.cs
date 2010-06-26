@@ -12,7 +12,9 @@ namespace MagnumHouseLib
 		public NetworkClient (string serverAddress)
 		{
 			client = new TcpClient(serverAddress, NetworkUtil.port);
+			Console.WriteLine("trying to connect");
 			client.BeginConnect(serverAddress, NetworkUtil.port, new AsyncCallback(Connected), null);
+			Console.WriteLine("trying to connect");
 		}
 		
 		public void Connected(IAsyncResult ar) {
