@@ -5,7 +5,7 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="../bin/Release/MagnumHouse.exe" internal="true" />
+    <widget-library name="../bin/Debug/MagnumHouse.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="MagnumHouse.PhysicsAdjuster" design-size="467 473">
     <property name="MemberName" />

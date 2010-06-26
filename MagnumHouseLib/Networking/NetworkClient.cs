@@ -1,6 +1,7 @@
 
 using System;
 using System.Net.Sockets;
+using System.Net;
 
 namespace MagnumHouseLib
 {
@@ -8,13 +9,18 @@ namespace MagnumHouseLib
 	{
 
 		TcpClient client;
+		IPAddress remoteAddr;
 		
 		public NetworkClient (string serverAddress)
 		{
-			client = new TcpClient(serverAddress, NetworkUtil.port);
-			Console.WriteLine("trying to connect");
-			client.BeginConnect(serverAddress, NetworkUtil.port, new AsyncCallback(Connected), null);
-			Console.WriteLine("trying to connect");
+			remoteAddr = IPAddress.Parse(serverAddress);
+			client = new TcpClient();
+			
+		}
+		
+		public void Connect() {
+			client.BeginConnect(remoteAddr, NetworkUtil.port, new AsyncCallback(Connected), null);
+			Console.WriteLine("trying to connect");	
 		}
 		
 		public void Connected(IAsyncResult ar) {
