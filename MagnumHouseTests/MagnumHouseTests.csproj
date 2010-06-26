@@ -40,9 +40,9 @@
     <Compile Include="TileMapTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MagnumHouse\MagnumHousePlusAdjuster.csproj">
-      <Project>{0D4F719D-47EE-4A2F-B0CA-6541B6D28005}</Project>
-      <Name>MagnumHousePlusAdjuster</Name>
+    <ProjectReference Include="..\MagnumHouseLib\MagnumHouseLib.csproj">
+      <Project>{F4C742C8-6DB0-435E-AFD3-CA31FABD3D98}</Project>
+      <Name>MagnumHouseLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

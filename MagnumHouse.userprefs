@@ -1,20 +1,33 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" ctype="Workspace" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MagnumHouse/Launcher.cs" ctype="Workbench">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MagnumHouse/PhysicsAdjuster.cs" ctype="Workbench">
     <Files>
       <File FileName="Tools/Main.cs" Line="1" Column="1" />
-      <File FileName="MagnumHouse/PhysicsAdjuster.cs" Line="1" Column="1" />
+      <File FileName="MagnumHouse/PhysicsAdjuster.cs" Line="3" Column="7" />
       <File FileName="MagnumHouseLib/Game.cs" Line="1" Column="1" />
-      <File FileName="MagnumHouse/Launcher.cs" Line="5" Column="1" />
+      <File FileName="MagnumHouse/Launcher.cs" Line="38" Column="3" />
       <File FileName="MagnumHouseLib/SyncList.cs" Line="1" Column="1" />
+      <File FileName="MagnumHouseLib/Networking/NetworkClient.cs" Line="15" Column="85" />
+      <File FileName="MagnumHouseLib/Networking/NetworkServer.cs" Line="3" Column="17" />
+      <File FileName="MagnumHouseLib/Networking/NetworkUtil.cs" Line="44" Column="9" />
+      <File FileName="MagnumHouseLib/Networking/NetworkHero.cs" Line="11" Column="3" />
+      <File FileName="Client/Main.cs" Line="2" Column="24" />
+      <File FileName="Server/Main.cs" Line="13" Column="4" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="MagnumHouse" selected="True" />
-          <Node name="MagnumHousePlusAdjuster">
-            <Option id="ShowAllFiles" value="False" />
+          <Node name="Client" expanded="True">
+            <Node name="References" expanded="True" />
           </Node>
+          <Node name="MagnumHouseLib" expanded="True">
+            <Node name="Networking" expanded="True" />
+          </Node>
+          <Node name="MagnumHousePlusAdjuster" expanded="True">
+            <Option id="ShowAllFiles" value="False" />
+            <Node name="References" expanded="True" selected="True" />
+          </Node>
+          <Node name="Server" expanded="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">
