@@ -13,6 +13,10 @@ namespace MagnumHouseLib
 			IPAddress localAddr = IPAddress.Parse("127.0.0.1");
 
 			listener = new TcpListener(localAddr, NetworkUtil.port);
+			
+		}
+		
+		public void Start() {
 			listener.Start();
 			listener.BeginAcceptTcpClient(new AsyncCallback(AcceptConnection), null);
 			Console.WriteLine("accepting connections");

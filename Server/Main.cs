@@ -8,8 +8,9 @@ namespace Server
 	{
 		public static void Main (string[] args)
 		{
+			Console.WriteLine("server");
 			NetworkServer server = new NetworkServer();
-			
+			server.Start();
 			while(true) {Thread.Sleep(10);}
 		}
 	}
