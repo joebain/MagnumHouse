@@ -2,12 +2,14 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Drawing;
 using Tao.OpenGl;
 using Tao.Sdl;
 
+using MagnumHouseLib;
 
 namespace MagnumHouse
 {
@@ -17,6 +19,7 @@ namespace MagnumHouse
 		public const int ScreenHeight = 600;
 		public static int Width {get { return ScreenWidth / Tile.Size; }}
 		public static int Height {get { return  ScreenHeight / Tile.Size; }}
+		public float Zoom = 1.0f;
 		
 		public Vector2f viewOffset = new Vector2f();
 		
@@ -28,8 +31,9 @@ namespace MagnumHouse
 		bool quitFlag = false;
 		bool restartFlag = false;
 		
-		private List<Screen> m_screens;
-		private Message m_lastMessage;
+		private IEnumerable<Screen> m_screens;
+		private ScreenMessage m_lastMessage;
+		
 		
 		public void Restart() {
 			restartFlag = true;	
@@ -60,31 +64,38 @@ namespace MagnumHouse
 			Gl.glEnable(Gl.GL_TEXTURE_2D);
 		}
 		
-		public void Setup()
-		{
+		public void Setup(IEnumerable<Screen> screens) {
 			InitGfx();
 			
-			m_screens = new List<Screen>();
-			m_screens.Add(new TitleScreen());
-			m_screens.Add(new TargetLevel());
-			m_screens.Add(new EndScreen());
-			LoadScreen(new Message());
+			m_screens = screens;
+			LoadScreen(new ScreenMessage());
 		}
 		
-		private void LoadScreen(Message _message) {
+		public void Setup()
+		{			
+			var screens = new List<Screen>();
+			screens.Add(new TitleScreen());
+			//m_screens.Add(new TargetLevel());
+			screens.Add(new NetworkLevel());
+			//m_screens.Add(new EndScreen());
+			
+			Setup(screens);
+		}
+		
+		private void LoadScreen(ScreenMessage _message) {
 			m_lastMessage = _message;
-			m_screens[0].Setup(this, m_keyboard, _message);
-			m_screens[0].Exiting += NextScreen;
+			m_screens.First().Setup(this, m_keyboard, _message);
+			m_screens.First().Exiting += NextScreen;
 		}
 		
 		private void ReLoadScreen() {
-			m_screens[0].Setup(this, m_keyboard, m_lastMessage);
+			m_screens.First().Setup(this, m_keyboard, m_lastMessage);
 		}
 		
-		private void NextScreen(Message _message) {
-			m_screens[0].Exiting -= NextScreen;
-			m_screens.RemoveAt(0);
-			if (m_screens.Count == 0) {
+		private void NextScreen(ScreenMessage _message) {
+			m_screens.First().Exiting -= NextScreen;
+			m_screens = m_screens.Skip(1);
+			if (!m_screens.Any()) {
 				quitFlag = true;
 				return;
 			}
@@ -121,10 +132,10 @@ namespace MagnumHouse
 					
 				time.Reset();
 				time.Start();
-				m_screens[0].House.Update(delta);
-				m_screens[0].Update(delta);
+				m_screens.First().House.Update(delta);
+				m_screens.First().Update(delta);
 				Camera();
-				m_screens[0].House.Draw();
+				m_screens.First().House.Draw();
                 
                 Sdl.SDL_GL_SwapBuffers();
 				
@@ -140,12 +151,15 @@ namespace MagnumHouse
 			//Gl.glRotatef((float)Math.PI, 0, 0, 0);
 			Gl.glTranslatef(-1.0f,-1.0f,0f);
 			Gl.glScalef(2.0f/Width,2.0f/Height,0f);
+			Gl.glScalef(Zoom, Zoom, 0f);
 			
 			Gl.glTranslatef(viewOffset.X, viewOffset.Y, 0);
 		}
 		
 		public Vector2f ScreenPxToGameCoords(Vector2i _px) {
-			return new Vector2f((float)_px.X / Tile.Size - viewOffset.X, (float)(ScreenHeight-_px.Y) / Tile.Size - viewOffset.Y);
+			return new Vector2f(
+				(float)_px.X / (Tile.Size*Zoom) - viewOffset.X,
+			    (float)(ScreenHeight-_px.Y) / (Tile.Size*Zoom) - viewOffset.Y);
 		}
 	}
 }

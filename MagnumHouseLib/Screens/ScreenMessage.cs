@@ -3,7 +3,7 @@ using System;
 
 namespace MagnumHouse
 {
-	public class Message
+	public class ScreenMessage
 	{
 		public float Time;
 	}

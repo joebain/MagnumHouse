@@ -83,11 +83,9 @@
     <Compile Include="IShootable.cs" />
     <Compile Include="IUpdateable.cs" />
     <Compile Include="Magnum.cs" />
-    <Compile Include="Message.cs" />
     <Compile Include="ObjectHouse.cs" />
     <Compile Include="Phony.cs" />
     <Compile Include="RangeAttribute.cs" />
-    <Compile Include="Screen.cs" />
     <Compile Include="Slug.cs" />
     <Compile Include="Sound.cs" />
     <Compile Include="Sprite.cs" />
@@ -105,9 +103,26 @@
     <Compile Include="Networking\NetworkHero.cs" />
     <Compile Include="Networking\NetworkServer.cs" />
     <Compile Include="Networking\NetworkUtil.cs" />
+    <Compile Include="Networking\INetworkMessage.cs" />
+    <Compile Include="Networking\GangsterMessage.cs" />
+    <Compile Include="ArrayExtensions.cs" />
+    <Compile Include="Networking\NetworkGangster.cs" />
+    <Compile Include="Screens\Screen.cs" />
+    <Compile Include="Screens\ScreenMessage.cs" />
+    <Compile Include="Screens\TitleScreen.cs" />
+    <Compile Include="Screens\TargetLevel.cs" />
+    <Compile Include="Screens\EndScreen.cs" />
+    <Compile Include="Screens\NetworkLevel.cs" />
+    <Compile Include="Networking\WorldVisage.cs" />
+    <Compile Include="Networking\GangsterVisage.cs" />
+    <Compile Include="Networking\Visage.cs" />
+    <Compile Include="Screens\ServerLevel.cs" />
+    <Compile Include="EventExtensions.cs" />
+    <Compile Include="GhostGangster.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Networking\" />
+    <Folder Include="Screens\" />
   </ItemGroup>
 </Project>

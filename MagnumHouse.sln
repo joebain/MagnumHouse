@@ -45,6 +45,6 @@ Global
 		{F4C742C8-6DB0-435E-AFD3-CA31FABD3D98}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = MagnumHouse\MagnumHousePlusAdjuster.csproj
+		StartupItem = Tools\MagnumHouse.csproj
 	EndGlobalSection
 EndGlobal

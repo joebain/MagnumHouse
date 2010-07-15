@@ -15,7 +15,7 @@ namespace MagnumHouse
 	{
 		private bool HUD;
 		private Game m_game;
-		private Vector2f m_position;
+		private Vector2f m_position = new Vector2f();
 		public virtual Vector2f Position {
 			get { 
 				if (!HUD)
