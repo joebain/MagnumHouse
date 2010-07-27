@@ -5,7 +5,7 @@ using System.Linq;
 using Tao.Sdl;
 using MagnumHouseLib;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class TargetLevel : Screen {
 		

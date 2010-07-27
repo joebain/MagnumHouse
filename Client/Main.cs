@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using MagnumHouseLib;
-using MagnumHouse;
+using MagnumHouseLib;
 
 namespace Client
 {
@@ -12,7 +12,7 @@ namespace Client
 			NetworkClient client = new NetworkClient("127.0.0.1");
 			client.Connect();
 			Thread.Sleep(10);
-			client.SendMessage(new GangsterMessage(new Vector2f(1,1)));
+			client.SendMessage(new GangsterMessage(1001, new Vector2f(1,1)));
 			while(true) {Thread.Sleep(10);}
 		}
 	}

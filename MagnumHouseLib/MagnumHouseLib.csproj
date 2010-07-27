@@ -119,6 +119,10 @@
     <Compile Include="Screens\ServerLevel.cs" />
     <Compile Include="EventExtensions.cs" />
     <Compile Include="GhostGangster.cs" />
+    <Compile Include="Networking\HelloMessage.cs" />
+    <Compile Include="Networking\GoodbyeMessage.cs" />
+    <Compile Include="Networking\SlugMessage.cs" />
+    <Compile Include="NetworkHouse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

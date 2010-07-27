@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using MagnumHouseLib;
-using MagnumHouse;
+using MagnumHouseLib;
 
 namespace Server
 {

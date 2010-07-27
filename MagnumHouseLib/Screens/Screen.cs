@@ -5,7 +5,7 @@ using System.Linq;
 
 using Tao.Sdl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public abstract class Screen
 	{

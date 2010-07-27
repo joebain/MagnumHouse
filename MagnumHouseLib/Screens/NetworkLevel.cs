@@ -1,6 +1,6 @@
 using System;
 
-using MagnumHouse;
+using MagnumHouseLib;
 
 namespace MagnumHouseLib
 {
@@ -29,7 +29,7 @@ namespace MagnumHouseLib
 			m_house.AddDrawable(magnum);
 			m_house.AddUpdateable(magnum);
 			
-			var nHero = new NetworkHero(hero, "127.0.0.1");
+			var nHero = new NetworkHero(hero, "127.0.0.1", m_house);
 			m_house.AddUpdateable(nHero);
 			nHero.Connect();
 		}

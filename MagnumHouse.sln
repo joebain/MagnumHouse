@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagnumHousePlusAdjuster", "MagnumHouse\MagnumHousePlusAdjuster.csproj", "{0D4F719D-47EE-4A2F-B0CA-6541B6D28005}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagnumHouseTests", "MagnumHouseTests\MagnumHouseTests.csproj", "{77522F37-618F-4B67-8DA7-8AF833A4B82B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagnumHouse", "Tools\MagnumHouse.csproj", "{99102E33-9AD6-4FAC-AD38-E2FD2CA80A2C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagnumHouseLib", "MagnumHouseLib\MagnumHouseLib.csproj", "{F4C742C8-6DB0-435E-AFD3-CA31FABD3D98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{0A6BA100-4CDF-480C-945B-E157CD5BC738}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{56A0349D-92DB-4543-9125-081BDB118944}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagnumHousePlusAdjuster", "MagnumHousePlusAdjuster\MagnumHousePlusAdjuster.csproj", "{0D4F719D-47EE-4A2F-B0CA-6541B6D28005}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagnumHouse", "MagnumHouse\MagnumHouse.csproj", "{99102E33-9AD6-4FAC-AD38-E2FD2CA80A2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +45,6 @@ Global
 		{F4C742C8-6DB0-435E-AFD3-CA31FABD3D98}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Tools\MagnumHouse.csproj
+		StartupItem = MagnumHouseTests\MagnumHouseTests.csproj
 	EndGlobalSection
 EndGlobal
