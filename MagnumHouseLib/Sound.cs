@@ -2,7 +2,7 @@ using System;
 using Tao.Sdl;
 using SdlDotNet.Audio;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class Sound
 	{

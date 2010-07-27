@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class Sprite : Thing2D, IDrawable
 	{		

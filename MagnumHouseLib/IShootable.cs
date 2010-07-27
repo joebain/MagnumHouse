@@ -1,7 +1,7 @@
 
 using System;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public interface IShootable : IThing2D, IDeadable
 	{

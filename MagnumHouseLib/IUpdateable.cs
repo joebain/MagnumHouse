@@ -1,6 +1,6 @@
 using System;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public interface IUpdateable : IDeadable
 	{

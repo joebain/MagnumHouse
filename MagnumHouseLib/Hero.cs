@@ -5,7 +5,7 @@ using System.IO;
 using Tao.Sdl;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class Hero : Gangster
 	{

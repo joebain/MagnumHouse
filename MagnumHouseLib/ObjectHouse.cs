@@ -6,10 +6,8 @@ using System.Linq;
 
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
-
-
 	public class ObjectHouse
 	{
 		public static bool drawBoundingBoxes;
@@ -17,6 +15,10 @@ namespace MagnumHouse
 		Dictionary<Type, SyncList<Object>> m_things = new Dictionary<Type, SyncList<Object>>();
 		
 		TileMap m_map;
+		
+		private NetworkHouse NetworkHouse;
+		List<Type> interceptedTypes = new List<Type>();
+		
 		
 		public ObjectHouse () {
 			m_things[typeof(IDrawable)] = new SyncList<object>();
@@ -48,8 +50,20 @@ namespace MagnumHouse
 			}
 		}
 		
+		public void SetNetworkHouse(NetworkHouse house) {
+			NetworkHouse = house;
+		}
+		
+		public void RegisterNetworkType(Type intercept) {
+			interceptedTypes.Add(intercept);
+		}
+		
 		public void AddUpdateable(IUpdateable _updateable) {
-			Add<IUpdateable>(_updateable);
+			if (interceptedTypes.Contains(_updateable.GetType())) {
+				NetworkHouse.AddUdateable(_updateable);
+			} else {
+				Add<IUpdateable>(_updateable);
+			}
 		}
 		
 		public void RemoveUpdateable(IUpdateable _updateable) {
@@ -151,6 +165,10 @@ namespace MagnumHouse
 			foreach (var thing in m_things) {
 				thing.Value.Process();
 			}
+		}
+		
+		public void Die() {
+			GetList<IUpdateable>().NiftyFor<IUpdateable>(_u => _u.Die(), _u => false);
 		}
 	}
 }

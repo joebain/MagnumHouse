@@ -1,7 +1,7 @@
 
 using System;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public interface IThing2D {
 		Vector2f Position {get;}
@@ -55,5 +55,7 @@ namespace MagnumHouse
 		public void BottomCentre() {
 			Position = new Vector2f(Game.Width/2 - Size.X/2, 0);
 		}
+		
+		public virtual void Die() {}
 	}
 }

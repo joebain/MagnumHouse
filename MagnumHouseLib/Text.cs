@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class Text : Thing2D, IDrawable, IUpdateable
 	{

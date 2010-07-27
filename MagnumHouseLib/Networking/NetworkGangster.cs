@@ -1,7 +1,7 @@
 
 using System;
 
-using MagnumHouse;
+using MagnumHouseLib;
 
 namespace MagnumHouseLib
 {
@@ -17,8 +17,7 @@ namespace MagnumHouseLib
 		protected override void HandleMessage ()
 		{
 			if (GangsterMessage.SIs(readBuffer)) {
-				var gm = new GangsterMessage();
-				gm.FromBytes(readBuffer);
+				var gm = new GangsterMessage(readBuffer);
 				Console.WriteLine("position is " + gm.Position);
 			}
 		}

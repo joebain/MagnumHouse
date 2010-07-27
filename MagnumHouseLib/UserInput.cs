@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Tao.Sdl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class UserInput
 	{

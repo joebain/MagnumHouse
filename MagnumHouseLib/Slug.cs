@@ -2,7 +2,7 @@
 using System;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public enum ThingsToHit {
 		Wall,

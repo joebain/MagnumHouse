@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class Phony : Gangster
 	{

@@ -2,7 +2,7 @@
 using System;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class Magnum : IDrawable, IUpdateable
 	{
@@ -144,5 +144,7 @@ namespace MagnumHouse
 		}
 		
 		public bool Dead {get; private set;}
+		
+		public void Die() {}
 	}
 }

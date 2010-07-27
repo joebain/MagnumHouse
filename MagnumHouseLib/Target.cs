@@ -1,7 +1,7 @@
 using System;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class Target : Thing2D, IDrawable, IShootable
 	{

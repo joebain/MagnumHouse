@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class TileMap
 	{

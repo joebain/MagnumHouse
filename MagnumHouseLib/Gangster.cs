@@ -5,7 +5,7 @@ using System.IO;
 using Tao.Sdl;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public abstract class Gangster : BumblingThing, IUpdateable, IDrawable, IShootable
 	{

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public enum Bumped {
 		Top, Bottom, Right, Left

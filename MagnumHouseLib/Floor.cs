@@ -3,7 +3,7 @@ using System;
 
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 
 
@@ -26,5 +26,7 @@ namespace MagnumHouse
 		}
 		
 		public bool Dead {get { return false;}}
+		
+		public void Die() {}
 	}
 }

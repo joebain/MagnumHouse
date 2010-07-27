@@ -1,7 +1,7 @@
 using System;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class Background : IDrawable
 	{
@@ -33,5 +33,7 @@ namespace MagnumHouse
 		}
 		
 		public bool Dead { get { return false; }}
+		
+		public void Die() {}
 	}
 }

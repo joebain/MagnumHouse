@@ -11,7 +11,7 @@ using Tao.Sdl;
 
 using MagnumHouseLib;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class Game
 	{
@@ -44,6 +44,7 @@ namespace MagnumHouse
 		
 		public void Quit() {
 			quitFlag = true;
+			m_screens.First().House.Die();
 			if (Quitting != null) Quitting();
 		}
 		

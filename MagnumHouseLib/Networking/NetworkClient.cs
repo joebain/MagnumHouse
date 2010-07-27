@@ -3,7 +3,7 @@ using System;
 using System.Net.Sockets;
 using System.Net;
 
-using MagnumHouse;
+using MagnumHouseLib;
 
 namespace MagnumHouseLib
 {
@@ -15,6 +15,7 @@ namespace MagnumHouseLib
 		NetworkStream stream;
 		const int bufferSize = 100;
 		protected byte [] readBuffer = new byte[bufferSize];
+		DateTime lastMessage;
 		
 		public NetworkClient (string serverAddress)
 		{
@@ -35,22 +36,22 @@ namespace MagnumHouseLib
 			Console.WriteLine("client connected");			
 			
 			stream = client.GetStream();
+			ReadMessage();
+		}
+		
+		private void ReadMessage() {
 			stream.BeginRead(readBuffer, 0, bufferSize, new AsyncCallback(GotMessage), null);
-			
 		}
 		
 		private void GotMessage(IAsyncResult ar) {
-			Console.WriteLine("got a message: ");
 			HandleMessage();
 			stream.EndRead(ar);
+			
+			ReadMessage();
 		}
 		
 		protected virtual void HandleMessage() {
-			if (GangsterMessage.SIs(readBuffer)) {
-				var gm = new GangsterMessage();
-				gm.FromBytes(readBuffer);
-				Console.WriteLine("position is " + gm.Position);
-			}
+			
 		}
 		
 		public void SendMessage(INetworkMessage _message) {
@@ -58,7 +59,6 @@ namespace MagnumHouseLib
 		}
 		
 		private void SentMessage (IAsyncResult ar) {
-			Console.WriteLine("sent a message");
 			stream.EndWrite(ar);
 		}
 	}
