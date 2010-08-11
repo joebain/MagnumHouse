@@ -6,6 +6,8 @@ namespace MagnumHouseLib
 {
 	public class Text : Thing2D, IDrawable, IUpdateable
 	{
+		public Layer Layer { get { return Layer.Normal; }}
+		
 		string m_text;
 		Sprite m_sprite = new Sprite();
 		static Bitmap tmpBmp = new Bitmap(1024, 1024);

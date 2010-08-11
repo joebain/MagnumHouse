@@ -9,6 +9,8 @@ namespace MagnumHouseLib
 
 	public class Floor : IDrawable
 	{
+		
+		public Layer Layer { get { return Layer.Normal; }}
 
 		public Floor ()
 		{

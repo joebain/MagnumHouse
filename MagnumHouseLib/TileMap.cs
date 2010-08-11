@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.IO;
 
 namespace MagnumHouseLib
 {
@@ -38,7 +39,13 @@ namespace MagnumHouseLib
 		}
 		
 		public TileMap(string mapFile) {
-			Bitmap bmp = new Bitmap(mapFile);
+			Bitmap bmp;
+			try {
+				bmp = new Bitmap(mapFile);
+			} catch {
+				Console.WriteLine("File couldnt be opened: " + mapFile);
+				throw;
+			}
 			Map = new int[bmp.Height, bmp.Width];
 			for (int x = 0 ; x < bmp.Width ; x++) {
 				for (int y = 0 ; y < bmp.Height ; y++) {
@@ -62,10 +69,8 @@ namespace MagnumHouseLib
 					if (Map[y,x] == 1) {
 						_house.AddDrawable(new Tile(new Vector2i(x,(Height-1) - y)));
 					} else if (Map[y,x] == 2) {
-						Magnum magnum = new Magnum(_house);
-						_house.AddDrawable(magnum);
-						_house.AddUpdateable(magnum);
-						Phony phony = new Phony(magnum, this, _game, _house);
+						EasyPhony phony = new EasyPhony(_house, _house);
+						phony.PlaceInWorld(this);
 						phony.Position = new Vector2f(x, (Height-1) - y);
 						_house.AddDrawable(phony);
 						_house.AddUpdateable(phony);

@@ -7,6 +7,8 @@ namespace MagnumHouseLib
 
 	public class Tile : IDrawable
 	{
+		public Layer Layer { get { return Layer.Normal; }}
+		
 		public const int Size = 40;
 		
 		Vector2i m_position;
@@ -21,7 +23,13 @@ namespace MagnumHouseLib
 			Gl.glPushMatrix();
 			
 			Gl.glTranslatef(m_position.X, m_position.Y, 0);
-			Gl.glColor3f(0.5f,0.5f,0.5f);
+			if (m_position.Y <= 0) {
+				Gl.glColor3f(0.449f,0.797f,0.301f); //nice green grass
+			} else if (m_position.Y <= 12) {
+				Gl.glColor3f(0.797f,0.570f,0.301f); //brown trees
+			} else {
+				Gl.glColor3f(0.684f,0.852f,0.859f); //blue sky
+			}
 			
 			Gl.glBegin(Gl.GL_TRIANGLE_STRIP);
 			

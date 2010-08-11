@@ -8,6 +8,8 @@ namespace MagnumHouseLib
 {
 	public class GhostGangster : Thing2D, IUpdateable, IDrawable
 	{
+		public Layer Layer { get { return Layer.Normal; }}
+		
 		GangsterVisage visage;
 		
 		private float size = 0.6f;
@@ -17,7 +19,7 @@ namespace MagnumHouseLib
 			visage = _visage;
 		}
 		
-		public int Id {
+		public override int Id {
 			get {return visage.id;}
 		}
 		

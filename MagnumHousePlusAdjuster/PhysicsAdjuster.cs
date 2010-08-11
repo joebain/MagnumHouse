@@ -4,6 +4,8 @@ using Gdk;
 using Gtk;
 using System.Threading;
 
+using MagnumHouseLib;
+
 namespace MagnumHouse
 {
 	public partial class PhysicsAdjuster : Gtk.Window

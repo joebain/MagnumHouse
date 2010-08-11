@@ -6,7 +6,10 @@ namespace MagnumHouseLib
 {
 	public class Magnum : IDrawable, IUpdateable
 	{
+		public Layer Layer { get { return Layer.Pixelly; }}
 
+		public int Id { get; set;}
+		
 		float fireRate = 0.5f;
 		
 		float bulletCounter;
@@ -20,9 +23,9 @@ namespace MagnumHouseLib
 		[Range(0,2,2)]
 		public static float fireRateSizeMultiplier = 0.2f;
 		[Range(0,30,0)]
-		public static float kickback = 3f;
+		public static float kickback = 8f;
 		[Range(0,5,2)]
-		public static float kickBackSizeMultiplier = 2.13f;
+		public static float kickBackSizeMultiplier = 2.5f;
 		[Range(0,100,0)]
 		public static float maxSize = 4f;
 		[Range(0,10,2)]
@@ -35,7 +38,7 @@ namespace MagnumHouseLib
 		
 		Vector2f m_aim = new Vector2f();
 		
-		ObjectHouse m_house;
+		IObjectCollection m_house;
 		private Thing2D m_owner;
 		public Thing2D Owner {
 			get {return m_owner;} 
@@ -47,7 +50,7 @@ namespace MagnumHouseLib
 		}
 		Sound fireSound;
 		
-		public Magnum (ObjectHouse _house)
+		public Magnum (IObjectCollection _house)
 		{
 			m_house = _house;
 			fireSound = new Sound("sounds/fire.wav");
@@ -58,10 +61,11 @@ namespace MagnumHouseLib
 			//gun
 			Gl.glPushMatrix();
 						
-			Gl.glColor3f(0.5f,0,0);
+			Gl.glColor3f(0.691f,0.691f,0.691f);
 			
 			//Gl.glRotatef(Direction.Angle(), 0, 0, 1);
-			Gl.glTranslatef(Position.X, Position.Y, 0);
+			Vector2f offset = Position + Direction * 10f * (0.1f-(float)Math.Max(bulletCounter,0));
+			Gl.glTranslatef(offset.X, offset.Y, 0);
 			Gl.glRotatef(-Direction.Angle()*(float)(180f/Math.PI), 0, 0, 1);
 			
 			Gl.glBegin(Gl.GL_TRIANGLE_STRIP);
@@ -97,7 +101,7 @@ namespace MagnumHouseLib
 			if (bulletCounter > 0) bulletCounter -= _delta*fireRate;
 			
 			if (m_owner != null) {
-				Position = m_owner.Position + Direction + Vector2f.Up*m_owner.Size.Y*0.5f;
+				Position = m_owner.Position + m_owner.Size/2f;
 				if (m_owner.Dead) Dead = true;
 			}
 		}

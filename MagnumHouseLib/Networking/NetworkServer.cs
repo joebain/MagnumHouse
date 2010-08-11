@@ -12,12 +12,14 @@ namespace MagnumHouseLib
 	{
 		TcpListener listener;
 		
-		List<Visage> visages = new List<Visage>();
-		List<Visage> disconnectedClients = new List<Visage>();
+		List<ClientDetails> clientDetails = new List<ClientDetails>();
+		List<ClientDetails> disconnectedClients = new List<ClientDetails>();
 		WorldVisage world = new WorldVisage();
 		public WorldVisage World { get { return world; } }
 		static int maxClients = 4;
 		int idcount = 1;
+		
+		public int Id { get; set;}
 		
 		public NetworkServer ()
 		{
@@ -41,15 +43,13 @@ namespace MagnumHouseLib
 			
 			var client = listener.EndAcceptTcpClient(ar);
 			
-			if (visages.Count < maxClients) {
+			if (clientDetails.Count < maxClients) {
 				Console.WriteLine("client connected");
 				
-				var g = new GangsterVisage();
-				var visage = new Visage() {gangster = g, client = client};
-				visages.Add(visage);
+				var visage = new ClientDetails() {client = client};
+				clientDetails.Add(visage);
 				Int32 id = idcount++;
-				g.id = id;
-				world.AddGangster(g);
+				
 				SendHello(visage, id);
 				AcceptClient();
 			} else {
@@ -57,75 +57,79 @@ namespace MagnumHouseLib
 			}
 		}
 		
-		public void SendHello(Visage visage, Int32 id) {
+		public void SendHello(ClientDetails visage, Int32 id) {
 			
-			var message = new HelloMessage(id);
+			var message = new ClientHelloMessage(id);
 			
 			Console.WriteLine("sending hello");
-			Console.WriteLine("can write? " + visage.client.GetStream().CanWrite);
 			visage.client.GetStream().BeginWrite(message.GetBytes(), 0, message.Size, new AsyncCallback(SentHello), visage);
 		}
 		
-		public void ReadMessage(Visage _visage) {
+		public void ReceiveMessage(ClientDetails details) {
 			Console.WriteLine("waiting for messages");
-			Array.Clear(_visage.readBuffer,0,Visage.bufferSize);
-			_visage.client.GetStream().BeginRead(_visage.readBuffer, 0, Visage.bufferSize, new AsyncCallback(GotMessage), _visage);
+			Array.Clear(details.readBuffer,0,ClientDetails.bufferSize);
+			details.client.GetStream().BeginRead(details.readBuffer, 0, ClientDetails.bufferSize, new AsyncCallback(GotMessage), details);
 		}
 		
-		private void ClientDisconnected(Visage visage) {
+		private void ClientDisconnected(ClientDetails visage) {
 			disconnectedClients.Add(visage);
 		}
 		
 		public void GotMessage(IAsyncResult ar) {
 			Console.WriteLine("got a message");
 			
-			var visage = (Visage)ar.AsyncState;
-			visage.client.GetStream().EndRead(ar);
+			var details = (ClientDetails)ar.AsyncState;
+			details.client.GetStream().EndRead(ar);
 			
 			Console.Write("== ");
 			for (int i = 0 ; i < 10 ; i++) {
-				Console.Write(visage.readBuffer[i]);
+				Console.Write(details.readBuffer[i]);
 			}
 			Console.WriteLine(" ==");
 			
-			visage.gangster.Receive(visage.readBuffer);
-		
-			if (GoodbyeMessage.SIs(visage.readBuffer) || visage.readBuffer[0] == 0) {
-				ClientDisconnected(visage);
+			var message = new GenericMessage(details.readBuffer);
+			
+			if (message.ContentType == typeof(GoodbyeMessageContent)) {
+				ClientDisconnected(details);
 				Console.WriteLine("client said goodbye");
 			} else {
-				ReadMessage(visage);
+				HandleMessage(message);
+				ReceiveMessage(details);
 			}
 		}
 		
+		protected virtual void HandleMessage(GenericMessage message) {
+			
+		}
+		
 		public void Update(float _delta) {
-			foreach (var visage in visages) {
-				foreach (var other in visages.Where(v => v.gangster.id != visage.gangster.id)) {
-					var message = other.gangster.Relay();
-					visage.client.GetStream().BeginWrite(message.GetBytes(), 0, message.Size, new AsyncCallback(SentMessage), visage);
-				}
-			}
-			if (disconnectedClients.Any()) {
-				foreach (var visage in disconnectedClients) {
-					visages.Remove(visage);
-					world.RemoveGangster(visage.gangster);
-				}
-				disconnectedClients.Clear();
-			}
+//			foreach (var details in clientDetails) {
+//				foreach (var other in clientDetails.Where(v => v.gangster.id != details.gangster.id)) {
+//					var message = other.gangster.Relay();
+//					details.client.GetStream().BeginWrite(message.GetBytes(), 0, message.Size, new AsyncCallback(SentMessage), details);
+//				}
+//			}
+//			if (disconnectedClients.Any()) {
+//				foreach (var visage in disconnectedClients) {
+//					clientDetails.Remove(visage);
+//					world.RemoveGangster(visage.gangster);
+//				}
+//				disconnectedClients.Clear();
+//			}
 		}
 		
 		public void SentMessage(IAsyncResult ar) {
 			Console.WriteLine("sent a message");
-			var visage = (Visage)ar.AsyncState;
+			var visage = (ClientDetails)ar.AsyncState;
 			visage.client.GetStream().EndWrite(ar);
 		}
 		
 		public void SentHello(IAsyncResult ar) {
 			Console.WriteLine("sent a hello");
-			var visage = (Visage)ar.AsyncState;
+			var visage = (ClientDetails)ar.AsyncState;
 			visage.client.GetStream().EndWrite(ar);
 			
-			ReadMessage(visage);
+			ReceiveMessage(visage);
 		}
 		
 		public bool Dead { get { return false; } }

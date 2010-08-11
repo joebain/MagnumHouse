@@ -7,14 +7,17 @@ namespace MagnumHouseLib
 {
 	public class UserInput
 	{
+		public int Id { get; set;}
+		
 		bool m_quitFlag = false;
 		
 		Dictionary<int, bool> m_keys = new Dictionary<int, bool>();
 		Dictionary<byte, bool> m_mouseButtons = new Dictionary<byte, bool>();
 		
-		Vector2i m_mousePos = new Vector2i();
+		Vector2f m_mousePos = new Vector2f();
+		Vector2i screenMousePos = new Vector2i();
 		
-		public Vector2i MousePos { get { return m_mousePos.Clone(); }}
+		public Vector2f MousePos { get { return m_mousePos.Clone(); }}
 		
 		public bool QuitRequested { get { return m_quitFlag; }}
 		
@@ -39,8 +42,15 @@ namespace MagnumHouseLib
 			}
 		}
 		
-		public UserInput()
+		Game m_game;
+		
+		public UserInput(Game _game)
 		{
+			m_game = _game;
+		}
+		
+		public void Update(float _delta) {
+			m_mousePos = m_game.ScreenPxToGameCoords(screenMousePos);
 		}
 		
 		public void HandleSDLInput()
@@ -69,8 +79,8 @@ namespace MagnumHouseLib
 					m_mouseButtons[e.button.button] = false;
 				}
 				else if (e.type == Sdl.SDL_MOUSEMOTION) {
-					m_mousePos.X = e.motion.x;
-					m_mousePos.Y = e.motion.y;
+					screenMousePos.X = e.motion.x;
+					screenMousePos.Y = e.motion.y;
 				}
 			}
 		}

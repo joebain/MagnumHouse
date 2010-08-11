@@ -69,6 +69,9 @@
     <None Include="sounds\land.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="pictures\platformlevel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Background.cs" />
@@ -115,18 +118,35 @@
     <Compile Include="Screens\NetworkLevel.cs" />
     <Compile Include="Networking\WorldVisage.cs" />
     <Compile Include="Networking\GangsterVisage.cs" />
-    <Compile Include="Networking\Visage.cs" />
     <Compile Include="Screens\ServerLevel.cs" />
     <Compile Include="EventExtensions.cs" />
     <Compile Include="GhostGangster.cs" />
     <Compile Include="Networking\HelloMessage.cs" />
-    <Compile Include="Networking\GoodbyeMessage.cs" />
     <Compile Include="Networking\SlugMessage.cs" />
     <Compile Include="NetworkHouse.cs" />
+    <Compile Include="Networking\ClientDetails.cs" />
+    <Compile Include="Networking\ClientGoodbyeMessage.cs" />
+    <Compile Include="Networking\NetworkHouseServer.cs" />
+    <Compile Include="Networking\ClientHelloMessage.cs" />
+    <Compile Include="Networking\MessageCodes.cs" />
+    <Compile Include="Networking\GenericMessage.cs" />
+    <Compile Include="Networking\MessageContents\MessageContent.cs" />
+    <Compile Include="Networking\MessageContents\GangsterMessageContent.cs" />
+    <Compile Include="Networking\MessageContents\SlugMessageContent.cs" />
+    <Compile Include="Networking\MessageContents\ClientHelloMessageContent.cs" />
+    <Compile Include="Networking\MessageContents\ClientGoodbyeMessageContent.cs" />
+    <Compile Include="Networking\MessageContents\HelloMessageContent.cs" />
+    <Compile Include="Networking\MessageContents\GoodbyeMessageContent.cs" />
+    <Compile Include="IObjectCollection.cs" />
+    <Compile Include="IGangsterProvider.cs" />
+    <Compile Include="Screens\PlatformLevel.cs" />
+    <Compile Include="EasyPhony.cs" />
+    <Compile Include="Vector3f.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Networking\" />
     <Folder Include="Screens\" />
+    <Folder Include="Networking\MessageContents\" />
   </ItemGroup>
 </Project>

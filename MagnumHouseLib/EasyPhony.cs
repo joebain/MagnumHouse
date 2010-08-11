@@ -5,12 +5,16 @@ using Tao.OpenGl;
 
 namespace MagnumHouseLib
 {
-	public class Phony : Gangster
+
+
+	public class EasyPhony : Gangster
 	{
 
 		Vector2f m_direction = Vector2f.Left;
 		
 		Vector2f m_aim = new Vector2f();
+		float timeToFire = 1.0f;
+		float fireCounter = 0f;
 		
 		private const float distToEnemySquared = 40f;
 		
@@ -22,10 +26,15 @@ namespace MagnumHouseLib
 		
 		IGangsterProvider m_provider;
 		
-		public Phony (IObjectCollection _house, IGangsterProvider _provider) : base (_house)
+		public EasyPhony (IObjectCollection _house, IGangsterProvider _provider) : base (_house)
 		{
 			m_provider = _provider;
 			m_magnum.ShowCrosshair = false;
+		}
+		
+		protected override void SetColour ()
+		{
+			Gl.glColor3f(0.648f, 0.375f, 0.613f);
 		}
 		
 		protected override void Control (float _delta, IEnumerable<Bumped> _bumps)
@@ -53,11 +62,16 @@ namespace MagnumHouseLib
 					closeGangster = gangster;
 				}
 			}
-			
-			if (distance < distToEnemySquared) {
+			fireCounter -= _delta;
+			float angleToGangster = (closeGangster.Position - Position).Angle();
+			if (distance < distToEnemySquared &&
+			    closeGangster.Position.Y >= Position.Y && (closeGangster.Position.X - Position.X) * Math.Sign(m_direction.X) > 0) {
 				m_aim = (closeGangster.Position + m_aim)/2;
 				m_magnum.AimAt(m_aim);
-				m_magnum.Shoot();
+				if (fireCounter <= 0 ) {
+					m_magnum.Shoot();
+					fireCounter = timeToFire;
+				}
 			} else {
 				m_magnum.AimAt(Position + m_direction);
 			}

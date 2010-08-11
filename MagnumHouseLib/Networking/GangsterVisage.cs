@@ -17,8 +17,8 @@ namespace MagnumHouseLib
 		public void Receive(byte[] buffer) {
 			if (GangsterMessage.SIs(buffer)) {
 				Receive(new GangsterMessage(buffer));
-			} else if (GoodbyeMessage.SIs(buffer)) {
-				Receive(new GoodbyeMessage(buffer));
+			} else if (ClientGoodbyeMessage.SIs(buffer)) {
+				Receive(new ClientGoodbyeMessage(buffer));
 			}
 		}
 		
@@ -27,7 +27,7 @@ namespace MagnumHouseLib
 			id = _message.Id;
 		}
 		
-		public void Receive(GoodbyeMessage _message) {
+		public void Receive(ClientGoodbyeMessage _message) {
 			id = _message.Id;
 			sayingGoodbye = true;
 		}
@@ -35,7 +35,7 @@ namespace MagnumHouseLib
 		public INetworkMessage Relay() {
 			if (sayingGoodbye) {
 				Console.WriteLine("relaying goodbye, id {0}",id);
-				return new GoodbyeMessage(id);
+				return new ClientGoodbyeMessage(id);
 			} else {
 				Console.WriteLine("relaying pos, id {0}",id);
 				return new GangsterMessage(id, position);

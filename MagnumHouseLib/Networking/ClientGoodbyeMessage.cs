@@ -3,18 +3,18 @@ using System;
 
 namespace MagnumHouseLib
 {
-	public class GoodbyeMessage : INetworkMessage
+	public class ClientGoodbyeMessage : INetworkMessage
 	{
 		public Int32 Id;
 		const int byteSize = 6;
 		public int Size { get { return byteSize; } }
 		
-		public GoodbyeMessage (Int32 id)
+		public ClientGoodbyeMessage (Int32 id)
 		{
 			Id = id;
 		}
 		
-		public GoodbyeMessage (byte[] _bytes) {
+		public ClientGoodbyeMessage (byte[] _bytes) {
 			FromBytes(_bytes);
 		}
 		

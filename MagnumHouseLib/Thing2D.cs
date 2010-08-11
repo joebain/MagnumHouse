@@ -13,6 +13,8 @@ namespace MagnumHouseLib
 	
 	public abstract class Thing2D : IThing2D, IDeadable
 	{
+		public virtual int Id {get; set;}
+		
 		private bool HUD;
 		private Game m_game;
 		private Vector2f m_position = new Vector2f();
@@ -30,8 +32,10 @@ namespace MagnumHouseLib
 				//else
 					//m_position = value + m_game.viewOffset;
 			}}
-		public virtual Vector2f Size {get;set;}
-		public virtual Vector2f Speed {get; set;}
+		private Vector2f m_size = new Vector2f();
+		public virtual Vector2f Size {get {return m_size; } set{m_size = value;}}
+		private Vector2f m_speed = new Vector2f();
+		public virtual Vector2f Speed {get{return m_speed;} set{m_speed = value;}}
 		public BoundingBox Bounds {get {return new BoundingBox(Position.X, Position.Y, Position.X + Size.X, Position.Y + Size.Y);}}
 		public virtual bool Dead {get; set;}
 		

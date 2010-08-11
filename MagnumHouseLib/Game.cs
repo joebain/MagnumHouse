@@ -17,15 +17,22 @@ namespace MagnumHouseLib
 	{
 		public const int ScreenWidth = 800;
 		public const int ScreenHeight = 600;
+		
+		public const int bg_pixel_size = 4;
+		public static int SmallScreenWidth {get {return ScreenWidth / bg_pixel_size;}}
+		public static int SmallScreenHeight {get {return ScreenHeight / bg_pixel_size;}}
 		public static int Width {get { return ScreenWidth / Tile.Size; }}
 		public static int Height {get { return  ScreenHeight / Tile.Size; }}
 		public float Zoom = 1.0f;
+		public static readonly Vector2f ScreenCentre = new Vector2f(Width/2f, Height/2f);
+		public static readonly Vector2f ScreenSize = new Vector2f(Width, Height);
 		
 		public Vector2f viewOffset = new Vector2f();
 		
-		UserInput m_keyboard = new UserInput();
+		UserInput m_keyboard;
 			
 		const long targetMsPerFrame = 16;
+		int effect_counter = 0;
 		
 		private bool m_stepping = false;
 		bool quitFlag = false;
@@ -34,6 +41,20 @@ namespace MagnumHouseLib
 		private IEnumerable<Screen> m_screens;
 		private ScreenMessage m_lastMessage;
 		
+		private Thing2D m_cameraSubject;
+		private Vector2f m_prevSubjectLoc = new Vector2f();
+		
+		private Sprite pixelly_fx_buffer;
+		private Sprite blurry_fx_buffer;
+		
+		
+		public Game() {
+			m_keyboard = new UserInput(this);
+		}
+		
+		public void SetCameraSubject(Thing2D _subject) {
+			m_cameraSubject = _subject;
+		}
 		
 		public void Restart() {
 			restartFlag = true;	
@@ -68,6 +89,21 @@ namespace MagnumHouseLib
 		public void Setup(IEnumerable<Screen> screens) {
 			InitGfx();
 			
+			pixelly_fx_buffer = new Sprite(new Bitmap(SmallScreenWidth, SmallScreenHeight));
+			pixelly_fx_buffer.Size = new Vector2f(Width,Height);
+			pixelly_fx_buffer.YFlip = true;
+			pixelly_fx_buffer.Transparency = 0.7f;
+			pixelly_fx_buffer.Scaling = Sprite.ScaleType.Pixelly;
+			pixelly_fx_buffer.SetParameters();
+			
+			blurry_fx_buffer = new Sprite(new Bitmap(SmallScreenWidth, SmallScreenHeight));
+			blurry_fx_buffer.SetHUD(this);
+			blurry_fx_buffer.Size = new Vector2f(Width,Height);
+			blurry_fx_buffer.YFlip = true;
+			blurry_fx_buffer.Transparency = 0.5f;
+			blurry_fx_buffer.Scaling = Sprite.ScaleType.Blurry;
+			blurry_fx_buffer.SetParameters();
+
 			m_screens = screens;
 			LoadScreen(new ScreenMessage());
 		}
@@ -76,9 +112,9 @@ namespace MagnumHouseLib
 		{			
 			var screens = new List<Screen>();
 			screens.Add(new TitleScreen());
-			//m_screens.Add(new TargetLevel());
-			screens.Add(new NetworkLevel());
-			//m_screens.Add(new EndScreen());
+			screens.Add(new PlatformLevel("pictures/platformlevel.png"));
+			screens.Add(new EndScreen());
+			//screens.Add(new NetworkLevel());
 			
 			Setup(screens);
 		}
@@ -111,12 +147,14 @@ namespace MagnumHouseLib
             while (quitFlag == false)
             {
                 m_keyboard.HandleSDLInput();
+				m_keyboard.Update(0);
+				
 				if (m_keyboard.QuitRequested) {
 					Quit();
 				}
                 
                 Gl.glClearColor(0f, 0f, 0f, 1f);
-                Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
+                //Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
 				
 				if (restartFlag || m_keyboard.IsKeyPressed(Sdl.SDLK_r)) {
 					restartFlag = false;
@@ -130,31 +168,95 @@ namespace MagnumHouseLib
 					m_stepping = !m_stepping;
 				}
 				if (m_stepping) Thread.Sleep(500);
-					
+				
+				if (m_cameraSubject != null)
+					m_prevSubjectLoc = m_cameraSubject.Position;
+				
 				time.Reset();
 				time.Start();
 				m_screens.First().House.Update(delta);
 				m_screens.First().Update(delta);
-				Camera();
-				m_screens.First().House.Draw();
+
+				
+				
+				GrabEffectsBuffer();
+				
+				if (m_cameraSubject != null)
+					Camera(m_cameraSubject.Position);
+				else
+					Camera(ScreenCentre);
+				
+				m_screens.First().House.Draw(Layer.Normal);
                 
-                Sdl.SDL_GL_SwapBuffers();
+				DrawEffectsBuffer();
+				
+				Sdl.SDL_GL_SwapBuffers();
 				
 				long sleep = targetMsPerFrame-time.ElapsedMilliseconds;
 				if (sleep > 0) Thread.Sleep(TimeSpan.FromMilliseconds(sleep));
             }
         }
 		
-		public void Camera() {
-			Gl.glMatrixMode(Gl.GL_MODELVIEW);
+		private void DrawEffectsBuffer() {
+			if (m_cameraSubject != null) {
+				pixelly_fx_buffer.Position = m_prevSubjectLoc - ScreenSize*0.5f;
+			}
+			float tmpTransparency = pixelly_fx_buffer.Transparency;
+			pixelly_fx_buffer.Transparency = 1.0f;
+			pixelly_fx_buffer.Draw();
+			pixelly_fx_buffer.Transparency = tmpTransparency;
+		}
+		
+		private void GrabEffectsBuffer() {
+			Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
+			Gl.glViewport(0,0,SmallScreenWidth, SmallScreenHeight);
+			
+			if (m_cameraSubject != null) {
+				Camera(m_cameraSubject.Position);
+			}
+			pixelly_fx_buffer.Draw();
+			m_screens.First().House.Draw(Layer.Pixelly);
+			
+			Gl.glBindTexture(Gl.GL_TEXTURE_2D, pixelly_fx_buffer.TexNum);
+            Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, 0, 0, SmallScreenWidth, SmallScreenHeight, 0);
+            
+			Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
+			
+			if (m_cameraSubject != null) {
+				Camera(m_cameraSubject.Position);
+			}
+			pixelly_fx_buffer.Draw();
+			m_screens.First().House.Draw(Layer.Blurry);
+			
+			Gl.glBindTexture(Gl.GL_TEXTURE_2D, blurry_fx_buffer.TexNum);
+            Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, 0, 0, SmallScreenWidth, SmallScreenHeight, 0);
+			
+			Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
+			
+			Gl.glViewport(0,0,ScreenWidth, ScreenHeight);
+		}
+		
+		public void Camera(Vector2f centre) {
+			
+			Gl.glMatrixMode(Gl.GL_PROJECTION);
 			Gl.glLoadIdentity();
+			Gl.glFrustum(0,Width, 0, Height, 0, 1000);
+			
+			viewOffset = ScreenSize*0.5f - centre;
+			
+			
 			
 			//Gl.glRotatef((float)Math.PI, 0, 0, 0);
+			
 			Gl.glTranslatef(-1.0f,-1.0f,0f);
 			Gl.glScalef(2.0f/Width,2.0f/Height,0f);
 			Gl.glScalef(Zoom, Zoom, 0f);
 			
 			Gl.glTranslatef(viewOffset.X, viewOffset.Y, 0);
+			
+			Gl.glMatrixMode(Gl.GL_MODELVIEW);
+			Gl.glLoadIdentity();
+			
 		}
 		
 		public Vector2f ScreenPxToGameCoords(Vector2i _px) {

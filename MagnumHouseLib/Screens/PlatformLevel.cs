@@ -6,16 +6,21 @@ using Tao.Sdl;
 
 namespace MagnumHouseLib
 {
-	public class TargetLevel : Screen {
-		
+	public class PlatformLevel: Screen
+	{
 		protected Gangster gangsterNo1;
-		float timePassed;
+		
+		string LevelPic;
+		
+		public PlatformLevel(string levelPic) {
+			LevelPic = levelPic;
+		}
 		
 		public override void Setup (Game _game, UserInput _keyboard, ScreenMessage _message)
 		{
 			base.Setup(_game, _keyboard, _message);
 			
-			TileMap tilemap = new TileMap("pictures/targetlevel.png");
+			TileMap tilemap = new TileMap(LevelPic);
 			m_house = new ObjectHouse(tilemap);
 			
 			Background bg = new Background(tilemap);
@@ -39,24 +44,11 @@ namespace MagnumHouseLib
 			
 			m_house.AddUpdateable(score);
 			m_house.AddDrawable(score);
-			
-			Text time = new Text("Time: 00:00");
-			time.SetHUD(_game);
-			time.TopLeft();
-			timePassed = 0;
-			time.updateAction = (_d) => {
-				timePassed += _d;
-				time.ChangeText("Time: " + timePassed.ToString("00.00").Replace(".",":"));
-			};
-			
-			m_house.AddUpdateable(time);
-			m_house.AddDrawable(time);
 		}
 		
 		public override void Update (float _delta)
 		{
-			if (!m_house.GetAllDrawable<Target>().Any()) Exit(new ScreenMessage() {Time = timePassed});
-			if (m_keyboard.IsKeyPressed(Sdl.SDLK_s)) Exit(new ScreenMessage() { Time = 69});
+			if (!m_house.GetAllDrawable<Target>().Any()) Exit(new ScreenMessage());
 		}
 	}
 }

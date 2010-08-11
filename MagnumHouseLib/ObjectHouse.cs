@@ -8,7 +8,7 @@ using Tao.OpenGl;
 
 namespace MagnumHouseLib
 {
-	public class ObjectHouse
+	public class ObjectHouse : IObjectCollection, IGangsterProvider
 	{
 		public static bool drawBoundingBoxes;
 		
@@ -16,7 +16,7 @@ namespace MagnumHouseLib
 		
 		TileMap m_map;
 		
-		private NetworkHouse NetworkHouse;
+		private NetworkHouse networkHouse;
 		List<Type> interceptedTypes = new List<Type>();
 		
 		
@@ -32,6 +32,7 @@ namespace MagnumHouseLib
 			m_things[typeof(IDrawable)] = new SyncList<object>();
 			m_things[typeof(IUpdateable)] = new SyncList<object>();
 		}
+		
 		public void Add<T>(T _addee) {
 			SyncList<Object> list;
 			if (m_things.TryGetValue(typeof(T), out list)) {
@@ -51,7 +52,7 @@ namespace MagnumHouseLib
 		}
 		
 		public void SetNetworkHouse(NetworkHouse house) {
-			NetworkHouse = house;
+			networkHouse = house;
 		}
 		
 		public void RegisterNetworkType(Type intercept) {
@@ -60,7 +61,7 @@ namespace MagnumHouseLib
 		
 		public void AddUpdateable(IUpdateable _updateable) {
 			if (interceptedTypes.Contains(_updateable.GetType())) {
-				NetworkHouse.AddUdateable(_updateable);
+				networkHouse.AddUdateable(_updateable);
 			} else {
 				Add<IUpdateable>(_updateable);
 			}
@@ -80,6 +81,22 @@ namespace MagnumHouseLib
 		
 		private SyncList<object> GetList<T>() {
 			return m_things[typeof(T)];
+		}
+		
+		public void Draw(Layer layer) {
+			GetList<IDrawable>().NiftyFor<IDrawable>(
+			_d => {
+				if (_d.Layer == layer)
+					_d.Draw();
+			}, _d => _d.Dead);
+		}
+		
+		public void DrawBut(Layer layer) {
+			GetList<IDrawable>().NiftyFor<IDrawable>(
+			_d => {
+				if (_d.Layer != layer)
+					_d.Draw();
+			}, _d => _d.Dead);
 		}
 		
 		public void Draw() {

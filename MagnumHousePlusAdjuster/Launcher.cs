@@ -3,6 +3,8 @@ using System;
 using System.Threading;
 using Gtk;
 
+using MagnumHouseLib;
+
 namespace MagnumHouse
 {
 

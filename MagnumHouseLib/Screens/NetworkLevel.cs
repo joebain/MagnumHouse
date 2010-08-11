@@ -21,8 +21,9 @@ namespace MagnumHouseLib
 			
 			Magnum magnum = new Magnum(m_house);
 			
-			var hero = new Hero(_keyboard, magnum, map, _game);
+			var hero = new Hero(_keyboard, m_house);
 			hero.Position = new Vector2f(1f, 10f);
+			hero.PlaceInWorld(map);
 			m_house.AddDrawable(hero);
 			m_house.AddUpdateable(hero);
 			

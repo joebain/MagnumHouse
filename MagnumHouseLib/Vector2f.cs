@@ -3,8 +3,7 @@ using System;
 
 namespace MagnumHouseLib
 {
-
-
+	[Serializable]
 	public class Vector2f
 	{
 
@@ -31,6 +30,13 @@ namespace MagnumHouseLib
 				Normalise();
 				Multiply(_max);
 			}
+		}
+		
+		public void Cap (float maxX, float maxY) {
+			if (Math.Abs(X) > maxX)
+				X = maxX * Math.Sign(X);
+			if (Math.Abs(Y) > maxY)
+				Y = maxY * Math.Sign(Y);
 		}
 		
 		public void Ensure (float _min) {
@@ -112,6 +118,10 @@ namespace MagnumHouseLib
 		public static Vector2f Random(float min, float max) {
 			System.Random random = new System.Random(DateTime.Now.Millisecond);
 			return new Vector2f((float)random.NextDouble() * (max-min) + min, (float)random.NextDouble() * (max-min) + min);
+		}
+		
+		public Vector2f Clone() {
+			return new Vector2f(X, Y);
 		}
 	}
 }

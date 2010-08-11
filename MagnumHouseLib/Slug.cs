@@ -13,6 +13,8 @@ namespace MagnumHouseLib
 
 	public class Slug : Thing2D, IUpdateable, IDrawable
 	{
+		public Layer Layer { get { return Layer.Normal; }}
+		
 		public override Vector2f Size { get; set; }
 		
 		public override Vector2f Position {get; set;}
@@ -40,7 +42,7 @@ namespace MagnumHouseLib
 		public void Draw() {
 			Gl.glPushMatrix();
 			
-			Gl.glColor3f(0,0,1);
+			Gl.glColor3f(0.742f,0.523f,0f);
 			
 			Gl.glTranslatef(Position.X, Position.Y, 0);
 			Gl.glBegin(Gl.GL_TRIANGLE_FAN);

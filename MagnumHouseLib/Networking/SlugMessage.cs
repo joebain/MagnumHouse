@@ -10,13 +10,15 @@ namespace MagnumHouseLib
 		public Vector2f Position;
 		public Vector2f Velocity;
 		public Int32 G_id;
+		public Int32 Id;
 		
-		public const int byteSize = 22;
+		public const int byteSize = 26;
 		
 		public int Size { get { return byteSize;}}
 		
-		public SlugMessage (Vector2f position, Vector2f velocity, Int32 g_id)
+		public SlugMessage (Int32 id, Vector2f position, Vector2f velocity, Int32 g_id)
 		{
+			Id = id;
 			Position = position;
 			Velocity = velocity;
 			G_id = g_id;
@@ -32,6 +34,7 @@ namespace MagnumHouseLib
 			Velocity.X = System.BitConverter.ToSingle(_bytes, 10);
 			Velocity.Y = System.BitConverter.ToSingle(_bytes, 14);
 			G_id = System.BitConverter.ToInt32(_bytes, 18);
+			Id = System.BitConverter.ToInt32(_bytes, 22);
 		}
 		
 		public byte[] GetBytes() {
@@ -42,6 +45,8 @@ namespace MagnumHouseLib
 			System.BitConverter.GetBytes(Velocity.X).CopyTo(bytes,10);
 			System.BitConverter.GetBytes(Velocity.Y).CopyTo(bytes,14);
 			System.BitConverter.GetBytes(G_id).CopyTo(bytes,18);
+			System.BitConverter.GetBytes(Id).CopyTo(bytes, 22);
+			return bytes;
 		}
 		
 		public bool Is(byte[] _bytes) {
