@@ -8,6 +8,7 @@ using System.Threading;
 using System.Drawing;
 using Tao.OpenGl;
 using Tao.Sdl;
+using Tao.FreeGlut;
 
 using MagnumHouseLib;
 
@@ -100,7 +101,7 @@ namespace MagnumHouseLib
 			blurry_fx_buffer.SetHUD(this);
 			blurry_fx_buffer.Size = new Vector2f(Width,Height);
 			blurry_fx_buffer.YFlip = true;
-			blurry_fx_buffer.Transparency = 0.5f;
+			blurry_fx_buffer.Transparency = 0.7f;
 			blurry_fx_buffer.Scaling = Sprite.ScaleType.Blurry;
 			blurry_fx_buffer.SetParameters();
 
@@ -186,9 +187,10 @@ namespace MagnumHouseLib
 				else
 					Camera(ScreenCentre);
 				
+				DrawEffectsBuffer();
+				
 				m_screens.First().House.Draw(Layer.Normal);
                 
-				DrawEffectsBuffer();
 				
 				Sdl.SDL_GL_SwapBuffers();
 				
@@ -201,10 +203,18 @@ namespace MagnumHouseLib
 			if (m_cameraSubject != null) {
 				pixelly_fx_buffer.Position = m_prevSubjectLoc - ScreenSize*0.5f;
 			}
-			float tmpTransparency = pixelly_fx_buffer.Transparency;
+			float tmpPixellyTransparency = pixelly_fx_buffer.Transparency;
 			pixelly_fx_buffer.Transparency = 1.0f;
 			pixelly_fx_buffer.Draw();
-			pixelly_fx_buffer.Transparency = tmpTransparency;
+			pixelly_fx_buffer.Transparency = tmpPixellyTransparency;
+			
+			
+			float tmpBlurryTransparency = blurry_fx_buffer.Transparency;
+			blurry_fx_buffer.Transparency = 0.7f;
+			blurry_fx_buffer.Draw();
+			blurry_fx_buffer.Transparency = tmpBlurryTransparency;
+			
+			
 		}
 		
 		private void GrabEffectsBuffer() {
@@ -225,7 +235,7 @@ namespace MagnumHouseLib
 			if (m_cameraSubject != null) {
 				Camera(m_cameraSubject.Position);
 			}
-			pixelly_fx_buffer.Draw();
+			blurry_fx_buffer.Draw();
 			m_screens.First().House.Draw(Layer.Blurry);
 			
 			Gl.glBindTexture(Gl.GL_TEXTURE_2D, blurry_fx_buffer.TexNum);
@@ -240,11 +250,17 @@ namespace MagnumHouseLib
 			
 			Gl.glMatrixMode(Gl.GL_PROJECTION);
 			Gl.glLoadIdentity();
-			Gl.glFrustum(0,Width, 0, Height, 0, 1000);
+			
 			
 			viewOffset = ScreenSize*0.5f - centre;
 			
+			Gl.glFrustum(10,20, 10, 20, 0, 1000);
+			//Glu.gluPerspective(45, (float)Width/Height, 0.1, 10);
 			
+			
+			
+			Gl.glMatrixMode(Gl.GL_MODELVIEW);
+			Gl.glLoadIdentity();
 			
 			//Gl.glRotatef((float)Math.PI, 0, 0, 0);
 			
@@ -254,8 +270,6 @@ namespace MagnumHouseLib
 			
 			Gl.glTranslatef(viewOffset.X, viewOffset.Y, 0);
 			
-			Gl.glMatrixMode(Gl.GL_MODELVIEW);
-			Gl.glLoadIdentity();
 			
 		}
 		

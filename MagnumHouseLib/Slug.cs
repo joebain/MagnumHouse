@@ -20,6 +20,8 @@ namespace MagnumHouseLib
 		public override Vector2f Position {get; set;}
 		public Vector2f Direction;
 		
+		public float weight = 1.0f;
+		
 		public float speed = 20.0f;
 		public override Vector2f Speed {
 			get { return new Vector2f(speed); }
@@ -33,6 +35,7 @@ namespace MagnumHouseLib
 		{
 			m_magnum = _magnum;
 			Size = new Vector2f(m_magnum.Size)/2f;
+			weight = m_magnum.health;
 		}
 		
 		public void Update(float _delta) {
@@ -60,7 +63,7 @@ namespace MagnumHouseLib
 		
 		public void HitSomething(ThingsToHit _hit, Object _thing) {
 			Dead = true;
-			if (_hit == ThingsToHit.Gangster)
+			if (_hit == ThingsToHit.Gangster && _thing != Magnum.Owner)
 				m_magnum.MadeAKill((IShootable)_thing);
 		}
 		

@@ -28,6 +28,8 @@ namespace MagnumHouseLib
 		
 		public EasyPhony (IObjectCollection _house, IGangsterProvider _provider) : base (_house)
 		{
+			Name = "easy phony";
+			
 			m_provider = _provider;
 			m_magnum.ShowCrosshair = false;
 		}

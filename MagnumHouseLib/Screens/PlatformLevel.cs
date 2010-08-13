@@ -31,6 +31,7 @@ namespace MagnumHouseLib
 			gangsterNo1.PlaceInWorld(tilemap);
 			m_house.AddDrawable(gangsterNo1);
 			m_house.AddUpdateable(gangsterNo1);
+			m_house.Add<IShootable>(gangsterNo1);
 			m_game.SetCameraSubject(gangsterNo1);
 			
 			tilemap.Create(m_house, _game);
@@ -44,6 +45,13 @@ namespace MagnumHouseLib
 			
 			m_house.AddUpdateable(score);
 			m_house.AddDrawable(score);
+			
+			Score score_pic = new Score(gangsterNo1);
+			score_pic.SetHUD(_game);
+			score_pic.TopLeft();
+			
+			m_house.AddUpdateable(score_pic);
+			m_house.AddDrawable(score_pic);
 		}
 		
 		public override void Update (float _delta)

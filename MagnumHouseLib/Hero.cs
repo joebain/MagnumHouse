@@ -20,6 +20,7 @@ namespace MagnumHouseLib
 		{
 			m_keys = _keys;
 			m_magnum.invulnerable = true;
+			Name = "hero";
 			
 			jumpSound = new Sound("sounds/jump.wav");
 			landSound = new Sound("sounds/land.wav");

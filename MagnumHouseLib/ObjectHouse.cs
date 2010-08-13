@@ -126,7 +126,7 @@ namespace MagnumHouseLib
 		
 		private void UpdateSlugs() {
 			foreach (var slug in GetAllSlugs()) {
-				if (m_map.IsCollision(slug.Position, slug.Size)) {
+				if (m_map.IsCollision(slug.Position, slug.Size) == TileMap.BLOCK) {
 					slug.HitSomething(ThingsToHit.Wall, null);
 				} else if (slug.Position.X > m_map.Width || slug.Position.X < 0
 				           || slug.Position.Y > m_map.Height || slug.Position.Y < 0) {
@@ -136,9 +136,11 @@ namespace MagnumHouseLib
 					_gangster =>
 					{
 						if (_gangster.Bounds.Overlaps(slug.Bounds)) {
-							slug.HitSomething(ThingsToHit.Gangster, _gangster);
-							_gangster.GotShot(slug);
-							return true;
+							if (_gangster != slug.Magnum.Owner) {
+								slug.HitSomething(ThingsToHit.Gangster, _gangster);
+								_gangster.GotShot(slug);
+								return true;
+							}
 						}
 						return false;
 					},

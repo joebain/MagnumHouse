@@ -16,7 +16,9 @@ namespace MagnumHouseLib
 			
 			Random rand = new Random(42);
 			for (int i = 0 ; i < points.Length ; i++) {
-				points[i] = new Vector3f((float)rand.NextDouble() * m_map.Width, (float)rand.NextDouble() * m_map.Height, ((float)rand.NextDouble() - 1f)*1000f);
+				points[i] = new Vector3f((float)rand.NextDouble() * m_map.Width,
+				                         (float)rand.NextDouble() * m_map.Height,
+				                         ((float)rand.NextDouble() - 1f)*1000f - 1f);
 			}
 		}
 		

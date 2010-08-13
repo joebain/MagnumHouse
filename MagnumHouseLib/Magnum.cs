@@ -17,21 +17,29 @@ namespace MagnumHouseLib
 		public Vector2f Position = new Vector2f();
 		public Vector2f Direction = Vector2f.Right;
 		
-		public float Size = 10f;
+		public float Size {get { return health*0.1f;}}
+		public float health = 1f;
 		[Range(0,2,2)]
-		public static float sizeStep = 0.04f;
+		public static float sizeStep = 1f;
 		[Range(0,2,2)]
-		public static float fireRateSizeMultiplier = 0.2f;
+		public static float fireRateSizeMultiplier = 1.1f;
 		[Range(0,30,0)]
 		public static float kickback = 8f;
 		[Range(0,5,2)]
-		public static float kickBackSizeMultiplier = 2.5f;
-		[Range(0,100,0)]
-		public static float maxSize = 4f;
-		[Range(0,10,2)]
-		public static float minSize = 0.2f;
+		public static float kickBackSizeMultiplier = 0.6f;
+		[Range(0,10,1)]
+		public static float maxHealth = 10f;
+		[Range(0,10,1)]
+		public static float minHealth = 1f;
 		[Range(0,5,2)]
-		public static float smallnessMultiplier = 2f;
+		public static float smallnessMultiplier = 0.05f;
+		
+		[Range(0,10,1)]
+		public static float upperVolatileSize = 6f;
+		[Range(0,5,2)]
+		public static float downsizeSpeed = 0.2f;
+		[Range(0,5,2)]
+		public static float rechargeSpeed = 0.5f;
 		
 		public bool ShowCrosshair = true;
 		public bool invulnerable = false;
@@ -44,8 +52,8 @@ namespace MagnumHouseLib
 			get {return m_owner;} 
 			set {
 				m_owner = value;
-				Size = m_owner.Size.X/4;
-				fireRate = fireRateSizeMultiplier * (1/Size);
+				health = m_owner.Size.X*2.5f;
+				fireRate = fireRateSizeMultiplier * (1/health);
 			}
 		}
 		Sound fireSound;
@@ -100,6 +108,18 @@ namespace MagnumHouseLib
 		public void Update(float _delta) {
 			if (bulletCounter > 0) bulletCounter -= _delta*fireRate;
 			
+			if (health > upperVolatileSize + downsizeSpeed) {
+				health -= downsizeSpeed*_delta;
+			} else if (health > upperVolatileSize) {
+				health = upperVolatileSize;
+			}
+			
+			if (health < minHealth-rechargeSpeed) {
+				health += rechargeSpeed*_delta;
+			} else if (health < minHealth) {
+				health = minHealth;
+			}
+			
 			if (m_owner != null) {
 				Position = m_owner.Position + m_owner.Size/2f;
 				if (m_owner.Dead) Dead = true;
@@ -115,7 +135,7 @@ namespace MagnumHouseLib
 				slug.Direction = Direction;
 				m_house.AddDrawable(slug);
 				m_house.AddUpdateable(slug);
-				m_owner.Speed += Direction *-kickback  * kickBackSizeMultiplier * Size;
+				m_owner.Speed += Direction *-kickback  * kickBackSizeMultiplier * health;
 			}
 		}
 		
@@ -130,14 +150,17 @@ namespace MagnumHouseLib
 		}
 		
 		public void Bigger() {
-			if (Size < maxSize)
-				Size += sizeStep;
-			fireRate = fireRateSizeMultiplier * (1/Size);
+			if (health < maxHealth)
+				health += sizeStep;
+			fireRate = fireRateSizeMultiplier * (1/health);
 		}
 		
 		public void Smaller(float _amount) {
-			if (Size > minSize) {
-				Size -= sizeStep * _amount * smallnessMultiplier;
+			float injury = sizeStep * (float)Math.Pow(2, _amount * smallnessMultiplier);
+			Console.WriteLine("health - " + injury);
+			float new_health = health - injury;
+			if (new_health > 0) {
+				health = new_health;
 				fireRate = (1/Size) * fireRateSizeMultiplier;
 			} else {
 				if (!invulnerable) {

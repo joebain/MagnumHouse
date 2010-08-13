@@ -24,6 +24,8 @@ namespace MagnumHouseLib
 		
 		public Phony (IObjectCollection _house, IGangsterProvider _provider) : base (_house)
 		{
+			Name = "phony";
+			
 			m_provider = _provider;
 			m_magnum.ShowCrosshair = false;
 		}

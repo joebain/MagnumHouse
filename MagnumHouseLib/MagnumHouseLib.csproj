@@ -45,6 +45,9 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Core" />
+    <Reference Include="Tao.FreeGlut, Version=2.4.0.2, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d">
+      <Package>tao-freeglut</Package>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\SdlDotNet.dll" />
@@ -142,6 +145,8 @@
     <Compile Include="Screens\PlatformLevel.cs" />
     <Compile Include="EasyPhony.cs" />
     <Compile Include="Vector3f.cs" />
+    <Compile Include="Score.cs" />
+    <Compile Include="FloorTile.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

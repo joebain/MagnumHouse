@@ -9,6 +9,8 @@ namespace MagnumHouseLib
 {
 	public class Gangster : BumblingThing, IUpdateable, IDrawable, IShootable
 	{
+		public string Name = "gangster";
+		
 		protected Magnum m_magnum;
 		
 		public Magnum Magnum { get { return m_magnum; }}
@@ -24,7 +26,7 @@ namespace MagnumHouseLib
 		public virtual float walkSpeed { get { return WalkSpeed; }}
 		[Range(0, 60, 0)]
 		public static float Gravity = 41f;
-		float gravity {get{return Gravity;}}//(1f/m_magnum.Size)*Gravity;}}
+		float gravity {get{return Gravity;}}
 		[Range(0, 30, 0)]
 		public static float MaxSpeed = 20.0f;
 		public virtual float maxSpeed {get { return MaxSpeed; }}
@@ -227,7 +229,8 @@ namespace MagnumHouseLib
 		public override bool Dead {get ; set;}
 		
 		public void GotShot(Slug _slug) {
-			m_magnum.Smaller(_slug.Size.Length());
+			if (_slug.Magnum.Owner != this)
+				m_magnum.Smaller(_slug.weight);
 		}
 	}
 }
