@@ -9,7 +9,7 @@ namespace MagnumHouseLib
 	{
 		public Layer Layer { get { return Layer.Normal; }}
 		
-		public const int Size = 40;
+		public const int Size = 20;
 		
 		Vector2i m_position;
 		

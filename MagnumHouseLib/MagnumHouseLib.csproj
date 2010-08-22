@@ -75,6 +75,9 @@
     <None Include="pictures\platformlevel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="pictures\empty_level.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Background.cs" />
@@ -147,6 +150,8 @@
     <Compile Include="Vector3f.cs" />
     <Compile Include="Score.cs" />
     <Compile Include="FloorTile.cs" />
+    <Compile Include="GangsterTrail.cs" />
+    <Compile Include="Screens\TrailLevel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

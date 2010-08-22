@@ -19,7 +19,7 @@ namespace MagnumHouseLib
 		public const int ScreenWidth = 800;
 		public const int ScreenHeight = 600;
 		
-		public const int bg_pixel_size = 4;
+		public const int bg_pixel_size = 2;
 		public static int SmallScreenWidth {get {return ScreenWidth / bg_pixel_size;}}
 		public static int SmallScreenHeight {get {return ScreenHeight / bg_pixel_size;}}
 		public static int Width {get { return ScreenWidth / Tile.Size; }}
@@ -33,6 +33,7 @@ namespace MagnumHouseLib
 		UserInput m_keyboard;
 			
 		const long targetMsPerFrame = 16;
+		const long maxMsPerFrame = 33;
 		int effect_counter = 0;
 		
 		private bool m_stepping = false;
@@ -93,7 +94,7 @@ namespace MagnumHouseLib
 			pixelly_fx_buffer = new Sprite(new Bitmap(SmallScreenWidth, SmallScreenHeight));
 			pixelly_fx_buffer.Size = new Vector2f(Width,Height);
 			pixelly_fx_buffer.YFlip = true;
-			pixelly_fx_buffer.Transparency = 0.7f;
+			pixelly_fx_buffer.Transparency = 0.8f;
 			pixelly_fx_buffer.Scaling = Sprite.ScaleType.Pixelly;
 			pixelly_fx_buffer.SetParameters();
 			
@@ -113,7 +114,8 @@ namespace MagnumHouseLib
 		{			
 			var screens = new List<Screen>();
 			screens.Add(new TitleScreen());
-			screens.Add(new PlatformLevel("pictures/platformlevel.png"));
+			screens.Add(new TrailLevel());
+			//screens.Add(new PlatformLevel("pictures/platformlevel.png"));
 			screens.Add(new EndScreen());
 			//screens.Add(new NetworkLevel());
 			
@@ -162,7 +164,10 @@ namespace MagnumHouseLib
 					ReLoadScreen();
 				}
 				
-				long deltaMillisecs = time.ElapsedMilliseconds;
+				long deltaMillisecs
+					= time.ElapsedMilliseconds > maxMsPerFrame
+						? maxMsPerFrame
+						: time.ElapsedMilliseconds;
                 float delta = deltaMillisecs/1000.0f;
 				
 				if (m_keyboard.IsKeyPressed(Sdl.SDLK_o)) {
