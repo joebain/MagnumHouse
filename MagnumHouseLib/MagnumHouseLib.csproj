@@ -152,6 +152,8 @@
     <Compile Include="FloorTile.cs" />
     <Compile Include="GangsterTrail.cs" />
     <Compile Include="Screens\TrailLevel.cs" />
+    <Compile Include="ScreenSprite.cs" />
+    <Compile Include="Camera.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

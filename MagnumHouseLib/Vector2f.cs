@@ -10,6 +10,8 @@ namespace MagnumHouseLib
 		public float X;
 		public float Y;
 		
+		public static Vector2f Zero {get { return new Vector2f(); } }
+		
 		public Vector2f ()
 		{
 		}
@@ -81,12 +83,24 @@ namespace MagnumHouseLib
 			return new Vector2f(_lhs.X - _rhs.X, _lhs.Y - _rhs.Y);
 		}
 		
+		public static Vector2f operator - (Vector2f _rhs) {
+			return new Vector2f(-_rhs.X, -_rhs.Y);
+		}
+		
 		public static Vector2f operator * (Vector2f _lhs, float _rhs) {
 			return new Vector2f(_lhs.X * _rhs, _lhs.Y * _rhs);
 		}
 		
+		public static Vector2f operator * (Vector2f _lhs, Vector2f _rhs) {
+			return new Vector2f(_lhs.X * _rhs.X, _lhs.Y * _rhs.Y);
+		}
+		
 		public static Vector2f operator / (Vector2f _lhs, float _rhs) {
 			return new Vector2f(_lhs.X / _rhs, _lhs.Y / _rhs);
+		}
+		
+		public static Vector2f operator / (Vector2f _lhs, Vector2f _rhs) {
+			return new Vector2f(_lhs.X / _rhs.X, _lhs.Y / _rhs.Y);
 		}
 		
 		public override string ToString ()
@@ -100,6 +114,10 @@ namespace MagnumHouseLib
 		
 		public Vector2i Round() {
 			return new Vector2i((int)Math.Round(X), (int)Math.Round(Y));
+		}
+		
+		public Vector2f Snap(Vector2f snap) {
+			return (this / snap).Round().ToF() * snap;
 		}
 		
 		public Vector2i Floor() {

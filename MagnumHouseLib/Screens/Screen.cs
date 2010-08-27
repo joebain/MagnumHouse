@@ -11,10 +11,13 @@ namespace MagnumHouseLib
 	{
 		protected ObjectHouse m_house = new ObjectHouse();
 		public ObjectHouse House { get { return m_house; } }
+		protected Vector2i m_size = new Vector2i(Game.Width, Game.Height);
+		public Vector2i Size {get{return m_size;}}
 		protected UserInput m_keyboard;
 		protected Game m_game;
 		
-		public event Action<ScreenMessage> Exiting;
+		public event Action<ScreenMessage> ExitRequest;
+		public event Action<ScreenMessage> ReloadRequest;
 		
 		ScreenMessage m_message;
 		
@@ -29,7 +32,11 @@ namespace MagnumHouseLib
 		}
 		
 		protected void Exit(ScreenMessage _message) {
-			if (Exiting != null) Exiting(_message);
+			if (ExitRequest != null) ExitRequest(_message);
+		}
+		
+		protected void Reload(ScreenMessage _message) {
+			if (ReloadRequest != null) ReloadRequest(_message);
 		}
 	}
 }

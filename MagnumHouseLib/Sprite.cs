@@ -35,10 +35,10 @@ namespace MagnumHouseLib
 		
 		private void InitTex() {
 			Gl.glGenTextures(1, out m_texnum);
-			SetParameters();
+			SetScalingParameters();
 		}
 		
-		public void SetParameters() {
+		public void SetScalingParameters() {
 			Gl.glBindTexture(Gl.GL_TEXTURE_2D, m_texnum);
 			if (Scaling == ScaleType.Blurry) {
 				Gl.glTexParameteri(Gl.GL_TEXTURE_2D,Gl.GL_TEXTURE_MIN_FILTER,Gl.GL_LINEAR);
@@ -64,7 +64,7 @@ namespace MagnumHouseLib
 		public void Draw() {
 			Gl.glEnable(Gl.GL_TEXTURE_2D);
 			
-			Gl.glBlendFunc(Gl.GL_SRC_ALPHA,Gl.GL_ONE);
+			Gl.glBlendFunc(Gl.GL_SRC_ALPHA,Gl.GL_ONE_MINUS_SRC_ALPHA);
 			Gl.glEnable(Gl.GL_BLEND);
 			
 			Gl.glBindTexture(Gl.GL_TEXTURE_2D, m_texnum);
@@ -85,13 +85,13 @@ namespace MagnumHouseLib
 			Gl.glMatrixMode(Gl.GL_MODELVIEW);
 			
 			Gl.glBegin(Gl.GL_TRIANGLE_STRIP);
-			Gl.glVertex2f(0,0);
+			Gl.glVertex3f(0,0, Depth);
 			Gl.glTexCoord2f(0,0);
-			Gl.glVertex2f(0, Size.Y);
+			Gl.glVertex3f(0, Size.Y, Depth);
 			Gl.glTexCoord2f(1, 1);
-			Gl.glVertex2f(Size.X, 0);
+			Gl.glVertex3f(Size.X, 0, Depth);
 			Gl.glTexCoord2f(1,0);
-			Gl.glVertex2f(Size.X, Size.Y);
+			Gl.glVertex3f(Size.X, Size.Y, Depth);
 			Gl.glTexCoord2f(0,1);
 			
 			Gl.glEnd();

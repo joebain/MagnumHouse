@@ -34,14 +34,14 @@ namespace MagnumHouseLib
 			score.updateAction = (_d) => {
 				score.ChangeText("Left: " + m_house.GetAllDrawable<Target>().Count().ToString("00"));
 			};
-			score.SetHUD(_game);
+			score.SetHUD(_game.Camera);
 			score.TopRight();
 			
 			m_house.AddUpdateable(score);
 			m_house.AddDrawable(score);
 			
 			Text time = new Text("Time: 00:00");
-			time.SetHUD(_game);
+			time.SetHUD(_game.Camera);
 			time.TopLeft();
 			timePassed = 0;
 			time.updateAction = (_d) => {

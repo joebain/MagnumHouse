@@ -12,11 +12,11 @@ public class EndScreen : Screen {
 			base.Setup (_game, _keyboard, _message);
 			
 			Text message = new Text("Congratulations, you won!");
-			message.SetHUD(_game);
+			message.SetHUD(_game.Camera);
 			message.CentreOn(new Vector2f(Game.Width/2, 2*Game.Height/3));
 			
 			Text score = new Text("Time: " + _message.Time.ToString("00.00").Replace(".",":"));
-			score.SetHUD(_game);
+			score.SetHUD(_game.Camera);
 			score.CentreOn(new Vector2f(Game.Width/2, Game.Height/3));
 			
 			m_house.AddDrawable(message);

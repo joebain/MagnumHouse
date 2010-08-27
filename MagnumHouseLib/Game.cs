@@ -19,16 +19,18 @@ namespace MagnumHouseLib
 		public const int ScreenWidth = 800;
 		public const int ScreenHeight = 600;
 		
+		
 		public const int bg_pixel_size = 2;
 		public static int SmallScreenWidth {get {return ScreenWidth / bg_pixel_size;}}
 		public static int SmallScreenHeight {get {return ScreenHeight / bg_pixel_size;}}
 		public static int Width {get { return ScreenWidth / Tile.Size; }}
 		public static int Height {get { return  ScreenHeight / Tile.Size; }}
-		public float Zoom = 1.0f;
+		public static float Zoom = 1.0f;
 		public static readonly Vector2f ScreenCentre = new Vector2f(Width/2f, Height/2f);
 		public static readonly Vector2f ScreenSize = new Vector2f(Width, Height);
 		
-		public Vector2f viewOffset = new Vector2f();
+		private Camera m_camera = new Camera();
+		public Camera Camera { get { return m_camera; } }
 		
 		UserInput m_keyboard;
 			
@@ -43,11 +45,8 @@ namespace MagnumHouseLib
 		private IEnumerable<Screen> m_screens;
 		private ScreenMessage m_lastMessage;
 		
-		private Thing2D m_cameraSubject;
-		private Vector2f m_prevSubjectLoc = new Vector2f();
-		
-		private Sprite pixelly_fx_buffer;
-		private Sprite blurry_fx_buffer;
+		private ScreenSprite pixelly_fx_buffer;
+		private ScreenSprite blurry_fx_buffer;
 		
 		
 		public Game() {
@@ -55,7 +54,7 @@ namespace MagnumHouseLib
 		}
 		
 		public void SetCameraSubject(Thing2D _subject) {
-			m_cameraSubject = _subject;
+			m_camera.CameraSubject = _subject;
 		}
 		
 		public void Restart() {
@@ -91,20 +90,27 @@ namespace MagnumHouseLib
 		public void Setup(IEnumerable<Screen> screens) {
 			InitGfx();
 			
-			pixelly_fx_buffer = new Sprite(new Bitmap(SmallScreenWidth, SmallScreenHeight));
-			pixelly_fx_buffer.Size = new Vector2f(Width,Height);
-			pixelly_fx_buffer.YFlip = true;
-			pixelly_fx_buffer.Transparency = 0.8f;
-			pixelly_fx_buffer.Scaling = Sprite.ScaleType.Pixelly;
-			pixelly_fx_buffer.SetParameters();
+			pixelly_fx_buffer
+				= new ScreenSprite(
+					new Vector2i(SmallScreenWidth, SmallScreenHeight),
+					new Vector2i(ScreenWidth, ScreenHeight),
+				    new Vector2i(Width, Height)) { 
+				Layer = Layer.Pixelly,
+				Scaling = Sprite.ScaleType.Pixelly,
+				Feedback = 0.99f
+			};
 			
-			blurry_fx_buffer = new Sprite(new Bitmap(SmallScreenWidth, SmallScreenHeight));
-			blurry_fx_buffer.SetHUD(this);
-			blurry_fx_buffer.Size = new Vector2f(Width,Height);
-			blurry_fx_buffer.YFlip = true;
-			blurry_fx_buffer.Transparency = 0.7f;
-			blurry_fx_buffer.Scaling = Sprite.ScaleType.Blurry;
-			blurry_fx_buffer.SetParameters();
+			blurry_fx_buffer
+				= new ScreenSprite(
+					new Vector2i(SmallScreenWidth/4, SmallScreenHeight/4),
+				    //new Vector2i(ScreenWidth, ScreenHeight),
+					new Vector2i(ScreenWidth, ScreenHeight),
+				    new Vector2i(Width, Height)) { 
+				Layer = Layer.Blurry,
+				Scaling = Sprite.ScaleType.Pixelly,
+				Feedback = 0.7f
+			};
+			blurry_fx_buffer.SetHUD(m_camera);
 
 			m_screens = screens;
 			LoadScreen(new ScreenMessage());
@@ -114,10 +120,10 @@ namespace MagnumHouseLib
 		{			
 			var screens = new List<Screen>();
 			screens.Add(new TitleScreen());
-			screens.Add(new TrailLevel());
-			//screens.Add(new PlatformLevel("pictures/platformlevel.png"));
-			screens.Add(new EndScreen());
+			//screens.Add(new TrailLevel());
+			screens.Add(new PlatformLevel("pictures/platformlevel.png"));
 			//screens.Add(new NetworkLevel());
+			screens.Add(new EndScreen());
 			
 			Setup(screens);
 		}
@@ -125,15 +131,18 @@ namespace MagnumHouseLib
 		private void LoadScreen(ScreenMessage _message) {
 			m_lastMessage = _message;
 			m_screens.First().Setup(this, m_keyboard, _message);
-			m_screens.First().Exiting += NextScreen;
+			m_screens.First().ExitRequest += NextScreen;
+			m_screens.First().ReloadRequest += ReloadScreen;
+			m_camera.ScreenSize = m_screens.First().Size;
 		}
 		
-		private void ReLoadScreen() {
+		private void ReloadScreen(ScreenMessage _message) {
 			m_screens.First().Setup(this, m_keyboard, m_lastMessage);
 		}
 		
 		private void NextScreen(ScreenMessage _message) {
-			m_screens.First().Exiting -= NextScreen;
+			m_screens.First().ExitRequest -= NextScreen;
+			m_screens.First().ReloadRequest -= ReloadScreen;
 			m_screens = m_screens.Skip(1);
 			if (!m_screens.Any()) {
 				quitFlag = true;
@@ -156,12 +165,11 @@ namespace MagnumHouseLib
 					Quit();
 				}
                 
-                Gl.glClearColor(0f, 0f, 0f, 1f);
-                //Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
+                Gl.glClearColor(0f, 0f, 0f, 0f);
 				
 				if (restartFlag || m_keyboard.IsKeyPressed(Sdl.SDLK_r)) {
 					restartFlag = false;
-					ReLoadScreen();
+					ReloadScreen(new ScreenMessage());
 				}
 				
 				long deltaMillisecs
@@ -175,27 +183,27 @@ namespace MagnumHouseLib
 				}
 				if (m_stepping) Thread.Sleep(500);
 				
-				if (m_cameraSubject != null)
-					m_prevSubjectLoc = m_cameraSubject.Position;
-				
 				time.Reset();
 				time.Start();
 				m_screens.First().House.Update(delta);
 				m_screens.First().Update(delta);
-
+				
+				m_camera.FindOffset();
+				m_camera.SetPosition();
+				
+				blurry_fx_buffer.Grab(m_screens.First().House.Draw);
+				pixelly_fx_buffer.Grab(m_screens.First().House.Draw);
 				
 				
-				GrabEffectsBuffer();
+				Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
 				
-				if (m_cameraSubject != null)
-					Camera(m_cameraSubject.Position);
-				else
-					Camera(ScreenCentre);
-				
-				DrawEffectsBuffer();
-				
+				blurry_fx_buffer.Position = Vector2f.Zero;
+				blurry_fx_buffer.Draw();
+				//m_screens.First().House.Draw(Layer.Blurry);
 				m_screens.First().House.Draw(Layer.Normal);
-                
+				
+				pixelly_fx_buffer.Position = -m_camera.LastOffset;
+				pixelly_fx_buffer.Draw();
 				
 				Sdl.SDL_GL_SwapBuffers();
 				
@@ -204,84 +212,10 @@ namespace MagnumHouseLib
             }
         }
 		
-		private void DrawEffectsBuffer() {
-			if (m_cameraSubject != null) {
-				pixelly_fx_buffer.Position = m_prevSubjectLoc - ScreenSize*0.5f;
-			}
-			float tmpPixellyTransparency = pixelly_fx_buffer.Transparency;
-			pixelly_fx_buffer.Transparency = 1.0f;
-			pixelly_fx_buffer.Draw();
-			pixelly_fx_buffer.Transparency = tmpPixellyTransparency;
-			
-			
-			float tmpBlurryTransparency = blurry_fx_buffer.Transparency;
-			blurry_fx_buffer.Transparency = 0.7f;
-			blurry_fx_buffer.Draw();
-			blurry_fx_buffer.Transparency = tmpBlurryTransparency;
-			
-			
-		}
-		
-		private void GrabEffectsBuffer() {
-			Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
-			Gl.glViewport(0,0,SmallScreenWidth, SmallScreenHeight);
-			
-			if (m_cameraSubject != null) {
-				Camera(m_cameraSubject.Position);
-			}
-			pixelly_fx_buffer.Draw();
-			m_screens.First().House.Draw(Layer.Pixelly);
-			
-			Gl.glBindTexture(Gl.GL_TEXTURE_2D, pixelly_fx_buffer.TexNum);
-            Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, 0, 0, SmallScreenWidth, SmallScreenHeight, 0);
-            
-			Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
-			
-			if (m_cameraSubject != null) {
-				Camera(m_cameraSubject.Position);
-			}
-			blurry_fx_buffer.Draw();
-			m_screens.First().House.Draw(Layer.Blurry);
-			
-			Gl.glBindTexture(Gl.GL_TEXTURE_2D, blurry_fx_buffer.TexNum);
-            Gl.glCopyTexImage2D(Gl.GL_TEXTURE_2D, 0, Gl.GL_RGBA, 0, 0, SmallScreenWidth, SmallScreenHeight, 0);
-			
-			Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
-			
-			Gl.glViewport(0,0,ScreenWidth, ScreenHeight);
-		}
-		
-		public void Camera(Vector2f centre) {
-			
-			Gl.glMatrixMode(Gl.GL_PROJECTION);
-			Gl.glLoadIdentity();
-			
-			
-			viewOffset = ScreenSize*0.5f - centre;
-			
-			Gl.glFrustum(10,20, 10, 20, 0, 1000);
-			//Glu.gluPerspective(45, (float)Width/Height, 0.1, 10);
-			
-			
-			
-			Gl.glMatrixMode(Gl.GL_MODELVIEW);
-			Gl.glLoadIdentity();
-			
-			//Gl.glRotatef((float)Math.PI, 0, 0, 0);
-			
-			Gl.glTranslatef(-1.0f,-1.0f,0f);
-			Gl.glScalef(2.0f/Width,2.0f/Height,0f);
-			Gl.glScalef(Zoom, Zoom, 0f);
-			
-			Gl.glTranslatef(viewOffset.X, viewOffset.Y, 0);
-			
-			
-		}
-		
 		public Vector2f ScreenPxToGameCoords(Vector2i _px) {
 			return new Vector2f(
-				(float)_px.X / (Tile.Size*Zoom) - viewOffset.X,
-			    (float)(ScreenHeight-_px.Y) / (Tile.Size*Zoom) - viewOffset.Y);
+				(float)_px.X / (Tile.Size*Zoom) - m_camera.ViewOffset.X,
+			    (float)(ScreenHeight-_px.Y) / (Tile.Size*Zoom) - m_camera.ViewOffset.Y);
 		}
 	}
 }

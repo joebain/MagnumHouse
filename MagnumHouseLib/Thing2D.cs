@@ -5,10 +5,11 @@ namespace MagnumHouseLib
 {
 	public interface IThing2D {
 		Vector2f Position {get;}
+		float Depth {get;}
 		Vector2f Size {get;}
 		Vector2f Speed {get;}
 		BoundingBox Bounds {get;}
-		void SetHUD(Game _game);
+		void SetHUD(Camera _camera);
 	}
 	
 	public abstract class Thing2D : IThing2D, IDeadable
@@ -16,14 +17,14 @@ namespace MagnumHouseLib
 		public virtual int Id {get; set;}
 		
 		private bool HUD;
-		private Game m_game;
+		private Camera m_camera;
 		private Vector2f m_position = new Vector2f();
 		public virtual Vector2f Position {
 			get { 
 				if (!HUD)
 					return m_position;
 				else {
-					return m_position - m_game.viewOffset;
+					return m_position - m_camera.ViewOffset;
 				}
 			} 
 			set {
@@ -31,7 +32,10 @@ namespace MagnumHouseLib
 					m_position = value;
 				//else
 					//m_position = value + m_game.viewOffset;
-			}}
+			}
+		}
+		private float m_depth = -1f;
+		public float Depth { get { return m_depth;} set {m_depth = value; }}
 		private Vector2f m_size = new Vector2f();
 		public virtual Vector2f Size {get {return m_size; } set{m_size = value;}}
 		private Vector2f m_speed = new Vector2f();
@@ -39,9 +43,9 @@ namespace MagnumHouseLib
 		public BoundingBox Bounds {get {return new BoundingBox(Position.X, Position.Y, Position.X + Size.X, Position.Y + Size.Y);}}
 		public virtual bool Dead {get; set;}
 		
-		public virtual void SetHUD(Game _game) {
+		public virtual void SetHUD(Camera _camera) {
 			HUD = true;
-			m_game = _game;
+			m_camera = _camera;
 		}
 		
 		public void CentreOn(Vector2f _pos) {

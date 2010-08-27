@@ -15,7 +15,7 @@ namespace Server
 			
 			var sl = new ServerLevel(server);
 			var game = new Game();
-			game.Zoom = 0.2f;
+			Game.Zoom = 0.2f;
 			game.Setup(new [] {sl});
 			game.Run();
 		}

@@ -6,7 +6,7 @@ namespace MagnumHouseLib
 {
 	public class Text : Thing2D, IDrawable, IUpdateable
 	{
-		public Layer Layer { get { return Layer.Normal; }}
+		public Layer Layer { get;set;}
 		
 		string m_text;
 		Sprite m_sprite = new Sprite();
@@ -16,10 +16,12 @@ namespace MagnumHouseLib
 		public Text ()
 		{
 			ChangeText("");
+			Layer = Layer.Normal;
 		}
 		
 		public Text(string _text) {
 			ChangeText(_text);
+			Layer = Layer.Normal;
 		}
 		
 		public void ChangeTextQuickly(string _text) {
@@ -66,9 +68,9 @@ namespace MagnumHouseLib
 			}
 		}
 		
-		public override void SetHUD (Game _game)
+		public override void SetHUD (Camera _camera)
 		{
-			m_sprite.SetHUD (_game);
+			m_sprite.SetHUD (_camera);
 		}
 		
 		public void Draw() {

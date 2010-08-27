@@ -28,7 +28,7 @@ namespace MagnumHouseLib
 		public static float Gravity = 41f;
 		float gravity {get{return Gravity;}}
 		[Range(0, 30, 0)]
-		public static float MaxSpeed = 20.0f;
+		public static float MaxSpeed = 14.0f;
 		public virtual float maxSpeed {get { return MaxSpeed; }}
 		
 		[RangeAttribute(0,30,1)]
