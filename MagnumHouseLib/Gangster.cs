@@ -156,7 +156,12 @@ namespace MagnumHouseLib
 			if (bumps.Contains(Bumped.Top)) {
 				m_speed.Y = 0;
 			}
-			//PrintBumps(bumps);	
+			//PrintBumps(bumps);
+			
+			if (TryInjure()) {
+				m_magnum.Die();
+				Die();
+			}
 			
 			m_speed.Cap(tmpMaxSpeed);
 			if (onFloor) {

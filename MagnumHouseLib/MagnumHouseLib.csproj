@@ -83,7 +83,6 @@
     <Compile Include="Background.cs" />
     <Compile Include="BoundingBox.cs" />
     <Compile Include="BumblingThing.cs" />
-    <Compile Include="Floor.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Gangster.cs" />
     <Compile Include="Hero.cs" />
@@ -102,8 +101,6 @@
     <Compile Include="Target.cs" />
     <Compile Include="Text.cs" />
     <Compile Include="Thing2D.cs" />
-    <Compile Include="Tile.cs" />
-    <Compile Include="TileMap.cs" />
     <Compile Include="TileProximity.cs" />
     <Compile Include="UserInput.cs" />
     <Compile Include="Vector2f.cs" />
@@ -149,16 +146,21 @@
     <Compile Include="EasyPhony.cs" />
     <Compile Include="Vector3f.cs" />
     <Compile Include="Score.cs" />
-    <Compile Include="FloorTile.cs" />
     <Compile Include="GangsterTrail.cs" />
     <Compile Include="Screens\TrailLevel.cs" />
     <Compile Include="ScreenSprite.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="scenery\Floor.cs" />
+    <Compile Include="scenery\FloorTile.cs" />
+    <Compile Include="scenery\SpikyTile.cs" />
+    <Compile Include="scenery\Tile.cs" />
+    <Compile Include="scenery\TileMap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Networking\" />
     <Folder Include="Screens\" />
     <Folder Include="Networking\MessageContents\" />
+    <Folder Include="scenery\" />
   </ItemGroup>
 </Project>

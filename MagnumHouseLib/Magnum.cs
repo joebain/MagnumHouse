@@ -164,14 +164,14 @@ namespace MagnumHouseLib
 				fireRate = (1/Size) * fireRateSizeMultiplier;
 			} else {
 				if (!invulnerable) {
-					m_owner.Dead = true;
-					Dead = true;
+					m_owner.Die();
+					Die();
 				}
 			}
 		}
 		
 		public bool Dead {get; private set;}
 		
-		public void Die() {}
+		public void Die() {Dead = true;}
 	}
 }

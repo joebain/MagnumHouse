@@ -23,6 +23,14 @@ namespace MagnumHouseLib
 			doPhysics = true;
 		}
 		
+		protected bool TryInjure() {
+			int collision = m_tiles.IsCollision(m_position, Size);
+			if (collision == TileMap.SPIKY) {
+				return true;
+			}
+			return false;
+		}
+		
 		protected IEnumerable<Bumped> TryMove(Vector2f _move) {
 			List<Bumped> bumps = new List<Bumped>();
 			if (m_tiles == null) return bumps;
@@ -42,7 +50,7 @@ namespace MagnumHouseLib
 					m_position.Y = ((int)(m_position.Y + 1)) + pushAway;
 					bumps.Add(Bumped.Bottom);
 				}
-			}
+			}	
 			
 			m_position.X += _move.X;
 			collision = m_tiles.IsCollision(m_position, Size);

@@ -11,6 +11,7 @@ namespace MagnumHouseLib
 		public const int TARGET = 3;
 		public const int PHONY = 2;
 		public const int FLOOR = 4;
+		public const int SPIKY = 5;
 		
 		public int Width { get { return Map.GetLength(1); }}
 		public int Height {get { return Map.GetLength(0); }}
@@ -59,6 +60,8 @@ namespace MagnumHouseLib
 					if (colour.R == 255) {
 						if (colour.B == 255)
 							Map[y,x] = FLOOR;
+						else if (colour.G == 255)
+							Map[y,x] = SPIKY;
 						else
 							Map[y,x] = BLOCK;
 					}
@@ -92,53 +95,12 @@ namespace MagnumHouseLib
 						_house.Add<IShootable>(target);
 					} else if (Map[y,x] == FLOOR) {
 						_house.AddDrawable(new FloorTile(new Vector2i(x, (Height-1)-y)));
+					} else if (Map[y,x] == SPIKY) {
+						_house.AddDrawable(new SpikyTile(new Vector2i(x, (Height-1)-y)));
 					}
 				}
 			}
 			_house.ProcessLists();
-		}
-		
-		public TileProximity GetProximity(Vector2f _pos) {
-			
-			TileProximity prox = new TileProximity();
-			Vector2i gridPos = _pos.Floor();
-			Vector2f offset = _pos - gridPos.ToF();
-			int left = (int) Math.Round(offset.X);
-			int right = (int) Math.Round(1-offset.X);
-			int above = (int) Math.Round(offset.Y);
-			int below = (int) Math.Round(1-offset.Y);
-			int mapAboveLeft = GetMap(gridPos.X+left,gridPos.Y+above);
-			int mapBelowLeft = GetMap(gridPos.X+left,gridPos.Y+below);
-			int mapAboveRight = GetMap(gridPos.X+right,gridPos.Y+above);
-			int mapBelowRight = GetMap(gridPos.X+right,gridPos.Y+below);
-			if (mapAboveLeft == BLOCK ||
-			    mapAboveRight == BLOCK ||
-			    mapBelowLeft == BLOCK ||
-			    mapBelowRight == BLOCK ||
-			    mapBelowLeft == FLOOR ||
-			    mapBelowRight == FLOOR) {
-				prox.On = 1;
-			}
-			if (mapBelowLeft == BLOCK ||
-			    mapBelowRight == BLOCK ||
-			    mapBelowLeft == FLOOR ||
-			    mapBelowRight == FLOOR) {
-				prox.Below = 1;
-			}
-			if (mapAboveLeft == BLOCK ||
-			    mapAboveRight == BLOCK) {
-				prox.Above = 1;
-			}
-			if (mapAboveLeft == BLOCK ||
-			    mapBelowLeft == BLOCK) {
-				prox.Left = 1;
-			}
-			if (mapAboveRight == BLOCK ||
-			    mapBelowRight == BLOCK) {
-				prox.Right = 1;
-			}
-			
-			return prox;
 		}
 		
 		public int IsCollision(Vector2f _pos, Vector2f _size) {
@@ -171,6 +133,16 @@ namespace MagnumHouseLib
 			}
 			
 			if (floorCollision) return FLOOR;
+			
+			bool spikeCollision = false;
+			for (int x = 0; x < width ; x++) {
+				if (collisions[x,0] == SPIKY) {
+					spikeCollision = true;
+					break;
+				}
+			}
+			
+			if (spikeCollision) return SPIKY;
 			
 			return EMPTY;
 		}

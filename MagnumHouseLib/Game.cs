@@ -102,12 +102,12 @@ namespace MagnumHouseLib
 			
 			blurry_fx_buffer
 				= new ScreenSprite(
-					new Vector2i(SmallScreenWidth/4, SmallScreenHeight/4),
+					new Vector2i(SmallScreenWidth/2, SmallScreenHeight/2),
 				    //new Vector2i(ScreenWidth, ScreenHeight),
 					new Vector2i(ScreenWidth, ScreenHeight),
 				    new Vector2i(Width, Height)) { 
 				Layer = Layer.Blurry,
-				Scaling = Sprite.ScaleType.Pixelly,
+				Scaling = Sprite.ScaleType.Blurry,
 				Feedback = 0.7f
 			};
 			blurry_fx_buffer.SetHUD(m_camera);

@@ -64,6 +64,6 @@ namespace MagnumHouseLib
 			Position = new Vector2f(Game.Width/2 - Size.X/2, 0);
 		}
 		
-		public virtual void Die() {}
+		public virtual void Die() {Dead = true;}
 	}
 }
