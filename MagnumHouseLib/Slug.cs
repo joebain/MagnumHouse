@@ -13,7 +13,8 @@ namespace MagnumHouseLib
 
 	public class Slug : Thing2D, IUpdateable, IDrawable
 	{
-		public Layer Layer { get { return Layer.Normal; }}
+		public Layer Layer { get { return Layer.Pixelly; }}
+		public Priority Priority {get { return Priority.Middle; } }
 		
 		public override Vector2f Size { get; set; }
 		

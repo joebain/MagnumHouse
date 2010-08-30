@@ -45,9 +45,6 @@ namespace MagnumHouseLib
 		private IEnumerable<Screen> m_screens;
 		private ScreenMessage m_lastMessage;
 		
-		private ScreenSprite pixelly_fx_buffer;
-		private ScreenSprite blurry_fx_buffer;
-		
 		
 		public Game() {
 			m_keyboard = new UserInput(this);
@@ -90,28 +87,7 @@ namespace MagnumHouseLib
 		public void Setup(IEnumerable<Screen> screens) {
 			InitGfx();
 			
-			pixelly_fx_buffer
-				= new ScreenSprite(
-					new Vector2i(SmallScreenWidth, SmallScreenHeight),
-					new Vector2i(ScreenWidth, ScreenHeight),
-				    new Vector2i(Width, Height)) { 
-				Layer = Layer.Pixelly,
-				Scaling = Sprite.ScaleType.Pixelly,
-				Feedback = 0.99f
-			};
 			
-			blurry_fx_buffer
-				= new ScreenSprite(
-					new Vector2i(SmallScreenWidth/2, SmallScreenHeight/2),
-				    //new Vector2i(ScreenWidth, ScreenHeight),
-					new Vector2i(ScreenWidth, ScreenHeight),
-				    new Vector2i(Width, Height)) { 
-				Layer = Layer.Blurry,
-				Scaling = Sprite.ScaleType.Blurry,
-				Feedback = 0.7f
-			};
-			blurry_fx_buffer.SetHUD(m_camera);
-
 			m_screens = screens;
 			LoadScreen(new ScreenMessage());
 		}
@@ -191,19 +167,12 @@ namespace MagnumHouseLib
 				m_camera.FindOffset();
 				m_camera.SetPosition();
 				
-				blurry_fx_buffer.Grab(m_screens.First().House.Draw);
-				pixelly_fx_buffer.Grab(m_screens.First().House.Draw);
-				
+				m_screens.First().House.Grab();
 				
 				Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
 				
-				blurry_fx_buffer.Position = Vector2f.Zero;
-				blurry_fx_buffer.Draw();
-				//m_screens.First().House.Draw(Layer.Blurry);
-				m_screens.First().House.Draw(Layer.Normal);
+				m_screens.First().House.Draw();
 				
-				pixelly_fx_buffer.Position = -m_camera.LastOffset;
-				pixelly_fx_buffer.Draw();
 				
 				Sdl.SDL_GL_SwapBuffers();
 				

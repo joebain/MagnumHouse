@@ -10,6 +10,8 @@ namespace MagnumHouseLib
 		private Sprite m_sprite;
 		
 		public Layer Layer {get { return Layer.Normal;}}
+		public Priority Priority {get { return Priority.Middle; } }
+		
 		private bool m_dead = false;
 		public bool Dead { get { return m_dead; } }
 		public void Die() {

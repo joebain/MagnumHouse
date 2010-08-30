@@ -11,6 +11,7 @@ namespace MagnumHouseLib
 		float height = 1.0f;
 		
 		public Layer Layer { get { return Layer.Normal; } }
+		public Priority Priority {get { return Priority.Middle; } }
 		
 		public Score (Gangster _gangster)
 		{

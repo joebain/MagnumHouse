@@ -5,6 +5,8 @@ namespace MagnumHouseLib
 {
 	public class Background : IDrawable
 	{
+		public Priority Priority {get { return Priority.Middle; } }
+		
 		Vector3f[] points = new Vector3f[1000];
 		Vector3f[] stars = new Vector3f[100];
 		

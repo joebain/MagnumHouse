@@ -96,10 +96,8 @@
     <Compile Include="RangeAttribute.cs" />
     <Compile Include="Slug.cs" />
     <Compile Include="Sound.cs" />
-    <Compile Include="Sprite.cs" />
     <Compile Include="SyncList.cs" />
     <Compile Include="Target.cs" />
-    <Compile Include="Text.cs" />
     <Compile Include="Thing2D.cs" />
     <Compile Include="TileProximity.cs" />
     <Compile Include="UserInput.cs" />
@@ -148,13 +146,16 @@
     <Compile Include="Score.cs" />
     <Compile Include="GangsterTrail.cs" />
     <Compile Include="Screens\TrailLevel.cs" />
-    <Compile Include="ScreenSprite.cs" />
-    <Compile Include="Camera.cs" />
     <Compile Include="scenery\Floor.cs" />
     <Compile Include="scenery\FloorTile.cs" />
     <Compile Include="scenery\SpikyTile.cs" />
     <Compile Include="scenery\Tile.cs" />
     <Compile Include="scenery\TileMap.cs" />
+    <Compile Include="IGrabing.cs" />
+    <Compile Include="gfx\Camera.cs" />
+    <Compile Include="gfx\ScreenSprite.cs" />
+    <Compile Include="gfx\Sprite.cs" />
+    <Compile Include="gfx\Text.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -162,5 +163,6 @@
     <Folder Include="Screens\" />
     <Folder Include="Networking\MessageContents\" />
     <Folder Include="scenery\" />
+    <Folder Include="gfx\" />
   </ItemGroup>
 </Project>

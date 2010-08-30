@@ -9,6 +9,7 @@ namespace MagnumHouseLib
 	public class GhostGangster : Thing2D, IUpdateable, IDrawable
 	{
 		public Layer Layer { get { return Layer.Normal; }}
+		public Priority Priority {get { return Priority.Middle; } }
 		
 		GangsterVisage visage;
 		

@@ -9,6 +9,7 @@ namespace MagnumHouseLib
 		Vector2i m_position;
 
 		public Layer Layer { get { return Layer.Normal; }}
+		public Priority Priority { get { return Priority.Middle; }}
 		
 		public SpikyTile(Vector2i position) {
 			m_position = position;
@@ -28,16 +29,22 @@ namespace MagnumHouseLib
 			
 			Gl.glBegin(Gl.GL_TRIANGLE_STRIP);
 			
-			Gl.glVertex2f(0, 0.3f);
-			Gl.glVertex2f(0.9f, 0.3f);
-			Gl.glVertex2f(0, 0.0f);
-			Gl.glVertex2f(0.9f, 0.0f);
+			Gl.glVertex2f(0, 0.0f); //bottom left
+			Gl.glVertex2f(0.9f, 0.0f); //bottom right
 			
-			//Gl.glVertex2f(0.8f, 0.9f);
-			//Gl.glVertex2f(0.3f, 0.9f);
+			Gl.glVertex2f(0, 0.5f); //top left
+			Gl.glVertex2f(0.9f, 0.5f); //top right
 			
+			Gl.glEnd();
 			
+			Gl.glBegin(Gl.GL_TRIANGLES);
 			
+			for (int i = 0 ; i < 3 ; i++) {
+				float offset = i * 0.3f;
+				Gl.glVertex2f(0 + offset, 0.5f);
+				Gl.glVertex2f(0.15f + offset, 0.9f);
+				Gl.glVertex2f(0.3f + offset, 0.5f);
+			}
 			
 			Gl.glEnd();
 			Gl.glPopMatrix();

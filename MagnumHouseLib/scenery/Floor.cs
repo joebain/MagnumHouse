@@ -11,6 +11,7 @@ namespace MagnumHouseLib
 	{
 		
 		public Layer Layer { get { return Layer.Normal; }}
+		public Priority Priority { get { return Priority.Middle; }}
 
 		public Floor ()
 		{

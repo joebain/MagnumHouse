@@ -13,6 +13,7 @@ namespace MagnumHouseLib
 		public static bool drawBoundingBoxes;
 		
 		Dictionary<Type, SyncList<Object>> m_things = new Dictionary<Type, SyncList<Object>>();
+		Dictionary<Priority, SyncList<IDrawable>> m_drawables = new Dictionary<Priority, SyncList<IDrawable>>();
 		
 		TileMap m_map;
 		
@@ -72,35 +73,55 @@ namespace MagnumHouseLib
 		}
 		
 		public void AddDrawable(IDrawable _drawable) {
-			Add<IDrawable>(_drawable);
+			SyncList<IDrawable> list;
+			if (!m_drawables.TryGetValue(_drawable.Priority, out list)) {
+				list = new SyncList<IDrawable>();
+				m_drawables.Add(_drawable.Priority, list);
+			}
+			list.Add(_drawable);
+			list.Process();
 		}
 		
 		public void RemoveDrawable(IDrawable _drawable) {
-			Remove<IDrawable>(_drawable);
+			SyncList<IDrawable> list;
+			if (m_drawables.TryGetValue(_drawable.Priority, out list)) {
+				list.Remove(_drawable);
+			}
 		}
 		
 		private SyncList<object> GetList<T>() {
-			return m_things[typeof(T)];
+			SyncList<object> list;
+			if (!m_things.TryGetValue(typeof(T), out list)) {
+				list = new SyncList<object>();
+			}
+			return list;
+		}
+		
+		private SyncList<IDrawable> GetDrawableList(Priority _priority) {
+			SyncList<IDrawable> list;
+			if (!m_drawables.TryGetValue(_priority, out list)) {
+				list = new SyncList<IDrawable>();
+			}
+			return list;
 		}
 		
 		public void Draw(Layer layer) {
-			GetList<IDrawable>().NiftyFor<IDrawable>(
+			Draw(layer, Priority.Back);
+			Draw(layer, Priority.Middle);
+			Draw(layer, Priority.Front);
+		}
+		
+		public void Draw(Layer layer, Priority _priority) {
+			SyncList<IDrawable> list = GetDrawableList(_priority);
+			list.NiftyFor<IDrawable>(
 			_d => {
 				if (_d.Layer == layer)
 					_d.Draw();
 			}, _d => _d.Dead);
 		}
 		
-		public void DrawBut(Layer layer) {
-			GetList<IDrawable>().NiftyFor<IDrawable>(
-			_d => {
-				if (_d.Layer != layer)
-					_d.Draw();
-			}, _d => _d.Dead);
-		}
-		
 		public void Draw() {
-			GetList<IDrawable>().NiftyFor<IDrawable>(_d => _d.Draw(), _d => _d.Dead);
+			Draw(Layer.Normal);
 			
 			if (drawBoundingBoxes) {
 				foreach (var thing in GetAllDrawable<IThing2D>()) {
@@ -122,6 +143,10 @@ namespace MagnumHouseLib
 			GetList<IUpdateable>().NiftyFor<IUpdateable>(_u => _u.Update(_delta), _u => _u.Dead);
 			
 			UpdateSlugs();
+		}
+		
+		public void Grab() {
+			GetList<IGrabing>().NiftyFor<IGrabing>(_g => _g.Grab(Draw), _g => _g.Dead);
 		}
 		
 		private void UpdateSlugs() {
@@ -176,8 +201,16 @@ namespace MagnumHouseLib
 			}
 		}
 		
+		public IEnumerable<IDrawable> GetDrawables() {
+			foreach (var kvp in m_drawables) {
+				foreach (var drawable in kvp.Value) {
+					yield return drawable;
+				}
+			}
+		}
+		
 		public IEnumerable<T> GetAllDrawable<T>() {
-			return GetAll<T>(GetList<IDrawable>());
+			return GetAll<T>(GetDrawables());
 		}
 		
 		public void ProcessLists() {

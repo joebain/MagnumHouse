@@ -69,6 +69,7 @@ namespace MagnumHouseLib
 		protected IObjectCollection m_house;
 		
 		public Layer Layer { get { return Layer.Pixelly; }}
+		public Priority Priority {get { return Priority.Middle; } }
 		
 		public Gangster (IObjectCollection _house)
 		{
@@ -159,7 +160,10 @@ namespace MagnumHouseLib
 			//PrintBumps(bumps);
 			
 			if (TryInjure()) {
-				m_magnum.Die();
+				Die();
+			}
+			
+			if (Position.Y < -10) {
 				Die();
 			}
 			
@@ -237,5 +241,12 @@ namespace MagnumHouseLib
 			if (_slug.Magnum.Owner != this)
 				m_magnum.Smaller(_slug.weight);
 		}
+		
+		public override void Die ()
+		{
+			Dead = true;
+			m_magnum.Die();
+		}
+
 	}
 }

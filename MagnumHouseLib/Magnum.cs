@@ -7,6 +7,7 @@ namespace MagnumHouseLib
 	public class Magnum : IDrawable, IUpdateable
 	{
 		public Layer Layer { get { return Layer.Pixelly; }}
+		public Priority Priority {get { return Priority.Middle; } }
 
 		public int Id { get; set;}
 		
