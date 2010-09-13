@@ -11,6 +11,7 @@ namespace MagnumHouseLib
 		public float Y;
 		
 		public static Vector2f Zero {get { return new Vector2f(); } }
+		public static Vector2f Unit {get { return new Vector2f(1); } }
 		
 		public Vector2f ()
 		{
@@ -34,11 +35,11 @@ namespace MagnumHouseLib
 			}
 		}
 		
-		public void Cap (float maxX, float maxY) {
-			if (Math.Abs(X) > maxX)
-				X = maxX * Math.Sign(X);
-			if (Math.Abs(Y) > maxY)
-				Y = maxY * Math.Sign(Y);
+		public void Cap (Vector2f max) {
+			if (Math.Abs(X) > max.X)
+				X = max.X * Math.Sign(X);
+			if (Math.Abs(Y) > max.Y)
+				Y = max.Y * Math.Sign(Y);
 		}
 		
 		public void Ensure (float _min) {
@@ -46,6 +47,20 @@ namespace MagnumHouseLib
 				Normalise();
 				Multiply(_min);
 			}
+		}
+		
+		public void Ensure (Vector2f min) {
+			if (Math.Abs(X) > min.X)
+				X = min.X * Math.Sign(X);
+			if (Math.Abs(Y) > min.Y)
+				Y = min.Y * Math.Sign(Y);
+		}
+		
+		public void Clamp(Vector2f min, Vector2f max) {
+			if (X < min.X) X = min.X;
+			else if (X > max.X) X = max.X;
+			if (Y < min.Y) Y = min.Y;
+			else if (Y > max.Y) Y = max.Y;
 		}
 		
 		public void Normalise() {
@@ -118,6 +133,10 @@ namespace MagnumHouseLib
 		
 		public Vector2f Snap(Vector2f snap) {
 			return (this / snap).Round().ToF() * snap;
+		}
+		
+		public Vector2i Ceiling() {
+			return new Vector2i((int)Math.Ceiling(X), (int)Math.Ceiling(Y));
 		}
 		
 		public Vector2i Floor() {

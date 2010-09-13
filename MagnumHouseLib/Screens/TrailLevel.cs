@@ -13,7 +13,7 @@ namespace MagnumHouseLib
 			TileMap tilemap = new TileMap("pictures/empty_level.png");
 			m_house = new ObjectHouse(tilemap);
 			
-			Background bg = new Background(tilemap);
+			Background bg = new Background(tilemap.Size);
 			m_house.AddDrawable(bg);
 			
 			Gangster gangsterNo1 = new Hero(m_keyboard, m_house);

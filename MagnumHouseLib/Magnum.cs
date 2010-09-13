@@ -72,9 +72,9 @@ namespace MagnumHouseLib
 						
 			Gl.glColor3f(0.691f,0.691f,0.691f);
 			
-			//Gl.glRotatef(Direction.Angle(), 0, 0, 1);
 			Vector2f offset = Position + Direction * 10f * (0.1f-(float)Math.Max(bulletCounter,0));
 			Gl.glTranslatef(offset.X, offset.Y, 0);
+			
 			Gl.glRotatef(-Direction.Angle()*(float)(180f/Math.PI), 0, 0, 1);
 			
 			Gl.glBegin(Gl.GL_TRIANGLE_STRIP);

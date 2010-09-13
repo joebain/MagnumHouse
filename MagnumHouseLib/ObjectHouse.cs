@@ -115,7 +115,7 @@ namespace MagnumHouseLib
 			SyncList<IDrawable> list = GetDrawableList(_priority);
 			list.NiftyFor<IDrawable>(
 			_d => {
-				if (_d.Layer == layer)
+				if ((_d.Layer & layer) == _d.Layer)
 					_d.Draw();
 			}, _d => _d.Dead);
 		}

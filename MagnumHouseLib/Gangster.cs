@@ -169,10 +169,10 @@ namespace MagnumHouseLib
 			
 			m_speed.Cap(tmpMaxSpeed);
 			if (onFloor) {
-				m_speed.Cap(maxFloorSpeed, maxYSpeed);
+				m_speed.Cap(new Vector2f(maxFloorSpeed, maxYSpeed));
 			}
 			else {
-				m_speed.Cap(maxXSpeed, maxYSpeed);
+				m_speed.Cap(new Vector2f(maxXSpeed, maxYSpeed));
 			}
 			
 			//physics

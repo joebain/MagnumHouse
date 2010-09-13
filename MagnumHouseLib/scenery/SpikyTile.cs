@@ -16,12 +16,16 @@ namespace MagnumHouseLib
 		}
 		
 		public void Draw() {
+			Draw(m_position);
+		}
+		
+		public static void Draw(Vector2i pos) {
 			Gl.glPushMatrix();
 			
-			Gl.glTranslatef(m_position.X, m_position.Y, 0);
-			if (m_position.Y <= 0) {
+			Gl.glTranslatef(pos.X, pos.Y, 0);
+			if (pos.Y <= 0) {
 				Gl.glColor3f(0.449f,0.797f,0.301f); //nice green grass
-			} else if (m_position.Y <= 12) {
+			} else if (pos.Y <= 12) {
 				Gl.glColor3f(0.797f,0.570f,0.301f); //brown trees
 			} else {
 				Gl.glColor3f(0.684f,0.852f,0.859f); //blue sky

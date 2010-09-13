@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using System.Linq;
+using System.Collections.Generic;
 
 using Tao.Sdl;
 
@@ -15,6 +16,10 @@ namespace MagnumHouseLib
 		public Vector2i Size {get{return m_size;}}
 		protected UserInput m_keyboard;
 		protected Game m_game;
+		protected IEnumerable<Event> m_events = new List<Event>();
+		
+		public virtual Thing2D Character {get{return new Thing2D();}}
+		public Game Game{get{return m_game;}}
 		
 		public event Action<ScreenMessage> ExitRequest;
 		public event Action<ScreenMessage> ReloadRequest;
@@ -27,11 +32,15 @@ namespace MagnumHouseLib
 			m_keyboard = _keyboard;
 		}
 		
-		public virtual void Update(float _delta) {
+		public virtual void ReloadEvents() {
 			
 		}
 		
-		protected void Exit(ScreenMessage _message) {
+		public virtual void Update(float _delta) {
+			m_events.ForEach(_e => _e.Update(_delta));
+		}
+		
+		public void Exit(ScreenMessage _message) {
 			if (ExitRequest != null) ExitRequest(_message);
 		}
 		

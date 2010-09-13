@@ -5,3 +5,4 @@
 *.userprefs
 *.test-cache
 */bin/*
+*~

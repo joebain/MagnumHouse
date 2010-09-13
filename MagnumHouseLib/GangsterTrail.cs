@@ -7,7 +7,7 @@ namespace MagnumHouseLib
 	public class GangsterTrail : IDrawable, IUpdateable
 	{
 		private Gangster m_gangster;
-		private Sprite m_sprite;
+		private Sprite s_sprite;
 		
 		public Layer Layer {get { return Layer.Normal;}}
 		public Priority Priority {get { return Priority.Middle; } }
@@ -23,7 +23,7 @@ namespace MagnumHouseLib
 		public GangsterTrail (Gangster _gangster, Sprite _sprite)
 		{
 			m_gangster = _gangster;
-			m_sprite = _sprite;
+			s_sprite = _sprite;
 
 //			for (int i = 0 ; i < _sprite.Bitmap.Width ; i++) {
 //				for (int j = 0 ; j < _sprite.Bitmap.Height; j++) {
@@ -32,8 +32,8 @@ namespace MagnumHouseLib
 //			}
 			//m_sprite.ReloadBitmap();
 			
-			m_sprite.Size.Y = m_sprite.Bitmap.Size.Height / Tile.Size;
-			m_sprite.Size.X = m_sprite.Bitmap.Size.Width / Tile.Size;
+			s_sprite.Size.Y = s_sprite.Bitmap.Size.Height / Tile.Size;
+			s_sprite.Size.X = s_sprite.Bitmap.Size.Width / Tile.Size;
 		}
 		
 		public void Update(float delta) {
@@ -49,7 +49,7 @@ namespace MagnumHouseLib
 		}
 		
 		public void Draw() {
-			m_sprite.Draw();
+			s_sprite.Draw();
 		}
 	}
 }

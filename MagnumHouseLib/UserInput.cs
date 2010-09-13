@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using Tao.Sdl;
+using System.Text;
 
 namespace MagnumHouseLib
 {
@@ -53,6 +54,25 @@ namespace MagnumHouseLib
 			m_mousePos = m_game.ScreenPxToGameCoords(screenMousePos);
 		}
 		
+		public Action<Sdl.SDL_keysym> KeyDown;
+		public Action<Sdl.SDL_keysym> KeyUp;
+		public Action<Sdl.SDL_MouseButtonEvent> MouseDown;
+		public Action<Sdl.SDL_MouseButtonEvent> MouseUp;
+		
+		public bool KeyIsChar(Sdl.SDL_keysym key) {
+			char letter = KeyToChar(key);
+			if (Text.characters.Contains(letter.ToString()))
+				return true;
+			return false;
+		}
+		
+		public char KeyToChar(Sdl.SDL_keysym key) {
+			if( key.unicode < 0x80 && key.unicode > 0 ){
+				return (char) key.unicode;
+			}
+			return '\0';
+		}
+		
 		public void HandleSDLInput()
 		{
 			Sdl.SDL_Event e;
@@ -66,17 +86,21 @@ namespace MagnumHouseLib
 				else if (e.type == Sdl.SDL_KEYDOWN)
 				{
 					m_keys[e.key.keysym.sym] = true;
+					if (KeyDown != null) KeyDown(e.key.keysym);
 					if (e.key.keysym.sym == Sdl.SDLK_ESCAPE) m_quitFlag = true;
 				}
 				else if (e.type == Sdl.SDL_KEYUP)
 				{
 					m_keys[e.key.keysym.sym] = false;
+					if (KeyUp != null) KeyUp(e.key.keysym);
 				}
 				else if (e.type == Sdl.SDL_MOUSEBUTTONDOWN) {
 					m_mouseButtons[e.button.button] = true;
+					if (MouseDown != null) MouseDown(e.button);
 				}
 				else if (e.type == Sdl.SDL_MOUSEBUTTONUP) {
 					m_mouseButtons[e.button.button] = false;
+					if (MouseUp != null) MouseUp(e.button);
 				}
 				else if (e.type == Sdl.SDL_MOUSEMOTION) {
 					screenMousePos.X = e.motion.x;

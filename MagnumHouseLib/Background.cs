@@ -10,22 +10,20 @@ namespace MagnumHouseLib
 		Vector3f[] points = new Vector3f[1000];
 		Vector3f[] stars = new Vector3f[100];
 		
-		TileMap m_map;
 		public float starSize = 2.0f;
-		public Layer Layer { get { return Layer.Blurry; }}
+		public Layer Layer { get;set; }
 		
-		public Background(TileMap _map) {
-			m_map = _map;
-			
+		public Background(Vector2i _size) {
+			Layer = Layer.Blurry;
 			Random rand = new Random(42);
 			for (int i = 0 ; i < points.Length ; i++) {
-				points[i] = new Vector3f((float)rand.NextDouble() * m_map.Width,
-				                         (float)rand.NextDouble() * m_map.Height,
+				points[i] = new Vector3f((float)rand.NextDouble() * _size.X,
+				                         (float)rand.NextDouble() * _size.Y,
 				                         ((float)rand.NextDouble() - 1f)*100000f - 1f);
 			}
 			for (int i = 0 ; i < stars.Length ; i++) {
-				stars[i] = new Vector3f((float)rand.NextDouble() * m_map.Width,
-				                         (float)rand.NextDouble() * m_map.Height,
+				stars[i] = new Vector3f((float)rand.NextDouble() * _size.X,
+				                         (float)rand.NextDouble() * _size.Y,
 				                         ((float)rand.NextDouble() - 1f)*100000f - 1f);
 			}
 		}

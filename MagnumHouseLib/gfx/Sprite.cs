@@ -20,6 +20,9 @@ namespace MagnumHouseLib
 		public float Rotation = 0f;
 		public float Zoom = 1f;
 		
+		public Vector2f CropNear = new Vector2f(0,0);
+		public Vector2f CropFar = new Vector2f(1,1);
+		
 		public enum ScaleType {
 			Pixelly, Blurry
 		}
@@ -73,15 +76,15 @@ namespace MagnumHouseLib
 			
 			Gl.glBindTexture(Gl.GL_TEXTURE_2D, m_texnum);
 			Gl.glColor4f(1,1,1, Transparency);
+			
 			Gl.glPushMatrix();
 			
-			Gl.glTranslatef(Size.X/2, Size.Y/2, 0);
-			Gl.glRotatef(Rotation, 0, 0, 1);
-			Gl.glScalef(Zoom, Zoom, 1);
-			Gl.glTranslatef(-Size.X/2, -Size.Y/2, 0);
+			Gl.glTranslatef(Position.X + Size.X*0.5f, Position.Y + Size.Y*0.5f, 0);
 			
-			Gl.glTranslatef(Position.X, Position.Y, 0);
-
+			Gl.glScalef(Zoom, Zoom, 1);
+			
+			Gl.glRotatef(Rotation, 0, 0, 1);
+			
 			Gl.glMatrixMode(Gl.GL_TEXTURE);
 			Gl.glPushMatrix();
 			Gl.glLoadIdentity();
@@ -94,14 +97,15 @@ namespace MagnumHouseLib
 			Gl.glMatrixMode(Gl.GL_MODELVIEW);
 			
 			Gl.glBegin(Gl.GL_TRIANGLE_STRIP);
-			Gl.glVertex3f(0,0, Depth);
-			Gl.glTexCoord2f(0,0);
-			Gl.glVertex3f(0, Size.Y, Depth);
-			Gl.glTexCoord2f(1, 1);
-			Gl.glVertex3f(Size.X, 0, Depth);
-			Gl.glTexCoord2f(1,0);
-			Gl.glVertex3f(Size.X, Size.Y, Depth);
-			Gl.glTexCoord2f(0,1);
+			
+			Gl.glTexCoord2f(CropNear.X,1-CropNear.Y);
+			Gl.glVertex3f(Size.X*-0.5f,Size.Y*-0.5f, Depth);
+			Gl.glTexCoord2f(CropNear.X, 1-CropFar.Y);
+			Gl.glVertex3f(Size.X*-0.5f, Size.Y*0.5f, Depth);
+			Gl.glTexCoord2f(CropFar.X,1-CropNear.Y);
+			Gl.glVertex3f(Size.X*0.5f, Size.Y*-0.5f, Depth);
+			Gl.glTexCoord2f(CropFar.X,1-CropFar.Y);
+			Gl.glVertex3f(Size.X*0.5f, Size.Y*0.5f, Depth);
 			
 			Gl.glEnd();
 			Gl.glPopMatrix();

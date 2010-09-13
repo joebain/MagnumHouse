@@ -18,7 +18,7 @@ namespace MagnumHouseLib
 			TileMap tilemap = new TileMap("pictures/targetlevel.png");
 			m_house = new ObjectHouse(tilemap);
 			
-			Background bg = new Background(tilemap);
+			Background bg = new Background(tilemap.Size);
 			m_house.AddDrawable(bg);
 			
 			gangsterNo1 = new Hero(m_keyboard, m_house);
@@ -32,7 +32,7 @@ namespace MagnumHouseLib
 			
 			Text score = new Text("Left: 00");
 			score.updateAction = (_d) => {
-				score.ChangeText("Left: " + m_house.GetAllDrawable<Target>().Count().ToString("00"));
+				score.Contents = "Left: " + m_house.GetAllDrawable<Target>().Count().ToString("00");
 			};
 			score.SetHUD(_game.Camera);
 			score.TopRight();
@@ -46,7 +46,7 @@ namespace MagnumHouseLib
 			timePassed = 0;
 			time.updateAction = (_d) => {
 				timePassed += _d;
-				time.ChangeText("Time: " + timePassed.ToString("00.00").Replace(".",":"));
+				time.Contents = "Time: " + timePassed.ToString("00.00").Replace(".",":");
 			};
 			
 			m_house.AddUpdateable(time);

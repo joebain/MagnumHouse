@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagnumHousePlusAdjuster", "MagnumHousePlusAdjuster\MagnumHousePlusAdjuster.csproj", "{0D4F719D-47EE-4A2F-B0CA-6541B6D28005}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagnumHouse", "MagnumHouse\MagnumHouse.csproj", "{99102E33-9AD6-4FAC-AD38-E2FD2CA80A2C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelEditor", "LevelEditor\LevelEditor.csproj", "{EC91B535-EF67-4C0D-93EE-FAB4C8A0BBB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,16 +29,16 @@ Global
 		{56A0349D-92DB-4543-9125-081BDB118944}.Debug|x86.Build.0 = Debug|x86
 		{56A0349D-92DB-4543-9125-081BDB118944}.Release|x86.ActiveCfg = Release|x86
 		{56A0349D-92DB-4543-9125-081BDB118944}.Release|x86.Build.0 = Release|x86
-		{99102E33-9AD6-4FAC-AD38-E2FD2CA80A2C}.Debug|x86.ActiveCfg = Debug|x86
-		{99102E33-9AD6-4FAC-AD38-E2FD2CA80A2C}.Debug|x86.Build.0 = Debug|x86
-		{99102E33-9AD6-4FAC-AD38-E2FD2CA80A2C}.Release|x86.ActiveCfg = Release|x86
-		{99102E33-9AD6-4FAC-AD38-E2FD2CA80A2C}.Release|x86.Build.0 = Release|x86
+		{EC91B535-EF67-4C0D-93EE-FAB4C8A0BBB8}.Debug|x86.ActiveCfg = Debug|x86
+		{EC91B535-EF67-4C0D-93EE-FAB4C8A0BBB8}.Debug|x86.Build.0 = Debug|x86
+		{EC91B535-EF67-4C0D-93EE-FAB4C8A0BBB8}.Release|x86.ActiveCfg = Release|x86
+		{EC91B535-EF67-4C0D-93EE-FAB4C8A0BBB8}.Release|x86.Build.0 = Release|x86
 		{F4C742C8-6DB0-435E-AFD3-CA31FABD3D98}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{F4C742C8-6DB0-435E-AFD3-CA31FABD3D98}.Debug|x86.Build.0 = Debug|Any CPU
 		{F4C742C8-6DB0-435E-AFD3-CA31FABD3D98}.Release|x86.ActiveCfg = Release|Any CPU
 		{F4C742C8-6DB0-435E-AFD3-CA31FABD3D98}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = MagnumHousePlusAdjuster\MagnumHousePlusAdjuster.csproj
+		StartupItem = LevelEditor\LevelEditor.csproj
 	EndGlobalSection
 EndGlobal

@@ -12,7 +12,7 @@ namespace MagnumHouseLib
 		void SetHUD(Camera _camera);
 	}
 	
-	public abstract class Thing2D : IThing2D, IDeadable
+	public class Thing2D : IThing2D, IDeadable
 	{
 		public virtual int Id {get; set;}
 		
@@ -40,7 +40,10 @@ namespace MagnumHouseLib
 		public virtual Vector2f Size {get {return m_size; } set{m_size = value;}}
 		private Vector2f m_speed = new Vector2f();
 		public virtual Vector2f Speed {get{return m_speed;} set{m_speed = value;}}
-		public BoundingBox Bounds {get {return new BoundingBox(Position.X, Position.Y, Position.X + Size.X, Position.Y + Size.Y);}}
+		public BoundingBox Bounds {
+			get {return new BoundingBox(Position.X, Position.Y, Position.X + Size.X, Position.Y + Size.Y);}
+			set { Position.X = value.Left; Position.Y = value.Bottom; Size.X = value.Right - Position.X; Size.Y = value.Top - Position.Y;}
+		}
 		public virtual bool Dead {get; set;}
 		
 		public virtual void SetHUD(Camera _camera) {
@@ -49,11 +52,19 @@ namespace MagnumHouseLib
 		}
 		
 		public void CentreOn(Vector2f _pos) {
-			Position = new Vector2f(_pos.X - Size.X/2, _pos.Y + Size.Y/2);
+			Position = new Vector2f(_pos.X - Size.X/2, _pos.Y - Size.Y/2);
 		}
 		
 		public void TopRight() {
 			Position = new Vector2f(Game.Width - Size.X, Game.Height - Size.Y);
+		}
+		
+		public void Right() {
+			Position = new Vector2f(Game.Width - Size.X, Position.Y);
+		}
+		
+		public void Left() {
+			Position = new Vector2f(0, Position.Y);
 		}
 		
 		public void TopLeft() {

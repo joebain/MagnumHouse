@@ -40,6 +40,10 @@ namespace MagnumHouseLib
 		public static Vector2i operator - (Vector2i _lhs, Vector2i _rhs) {
 			return new Vector2i(_lhs.X - _rhs.X, _lhs.Y - _rhs.Y);
 		}
+		
+		public static Vector2i operator / (Vector2i _lhs, int _rhs) {
+			return new Vector2i(_lhs.X / _rhs, _lhs.Y / _rhs);
+		}
 
 	}
 }

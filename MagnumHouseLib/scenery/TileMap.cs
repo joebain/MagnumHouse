@@ -1,11 +1,22 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Xml.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MagnumHouseLib
 {
-	public class TileMap
+	
+	public class TileMap : IDrawable
 	{
+		public Layer Layer { get { return Layer.Normal;}}
+		public Priority Priority { get { return Priority.Middle;}}
+		
+		public bool Dead {get { return m_dead;}}
+		
+		private bool m_dead = false;
+		public void Die() {m_dead = true;}
+		
 		public const int EMPTY = 0;
 		public const int BLOCK = 1;
 		public const int TARGET = 3;
@@ -13,8 +24,9 @@ namespace MagnumHouseLib
 		public const int FLOOR = 4;
 		public const int SPIKY = 5;
 		
-		public int Width { get { return Map.GetLength(1); }}
-		public int Height {get { return Map.GetLength(0); }}
+		public int Width { get { return Map.Width; }}
+		public int Height {get { return Map.Height; }}
+		public Vector2i Size {get { return new Vector2i(Width, Height); }}
 		
 		public static readonly int[,] Level1 = new int[,] {
 			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -39,64 +51,133 @@ namespace MagnumHouseLib
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 		};
 		
-		private int[,] Map;
+		
+		private LevelData Map;
+		
+		private EventData events = new EventData();
+		public EventData Data {get {return events;}}
+		
+		public TileMap(Vector2i size) {
+			Map = new LevelData(size.Y, size.X);
+		}
 		
 		public TileMap(int[,] _map) {
-			Map = _map;
+			Map = new LevelData(_map);
 		}
 		
 		public TileMap(string mapFile) {
-			Bitmap bmp;
-			try {
-				bmp = new Bitmap(mapFile);
-			} catch {
-				Console.WriteLine("File couldnt be opened: " + mapFile);
-				throw;
+			bool successLoading = false;
+			
+			successLoading = LoadFromPicture(mapFile);
+			
+			if (!successLoading) {
+				successLoading = Load(mapFile);
 			}
-			Map = new int[bmp.Height, bmp.Width];
+				
+			if (!successLoading) {
+				Console.WriteLine("File couldnt be opened: " + mapFile);
+			}
+			
+		}
+		
+		bool LoadFromPicture(string mapFile) {
+			
+			try {
+				Bitmap bmp = new Bitmap(mapFile);
+				BitmapToMapData(bmp);
+				return true;
+			} catch {
+				return false;
+			}
+		}
+		
+		void BitmapToMapData(Bitmap bmp) {
+			Map = new LevelData(bmp.Width, bmp.Height);
 			for (int x = 0 ; x < bmp.Width ; x++) {
 				for (int y = 0 ; y < bmp.Height ; y++) {
 					var colour = bmp.GetPixel(x, y);
 					if (colour.R == 255) {
 						if (colour.B == 255)
-							Map[y,x] = FLOOR;
+							Map.Set(x,y, FLOOR);
 						else if (colour.G == 255)
-							Map[y,x] = SPIKY;
+							Map.Set(x,y, SPIKY);
 						else
-							Map[y,x] = BLOCK;
+							Map.Set(x,y, BLOCK);
 					}
 					else if (colour.G == 255)
-						Map[y,x] = PHONY;
+						Map.Set(x, y, PHONY);
 					else if (colour.B == 255)
-						Map[y,x] = TARGET;
+						Map.Set (x, y, TARGET);
 					else
-						Map[y,x] = EMPTY;
+						Map.Set(x, y, EMPTY);
 				}
+			}	
+		}
+		
+		public void Save(string filename) {
+			var xf = new BinaryFormatter();
+			var file = File.OpenWrite(filename + ".events");
+			xf.Serialize(file, events);
+			file.Flush();
+			file.Close();
+			
+			var bf = new BinaryFormatter();
+			file = File.OpenWrite(filename + ".map");
+			bf.Serialize(file, Map);
+			file.Flush();
+			file.Close();
+		}
+		
+		public bool Load(string filename) {
+			bool success = false;
+			try {
+				using (var file = File.OpenRead(filename + ".events")) {	
+					var bf = new BinaryFormatter();
+					events = (EventData)bf.Deserialize(file);
+				}
+				using (var file = File.OpenRead(filename + ".map")) {	
+					var bf = new BinaryFormatter();
+					Map = (LevelData)bf.Deserialize(file);
+				}
+				
+				success = true;
 			}
+			catch {
+				Console.WriteLine("couldnt load file {0}", filename);
+				success = false;
+			}
+			return success;
+		}
+		
+		public void SetTileAt(Vector2i pos, int block) {
+			int y = (Height-1)-pos.Y;
+			if (pos.X < 0 || pos.X >= Width || y < 0 || y >= Height)
+				return;
+			Map.Set(pos.X, y, block);
 		}
 		
 		public void Create (ObjectHouse _house, Game _game)
 		{
 			for (int x = 0 ; x < Width ; x++) {
 				for (int y = 0 ; y < Height ; y++) {
-					if (Map[y,x] == BLOCK) {
-						_house.AddDrawable(new Tile(new Vector2i(x,(Height-1) - y)));
-					} else if (Map[y,x] == PHONY) {
+					if (Map.Get(x,y) == BLOCK) {
+						//_house.AddDrawable(new Tile(new Vector2i(x,(Height-1) - y)));
+					} else if (Map.Get(x,y) == PHONY) {
 						EasyPhony phony = new EasyPhony(_house, _house);
 						phony.PlaceInWorld(this);
 						phony.Position = new Vector2f(x, (Height-1) - y);
 						_house.AddDrawable(phony);
 						_house.AddUpdateable(phony);
 						_house.Add<IShootable>(phony);
-					} else if (Map[y,x] == TARGET) {
+					} else if (Map.Get(x, y) == TARGET) {
 						Target target = new Target();
 						target.Position = new Vector2f(x, (Height-1)-y);
 						_house.AddDrawable(target);
 						_house.Add<IShootable>(target);
-					} else if (Map[y,x] == FLOOR) {
-						_house.AddDrawable(new FloorTile(new Vector2i(x, (Height-1)-y)));
-					} else if (Map[y,x] == SPIKY) {
-						_house.AddDrawable(new SpikyTile(new Vector2i(x, (Height-1)-y)));
+					} else if (Map.Get(x, y) == FLOOR) {
+						//_house.AddDrawable(new FloorTile(new Vector2i(x, (Height-1)-y)));
+					} else if (Map.Get(x,y) == SPIKY) {
+						//_house.AddDrawable(new SpikyTile(new Vector2i(x, (Height-1)-y)));
 					}
 				}
 			}
@@ -153,7 +234,29 @@ namespace MagnumHouseLib
 			if (_y >= Height) return 0;
 			else if (_y < 0) return 0;
 			
-			return Map[Height-(_y+1),_x];
+			return Map.Get(_x, Height-(_y+1));
+		}
+		
+		public void Draw() {
+			for (int x = 0 ; x < Width ; x++) {
+				for (int y = 0 ; y < Height ; y++) {
+					DrawTile(Map.Get(x,y), new Vector2i(x, (Height-1)-y));
+				}
+			}
+		}
+		
+		private void DrawTile(int tile, Vector2i pos) {
+			switch (tile) {
+			case BLOCK:
+				Tile.Draw(pos);
+				break;
+			case FLOOR:
+				FloorTile.Draw(pos);
+				break;
+			case SPIKY:
+				SpikyTile.Draw(pos);
+				break;
+			}
 		}
 	}
 }

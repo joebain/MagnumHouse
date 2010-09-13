@@ -12,6 +12,15 @@ namespace MagnumHouseLib
 		public Vector2f ViewOffset = Game.ScreenSize*0.5f;
 		public Vector2f LastOffset = Game.ScreenSize*0.5f;
 		
+//		public Vector2f Centre {
+//			get {
+//				return ViewOffset;
+//			}
+//			set {
+//				
+//			}
+//		}
+		
 		public void SetPosition() {
 			Gl.glMatrixMode(Gl.GL_PROJECTION);
 			Gl.glLoadIdentity();
@@ -35,10 +44,11 @@ namespace MagnumHouseLib
 			
 			Vector2f centre;
 			
-			if (CameraSubject != null)
+			if (CameraSubject != null) {
 				centre = CameraSubject.Position;
-			else
+			} else {
 				centre = Game.ScreenCentre;
+			}
 			
 			ViewOffset = Game.ScreenSize*0.5f - centre;
 			
@@ -61,7 +71,6 @@ namespace MagnumHouseLib
 			else if (ViewOffset.Y > 0) {
 				ViewOffset.Y = 0;
 			}
-			
 			return ViewOffset;
 		}
 		
