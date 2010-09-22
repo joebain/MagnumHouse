@@ -54,14 +54,18 @@ namespace MagnumHouseLib
 			if (!buttonClicked) {
 				//mouse clicks on tiles
 				Vector2i mouse_pos = m_editor.Cursor.GridPosition;
-				if (m_keyboard.IsMouseButtonPressed(Sdl.SDL_BUTTON_LEFT)) {
+				if (mouse_pos.X >= 0 && mouse_pos.X < m_editor.Size.X &&
+				    mouse_pos.Y >= 0 && mouse_pos.Y < m_editor.Size.Y) {
 					
-					if (tileClicks[mouse_pos.X, mouse_pos.Y] == 0) {
-						tileClicks[mouse_pos.X, mouse_pos.Y] = 1;
-						m_editor.Map.SetTileAt(mouse_pos, SelectedTileType);
+					if (m_keyboard.IsMouseButtonPressed(Sdl.SDL_BUTTON_LEFT)) {
+						
+						if (tileClicks[mouse_pos.X, mouse_pos.Y] == 0) {
+							tileClicks[mouse_pos.X, mouse_pos.Y] = 1;
+							m_editor.Map.SetTileAt(mouse_pos, SelectedTileType);
+						}
+					} else {
+						tileClicks[mouse_pos.X, mouse_pos.Y] = 0;
 					}
-				} else {
-					tileClicks[mouse_pos.X, mouse_pos.Y] = 0;
 				}
 			}
 			else {
@@ -74,7 +78,7 @@ namespace MagnumHouseLib
 		}
 		
 		private void EventsMode() {
-			m_editor.ChangeGuiSet(new EventsGuiSet(m_game, m_keyboard, m_editor));
+			m_editor.ChangeGuiSet(new EditEventsGuiSet(m_game, m_keyboard, m_editor));
 		}
 		
 		private void SaveLevel() {

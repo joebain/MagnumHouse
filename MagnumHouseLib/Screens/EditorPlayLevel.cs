@@ -15,7 +15,7 @@ namespace MagnumHouseLib
 			
 			gangsterNo1.Position = _message.Position;
 			
-			EditorCursor cursor = new EditorCursor(_keyboard, Size);
+			EditorCursor cursor = new EditorCursor(_keyboard, Bounds);
 			m_house.AddUpdateable(cursor);
 			Button button = new Button(m_keyboard, "Back", m_game.Camera) {
 				Position = new Vector2f(1, 1)

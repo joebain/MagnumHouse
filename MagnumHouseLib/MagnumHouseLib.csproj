@@ -81,7 +81,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Background.cs" />
     <Compile Include="BumblingThing.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Gangster.cs" />
@@ -177,17 +176,29 @@
     <Compile Include="gfx\events\SpatialTrigger.cs" />
     <Compile Include="ui\guisets\GuiSet.cs" />
     <Compile Include="ui\guisets\OkCancelGuiSet.cs" />
-    <Compile Include="ui\guisets\SpatialEventGuiSet.cs" />
     <Compile Include="ui\guisets\StandardGuiSet.cs" />
-    <Compile Include="ui\guisets\TimedEventGuiSet.cs" />
     <Compile Include="ui\guisets\ChooseEffectGuiSet.cs" />
-    <Compile Include="ui\guisets\TextEffectGuiSet.cs" />
     <Compile Include="gfx\events\Trigger.cs" />
     <Compile Include="gfx\events\Event.cs" />
     <Compile Include="gfx\events\description\EventDescription.cs" />
     <Compile Include="scenery\EventData.cs" />
-    <Compile Include="ui\guisets\EventsGuiSet.cs" />
-    <Compile Include="Assert.cs" />
+    <Compile Include="Contracts.cs" />
+    <Compile Include="ui\guisets\GeneralGuiSet.cs" />
+    <Compile Include="ui\NumberBox.cs" />
+    <Compile Include="ui\MoveableTextBox.cs" />
+    <Compile Include="ui\ColourTextBox.cs" />
+    <Compile Include="ui\TickBox.cs" />
+    <Compile Include="ui\guisets\EditEventsGuiSet.cs" />
+    <Compile Include="gfx\events\ShakeEvent.cs" />
+    <Compile Include="gfx\events\description\TriggerDescription.cs" />
+    <Compile Include="gfx\events\description\SpatialTriggerDescription.cs" />
+    <Compile Include="gfx\events\description\TimedTriggerDescription.cs" />
+    <Compile Include="gfx\events\description\stringAndPos.cs" />
+    <Compile Include="gfx\events\description\TextEventDescription.cs" />
+    <Compile Include="gfx\events\description\FadeEventDescription.cs" />
+    <Compile Include="gfx\events\description\ShakeEventDescription.cs" />
+    <Compile Include="StarryBackground.cs" />
+    <Compile Include="GraphBackground.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

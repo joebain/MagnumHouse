@@ -16,6 +16,7 @@ namespace MagnumHouseLib
 		
 		public override void Update(float _delta) {
 			m_time += _delta;
+			base.Update(_delta);
 		}
 		
 		public override bool ConditionOff ()

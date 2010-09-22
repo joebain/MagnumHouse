@@ -13,7 +13,9 @@ namespace MagnumHouseLib
 		protected ObjectHouse m_house = new ObjectHouse();
 		public ObjectHouse House { get { return m_house; } }
 		protected Vector2i m_size = new Vector2i(Game.Width, Game.Height);
-		public Vector2i Size {get{return m_size;}}
+		protected BoundingBox m_bounds = new BoundingBox(0,0,Game.Width, Game.Height);
+		public virtual Vector2i Size {get{return m_size;}}
+		public virtual BoundingBox Bounds {get{return m_bounds;}}
 		protected UserInput m_keyboard;
 		protected Game m_game;
 		protected IEnumerable<Event> m_events = new List<Event>();

@@ -20,7 +20,7 @@ namespace MagnumHouseLib
 			}
 			set {
 				base.Position = value;
-				Position.Clamp(Vector2f.Zero, m_bounds.ToF());
+				base.Position.Clamp(m_bounds);
 			}
 		}
 
@@ -30,9 +30,9 @@ namespace MagnumHouseLib
 		public Priority Priority {get { return Priority.Middle;}}
 		public int Id {get{ return 0;}}
 		
-		Vector2i m_bounds;
+		BoundingBox m_bounds;
 		
-		public EditorCursor (UserInput keys, Vector2i bounds)
+		public EditorCursor (UserInput keys, BoundingBox bounds)
 		{
 			m_keys = keys;
 			m_bounds = bounds;

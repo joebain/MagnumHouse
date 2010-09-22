@@ -15,12 +15,16 @@ namespace MagnumHouseLib
 		
 		GuiSet m_guiset;
 		public EditorCursor Cursor {get{return cursor;}}
+		BoundingBox camSubBounds;
 		
 		public string filename = "default";
 		
 		public EditorLevel ()
 		{
 			m_size = new Vector2i(100,100);
+			m_bounds.Top = 100;
+			m_bounds.Right = 100;
+			m_bounds.Left = -20;
 		}
 		
 		
@@ -36,6 +40,10 @@ namespace MagnumHouseLib
 			base.Setup (_game, _keyboard, _message);
 			
 			m_game.Camera.CameraSubject = cameraSubject;
+			camSubBounds = Bounds.Clone;
+			camSubBounds.Left += Game.Size.X/2;
+			camSubBounds.Bottom += Game.Size.Y/2;
+			
 			m_game.Camera.ViewOffset = _message.Position;
 			m_game.AddLevel(new EditorPlayLevel());
 			
@@ -46,11 +54,11 @@ namespace MagnumHouseLib
 			}
 			m_house.AddDrawable(m_map);
 			
-			Background bg = new Background(Size);
+			GraphBackground bg = new GraphBackground(Size);
 			bg.Layer = Layer.Normal;
 			m_house.AddDrawable(bg);
 			
-			cursor = new EditorCursor(m_keyboard, Size);
+			cursor = new EditorCursor(m_keyboard, Bounds.Clone);
 			cursor.Position = m_keyboard.MousePos;
 			m_house.AddDrawable(cursor);
 			m_house.AddUpdateable(cursor);
@@ -62,9 +70,9 @@ namespace MagnumHouseLib
 			m_house.ProcessLists();
 		}
 		
-		
 		public override void Update (float _delta)
 		{
+			
 			//keys move the camera
 			if (m_keyboard.IsKeyPressed(Sdl.SDLK_UP)) {
 				cameraSubject.Position.Y += cameraSpeed*_delta;
@@ -78,16 +86,14 @@ namespace MagnumHouseLib
 			}
 			
 			//mouse moves the camera at edge
-			if (Math.Abs(m_keyboard.MousePos.X - cameraSubject.Position.X) > Game.Width/2 - 1 ||
-			    Math.Abs(m_keyboard.MousePos.Y - cameraSubject.Position.Y) > Game.Height/2 - 1) {
+			if (Math.Abs(m_keyboard.MousePos.X - cameraSubject.Position.X) > Game.Width/2 - 0.2f ||
+			    Math.Abs(m_keyboard.MousePos.Y - cameraSubject.Position.Y) > Game.Height/2 - 0.2f) {
 				Vector2f move = (m_keyboard.MousePos - cameraSubject.Position);
-				move.Cap(new Vector2f(cameraSpeed)*_delta);
+				move.Cap(cameraSpeed*_delta);
 				cameraSubject.Position += move;
 			}
 			
-			cameraSubject.Position.Clamp(Game.Size.ToF()/2, Size.ToF()-Game.Size.ToF()/2);
-			
-			
+			cameraSubject.Position.Clamp(camSubBounds);
 		}
 	}
 }

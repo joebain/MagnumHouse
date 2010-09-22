@@ -13,7 +13,7 @@ namespace MagnumHouseLib
 			var map = new TileMap("pictures/testlevel.png");
 			m_house = new ObjectHouse(map);
 			
-			Background bg = new Background(map.Size);
+			StarryBackground bg = new StarryBackground(map.Size);
 			m_house.AddDrawable(bg);
 			
 			map.Create(m_house, _game);

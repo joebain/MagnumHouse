@@ -13,10 +13,14 @@ namespace MagnumHouseLib
 	
 	public class Text : Thing2D, IDrawable, IUpdateable
 	{
+		public enum PointSizes {
+			Ten = 10, Sixteen = 16, TwentyTwo = 22
+		}
+		
 		static Dictionary<char, Character> s_characters = new Dictionary<char, Character>();
 		static Sprite s_sprite;
 		static Bitmap s_tmpBmp = new Bitmap(1024, 1024);
-		static Font s_font = new Font(FontFamily.GenericMonospace, 22);
+		static Font s_font = new Font(FontFamily.GenericMonospace, (int)PointSizes.TwentyTwo);
 		static Vector2f s_totalSize = new Vector2f();
 		public static readonly string characters =
 				"abcdefghijklmnopqrstuvwxyz" +
@@ -28,6 +32,8 @@ namespace MagnumHouseLib
 		public Priority Priority {get ;set;}
 		public Colour Colour{get;set;}
 		public bool Hidden = false;
+		
+		public int PointSize = (int)PointSizes.TwentyTwo;
 		
 		string m_text = "";
 		public string Contents {
@@ -113,7 +119,8 @@ namespace MagnumHouseLib
 			foreach (char letter in Contents) {
 				if (s_characters.TryGetValue(letter, out character)) {
 					s_sprite.Position = drawPos;
-					s_sprite.Size = character.Size;
+					Vector2f size = (character.Size/(int)PointSizes.TwentyTwo)*PointSize;
+					s_sprite.Size = size;
 					s_sprite.CropNear = character.Position / s_totalSize;
 					s_sprite.CropFar = (character.Position + character.Size) / s_totalSize;
 					float tmp = s_sprite.CropNear.Y;
@@ -122,7 +129,7 @@ namespace MagnumHouseLib
 					s_sprite.Draw();
 					//Console.WriteLine("drawing {4} ({5}) at {0}, size {1}, crop {2} and {3}",s_sprite.Position, s_sprite.Size,s_sprite.CropNear, s_sprite.CropFar, letter, character.Char);
 					
-					drawPos.X += character.Size.X;
+					drawPos.X += size.X;
 				}
 			}
 		}

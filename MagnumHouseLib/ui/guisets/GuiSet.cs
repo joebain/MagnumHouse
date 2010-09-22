@@ -13,8 +13,8 @@ namespace MagnumHouseLib
 		public Layer Layer {get{return Layer.Normal;}}
 		public Priority Priority {get{return Priority.Front;}}
 		
-		protected List<GuiItem> items = new List<GuiItem>();
-		protected List<Text> textItems = new List<Text>();
+		protected SyncList<GuiItem> items = new SyncList<GuiItem>();
+		protected SyncList<Text> textItems = new SyncList<Text>();
 		
 		protected Game m_game;
 		protected UserInput m_keyboard;
@@ -30,12 +30,15 @@ namespace MagnumHouseLib
 		}
 		
 		public virtual void Update(float _delta) {
-			items.ForEach(_i => _i.Update(_delta));
+			items.NiftyFor<GuiItem>(_i => _i.Update(_delta), _i => _i.Dead);
+			items.Process();
 		}
 		
 		public virtual void Draw() {
-			items.ForEach(_i => _i.Draw());
-			textItems.ForEach(_i => _i.Draw());
+			items.NiftyFor<GuiItem>(_i => _i.Draw(), _i => _i.Dead);
+			items.Process();
+			textItems.NiftyFor<Text>(_i => _i.Draw(), _i => _i.Dead);
+			textItems.Process();
 		}
 		
 		public void Die() {

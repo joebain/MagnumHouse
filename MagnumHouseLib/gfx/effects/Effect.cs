@@ -57,6 +57,10 @@ namespace MagnumHouseLib
 			m_stickToScreen = true;	
 		}
 		
+		public void Move(Vector2f move) {
+			Position += move;
+		}
+		
 		public Sprite.ScaleType Scaling {
 			set {
 				s_sprite.Scaling = value;
@@ -174,6 +178,13 @@ namespace MagnumHouseLib
 					s_sprite.Position = s_sprite.Position.Snap(m_stepSize);
 				} else {
 					s_sprite.Position = value;
+				}
+			}
+			get {
+				if (m_stickToScreen) {
+					return s_sprite.Position + m_camera.ViewOffset;
+				} else {
+					return s_sprite.Position;
 				}
 			}
 		}

@@ -118,7 +118,7 @@ namespace MagnumHouseLib
 			m_screens.First().Setup(this, m_keyboard, _message);
 			m_screens.First().ExitRequest += NextScreen;
 			m_screens.First().ReloadRequest += ReloadScreen;
-			m_camera.ScreenSize = m_screens.First().Size;
+			m_camera.CurrentScreen = m_screens.First();
 		}
 		
 		private void ReloadScreen(ScreenMessage _message) {

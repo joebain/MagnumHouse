@@ -18,7 +18,7 @@ namespace MagnumHouseLib
 			TileMap tilemap = new TileMap("pictures/targetlevel.png");
 			m_house = new ObjectHouse(tilemap);
 			
-			Background bg = new Background(tilemap.Size);
+			StarryBackground bg = new StarryBackground(tilemap.Size);
 			m_house.AddDrawable(bg);
 			
 			gangsterNo1 = new Hero(m_keyboard, m_house);

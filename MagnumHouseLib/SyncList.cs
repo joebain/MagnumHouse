@@ -55,5 +55,9 @@ namespace MagnumHouseLib
 			}
 			Process();
 		}
+		
+		public int Count {
+			get {return m_list.Count;}
+		}
 	}
 }

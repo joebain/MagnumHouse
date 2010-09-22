@@ -66,6 +66,14 @@ namespace MagnumHouseLib
 			return false;
 		}
 		
+		public bool KeyIsNumber(Sdl.SDL_keysym key) {
+			char letter = KeyToChar(key);
+			int i;
+			if (int.TryParse(letter.ToString(), out i))
+				return true;
+			return false;
+		}
+		
 		public char KeyToChar(Sdl.SDL_keysym key) {
 			if( key.unicode < 0x80 && key.unicode > 0 ){
 				return (char) key.unicode;
