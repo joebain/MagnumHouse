@@ -1,27 +1,32 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" ctype="Workspace" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Server/Main.cs" ctype="Workbench">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Client/Main.cs" ctype="Workbench">
     <Files>
       <File FileName="Tools/Main.cs" Line="1" Column="1" />
       <File FileName="MagnumHouse/PhysicsAdjuster.cs" Line="3" Column="7" />
       <File FileName="MagnumHouseLib/Game.cs" Line="1" Column="1" />
       <File FileName="MagnumHouse/Launcher.cs" Line="1" Column="1" />
       <File FileName="MagnumHouseLib/SyncList.cs" Line="1" Column="1" />
-      <File FileName="MagnumHouseLib/Networking/NetworkClient.cs" Line="1" Column="1" />
-      <File FileName="MagnumHouseLib/Networking/NetworkServer.cs" Line="16" Column="21" />
-      <File FileName="MagnumHouseLib/Networking/NetworkUtil.cs" Line="47" Column="1" />
+      <File FileName="MagnumHouseLib/Networking/NetworkClient.cs" Line="22" Column="4" />
+      <File FileName="MagnumHouseLib/Networking/NetworkServer.cs" Line="1" Column="1" />
+      <File FileName="MagnumHouseLib/Networking/NetworkUtil.cs" Line="1" Column="1" />
       <File FileName="MagnumHouseLib/Networking/NetworkHero.cs" Line="1" Column="1" />
-      <File FileName="Client/Main.cs" Line="2" Column="24" />
-      <File FileName="Server/Main.cs" Line="13" Column="4" />
+      <File FileName="Client/Main.cs" Line="11" Column="55" />
+      <File FileName="Server/Main.cs" Line="1" Column="1" />
+      <File FileName="MagnumHouseTests/TileMapTests.cs" Line="9" Column="14" />
+      <File FileName="MagnumHouseLib/TileMap.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Client" expanded="True" />
+          <Node name="Client" expanded="True" selected="True" />
+          <Node name="MagnumHouseLib" expanded="True">
+            <Node name="Networking" expanded="True" />
+          </Node>
           <Node name="MagnumHousePlusAdjuster">
             <Option id="ShowAllFiles" value="False" />
           </Node>
-          <Node name="Server" expanded="True" selected="True" />
+          <Node name="Server" expanded="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">
