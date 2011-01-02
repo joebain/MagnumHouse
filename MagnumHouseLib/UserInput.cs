@@ -2,19 +2,23 @@ using System;
 using System.Collections.Generic;
 
 using Tao.Sdl;
+using System.Text;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class UserInput
 	{
+		public int Id { get; set;}
+		
 		bool m_quitFlag = false;
 		
 		Dictionary<int, bool> m_keys = new Dictionary<int, bool>();
 		Dictionary<byte, bool> m_mouseButtons = new Dictionary<byte, bool>();
 		
-		Vector2i m_mousePos = new Vector2i();
+		Vector2f m_mousePos = new Vector2f();
+		Vector2i screenMousePos = new Vector2i();
 		
-		public Vector2i MousePos { get { return m_mousePos.Clone(); }}
+		public Vector2f MousePos { get { return m_mousePos.Clone(); }}
 		
 		public bool QuitRequested { get { return m_quitFlag; }}
 		
@@ -39,8 +43,34 @@ namespace MagnumHouse
 			}
 		}
 		
-		public UserInput()
+		Game m_game;
+		
+		public UserInput(Game _game)
 		{
+			m_game = _game;
+		}
+		
+		public void Update(float _delta) {
+			m_mousePos = m_game.ScreenPxToGameCoords(screenMousePos);
+		}
+		
+		public Action<Sdl.SDL_keysym> KeyDown;
+		public Action<Sdl.SDL_keysym> KeyUp;
+		public Action<Sdl.SDL_MouseButtonEvent> MouseDown;
+		public Action<Sdl.SDL_MouseButtonEvent> MouseUp;
+		
+		public bool KeyIsChar(Sdl.SDL_keysym key) {
+			char letter = KeyToChar(key);
+			if (Text.characters.Contains(letter.ToString()))
+				return true;
+			return false;
+		}
+		
+		public char KeyToChar(Sdl.SDL_keysym key) {
+			if( key.unicode < 0x80 && key.unicode > 0 ){
+				return (char) key.unicode;
+			}
+			return '\0';
 		}
 		
 		public void HandleSDLInput()
@@ -56,21 +86,25 @@ namespace MagnumHouse
 				else if (e.type == Sdl.SDL_KEYDOWN)
 				{
 					m_keys[e.key.keysym.sym] = true;
+					if (KeyDown != null) KeyDown(e.key.keysym);
 					if (e.key.keysym.sym == Sdl.SDLK_ESCAPE) m_quitFlag = true;
 				}
 				else if (e.type == Sdl.SDL_KEYUP)
 				{
 					m_keys[e.key.keysym.sym] = false;
+					if (KeyUp != null) KeyUp(e.key.keysym);
 				}
 				else if (e.type == Sdl.SDL_MOUSEBUTTONDOWN) {
 					m_mouseButtons[e.button.button] = true;
+					if (MouseDown != null) MouseDown(e.button);
 				}
 				else if (e.type == Sdl.SDL_MOUSEBUTTONUP) {
 					m_mouseButtons[e.button.button] = false;
+					if (MouseUp != null) MouseUp(e.button);
 				}
 				else if (e.type == Sdl.SDL_MOUSEMOTION) {
-					m_mousePos.X = e.motion.x;
-					m_mousePos.Y = e.motion.y;
+					screenMousePos.X = e.motion.x;
+					screenMousePos.Y = e.motion.y;
 				}
 			}
 		}

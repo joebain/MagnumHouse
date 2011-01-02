@@ -1,10 +1,13 @@
 using System;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class Target : Thing2D, IDrawable, IShootable
 	{
+		public Layer Layer { get { return Layer.Pixelly; }}
+		public Priority Priority {get { return Priority.Middle; } }
+		
 		private float radius = 0.5f;
 		Sound explodeSound = new Sound("sounds/explosion.wav");
 		

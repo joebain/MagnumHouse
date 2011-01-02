@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class Phony : Gangster
 	{
@@ -19,15 +19,14 @@ namespace MagnumHouse
 				return MaxFloorSpeed/5;
 			}
 		}
-
-
-
 		
-		private ObjectHouse m_house;
+		IGangsterProvider m_provider;
 		
-		public Phony (Magnum _magnum, TileMap _map, Game _game, ObjectHouse _house) : base (_magnum, _map, _game)
+		public Phony (IObjectCollection _house, IGangsterProvider _provider) : base (_house)
 		{
-			m_house = _house;
+			Name = "phony";
+			
+			m_provider = _provider;
 			m_magnum.ShowCrosshair = false;
 		}
 		
@@ -45,7 +44,7 @@ namespace MagnumHouse
 				GoRight();
 			}
 			
-			var gangsters = m_house.GetAllGangsters();
+			var gangsters = m_provider.GetAllGangsters();
 			Gangster closeGangster = gangsters.First();
 			float distance = float.MaxValue;
 			foreach (var gangster in gangsters) {

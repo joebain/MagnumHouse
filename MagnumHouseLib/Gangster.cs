@@ -5,12 +5,13 @@ using System.IO;
 using Tao.Sdl;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
-	public abstract class Gangster : BumblingThing, IUpdateable, IDrawable, IShootable
+	public class Gangster : BumblingThing, IUpdateable, IDrawable, IShootable
 	{
+		public string Name = "gangster";
+		
 		protected Magnum m_magnum;
-		protected Game m_game;
 		
 		public Magnum Magnum { get { return m_magnum; }}
 		
@@ -19,46 +20,62 @@ namespace MagnumHouse
 		protected Vector2f m_speed = new Vector2f();
 		
 		[Range(0, 30, 0)]
-		public static float jumpSpeed = 11f;
+		public static float jumpSpeed = 17f;
 		[Range(0, 30, 0)]
-		public static float WalkSpeed = 14f;
+		public static float WalkSpeed = 27f;
 		public virtual float walkSpeed { get { return WalkSpeed; }}
+		[Range(0, 60, 0)]
+		public static float Gravity = 41f;
+		float gravity {get{return Gravity;}}
 		[Range(0, 30, 0)]
-		public static float Gravity = 14f;
-		float gravity {get{return Gravity;}}//(1f/m_magnum.Size)*Gravity;}}
-		[Range(0, 30, 0)]
-		public static float MaxSpeed = 20.0f;
+		public static float MaxSpeed = 14.0f;
 		public virtual float maxSpeed {get { return MaxSpeed; }}
 		
+		[RangeAttribute(0,30,1)]
+		public static float maxXSpeed = 10.0f;
+		[RangeAttribute(0,30,1)]
+		public static float maxYSpeed = 20.0f;
+		
 		[RangeAttribute(0, 30, 0)]
-		public static float MaxFloorSpeed = 20.0f;
+		public static float MaxFloorSpeed = 5.0f;
 		public virtual float maxFloorSpeed { get { return MaxFloorSpeed; }}
 		[Range(0, 100, 0)]
 		public static float Friction = 10f;
 		public virtual float friction { get { return Friction; }}
 		[Range(0, 2, 2)]
-		public static float airTractionMultiplier = 0.5f;
+		public static float airTractionMultiplier = 1.0f;
 		[Range(0, 2, 2)]
 		public static float airFrictionMultiplier = 0.1f;
 		[Range(0, 2, 2)]
-		public static float walkSpeedSizeMult = 0.23f;
+		public static float walkSpeedSizeMult = 1.0f;
+		[Range(0,20,1)]
+		public static float wallSlideSpeed = 1.0f;
 		
-		protected const float size = 0.6f;
+		protected const float size = 0.8f;
 		
 		[Range(0, 2, 2)]
 		public static float groundTime = 0.2f;
 		protected float groundTimeCount = 0;
+		[Range(0,2,2)]
+		public static float wallTime = 0.1f;
+		protected float wallTimeCount = 0;
 		protected double m_time = 0;
 		
 		protected bool onFloor = false;
+		protected bool onWallRight = false;
+		protected bool onWallLeft = false;
+		protected IEnumerable<Bumped> bumps = new List<Bumped>();
+			
+		protected IObjectCollection m_house;
 		
+		public Layer Layer { get { return Layer.Pixelly; }}
+		public Priority Priority {get { return Priority.Middle; } }
 		
-		public Gangster (Magnum _magnum, TileMap _tiles, Game _game) : base (_tiles)
+		public Gangster (IObjectCollection _house)
 		{
-			m_game = _game;
-			m_magnum = _magnum;
+			m_magnum = new Magnum(_house);
 			m_magnum.Owner = this;
-			m_tiles = _tiles;
+			m_house = _house;
 		}
 		
 		public override Vector2f Position {
@@ -93,25 +110,40 @@ namespace MagnumHouse
 		public void Update(float _delta)
 		{
 			m_speed += m_acceleration*_delta;
-			if (onFloor) {
-				m_speed.Cap(maxFloorSpeed);
-			} else {
-				m_speed.Cap(maxSpeed);
-			}
+			float tmpMaxSpeed;
 			
-			onFloor = false;
-			if (m_position.Y <= 0) {
-				m_position.Y = 0;
-				onFloor = true;
-			}
+			tmpMaxSpeed = maxSpeed;
 			
 			//collisions
-			IEnumerable<Bumped> bumps = TryMove(m_speed*_delta);
+			bumps = TryMove(m_speed*_delta);
 			if (bumps.Contains(Bumped.Left)) {
+				if (!onWallLeft) {
+					HitWallLeft();
+				}
+				onWallLeft = true;
 				m_speed.X = 0;
+				if (m_speed.Y < 0) {
+					tmpMaxSpeed = wallSlideSpeed;
+				}
+			} else {
+				onWallLeft = false;
 			}
 			if (bumps.Contains(Bumped.Right)) {
+				if (!onWallRight) {
+					HitWallRight();
+				}
+				onWallRight = true;
 				m_speed.X = 0;
+				if (m_speed.Y < 0) {
+					tmpMaxSpeed = wallSlideSpeed;
+				}
+			} else {
+				onWallRight = false;
+			}
+			if (onWallLeft || onWallRight) {
+				wallTimeCount -= _delta;	
+			} else {
+				wallTimeCount = wallTime;
 			}
 			if (bumps.Contains(Bumped.Bottom)) {
 				m_speed.Y = 0;
@@ -119,21 +151,41 @@ namespace MagnumHouse
 					HitFloor();
 				}
 				onFloor = true;
+			} else {
+				onFloor = false;
 			}
 			if (bumps.Contains(Bumped.Top)) {
 				m_speed.Y = 0;
 			}
-			//PrintBumps(bumps);	
+			//PrintBumps(bumps);
+			
+			if (TryInjure()) {
+				Die();
+			}
+			
+			if (Position.Y < -10) {
+				Die();
+			}
+			
+			m_speed.Cap(tmpMaxSpeed);
+			if (onFloor) {
+				m_speed.Cap(new Vector2f(maxFloorSpeed, maxYSpeed));
+			}
+			else {
+				m_speed.Cap(new Vector2f(maxXSpeed, maxYSpeed));
+			}
 			
 			//physics
-			m_acceleration.Y = -gravity;
-			
-			if (onFloor) {
-				m_acceleration.X = -m_speed.X * friction;
-				groundTimeCount -= _delta;
-			} else {
-				m_acceleration.X = -m_speed.X * friction * airFrictionMultiplier;
-				groundTimeCount = groundTime;
+			if (doPhysics) {
+				m_acceleration.Y = -gravity;
+				
+				if (onFloor) {
+					m_acceleration.X = -m_speed.X * friction;
+					groundTimeCount -= _delta;
+				} else {
+					m_acceleration.X = -m_speed.X * friction * airFrictionMultiplier;
+					groundTimeCount = groundTime;
+				}
 			}
 			//Console.WriteLine("gt " + groundTimeCount);
 				
@@ -145,10 +197,24 @@ namespace MagnumHouse
 			//log.WriteLine(String.Format("{0}, {1}, {2}, {3}",m_time, m_position.CSV(), m_speed.CSV(), m_acceleration.CSV()));
 			
 			Control(_delta, bumps);
+			
+			m_magnum.Update(_delta);
 		}
 		
 		protected virtual void HitFloor() {
 			
+		}
+		
+		protected virtual void HitWallLeft() {
+			
+		}
+		
+		protected virtual void HitWallRight() {
+			
+		}
+		
+		protected virtual void SetColour() {
+			Gl.glColor3f(1, 0, 1);	
 		}
 		
 		public void Draw()
@@ -156,7 +222,7 @@ namespace MagnumHouse
 			Gl.glPushMatrix();
 			Gl.glTranslatef(m_position.X, m_position.Y, 0);
 			
-			Gl.glColor3f(1, 0, 1);
+			SetColour();
                 
             Gl.glBegin(Gl.GL_TRIANGLES);
                 Gl.glVertex3f( 0.0f, 0.0f, 0.0f);
@@ -165,12 +231,22 @@ namespace MagnumHouse
             Gl.glEnd();
 			
 			Gl.glPopMatrix();
+			
+			m_magnum.Draw();
 		}
 		
 		public override bool Dead {get ; set;}
 		
 		public void GotShot(Slug _slug) {
-			m_magnum.Smaller(_slug.Size.Length());
+			if (_slug.Magnum.Owner != this)
+				m_magnum.Smaller(_slug.weight);
 		}
+		
+		public override void Die ()
+		{
+			Dead = true;
+			m_magnum.Die();
+		}
+
 	}
 }

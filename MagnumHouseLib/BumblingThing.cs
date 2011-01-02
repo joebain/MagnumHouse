@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public enum Bumped {
 		Top, Bottom, Right, Left
@@ -13,29 +13,50 @@ namespace MagnumHouse
 		protected Vector2f m_position = new Vector2f();
 		protected TileMap m_tiles;
 		
+		protected bool doPhysics = false;
+		
 		private const float pushAway = 0.0001f;
 		
-		protected BumblingThing(TileMap _map) {
+		
+		public void PlaceInWorld(TileMap _map) {
 			m_tiles = _map;
+			doPhysics = true;
+		}
+		
+		protected bool TryInjure() {
+			int collision = m_tiles.IsCollision(m_position, Size);
+			if (collision == TileMap.SPIKY) {
+				return true;
+			}
+			return false;
 		}
 		
 		protected IEnumerable<Bumped> TryMove(Vector2f _move) {
 			List<Bumped> bumps = new List<Bumped>();
+			if (m_tiles == null) return bumps;
+			int collision;
 			m_position.Y += _move.Y;
-			if (m_tiles.IsCollision(m_position, Size)) {
+			collision = m_tiles.IsCollision(m_position, Size);
+			if (collision == TileMap.BLOCK) {
 				if (_move.Y > 0) {
-					m_position.Y = ((int)m_position.Y) + (1f - Size.Y) - pushAway;
+					m_position.Y = (float)Math.Floor(m_position.Y + Size.Y) - (Size.Y + pushAway);
 					bumps.Add(Bumped.Top); 
 				} else if (_move.Y < 0) {
 					m_position.Y = ((int)(m_position.Y + 1)) + pushAway;
 					bumps.Add(Bumped.Bottom);
 				}
-			}
+			} else if (collision == TileMap.FLOOR) {
+				if (_move.Y < 0) {
+					m_position.Y = ((int)(m_position.Y + 1)) + pushAway;
+					bumps.Add(Bumped.Bottom);
+				}
+			}	
 			
 			m_position.X += _move.X;
-			if (m_tiles.IsCollision(m_position, Size)) {
+			collision = m_tiles.IsCollision(m_position, Size);
+			if (collision == TileMap.BLOCK) {
 				if (_move.X > 0) {
-					m_position.X = ((int)m_position.X) + (1f - Size.X) - pushAway;
+					m_position.X = (float)Math.Floor(m_position.X + Size.X) - (Size.X + pushAway);
 					bumps.Add(Bumped.Right);
 				} else if (_move.X < 0) {
 					m_position.X = ((int)(m_position.X + 1)) + pushAway;

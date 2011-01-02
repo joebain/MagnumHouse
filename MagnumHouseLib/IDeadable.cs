@@ -1,12 +1,13 @@
 
 using System;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 
 
 	public interface IDeadable
 	{
 		bool Dead {get;}
+		void Die();
 	}
 }

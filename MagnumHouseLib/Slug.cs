@@ -2,7 +2,7 @@
 using System;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public enum ThingsToHit {
 		Wall,
@@ -13,10 +13,15 @@ namespace MagnumHouse
 
 	public class Slug : Thing2D, IUpdateable, IDrawable
 	{
+		public Layer Layer { get { return Layer.Pixelly; }}
+		public Priority Priority {get { return Priority.Middle; } }
+		
 		public override Vector2f Size { get; set; }
 		
 		public override Vector2f Position {get; set;}
 		public Vector2f Direction;
+		
+		public float weight = 1.0f;
 		
 		public float speed = 20.0f;
 		public override Vector2f Speed {
@@ -31,6 +36,7 @@ namespace MagnumHouse
 		{
 			m_magnum = _magnum;
 			Size = new Vector2f(m_magnum.Size)/2f;
+			weight = m_magnum.health;
 		}
 		
 		public void Update(float _delta) {
@@ -40,7 +46,7 @@ namespace MagnumHouse
 		public void Draw() {
 			Gl.glPushMatrix();
 			
-			Gl.glColor3f(0,0,1);
+			Gl.glColor3f(0.742f,0.523f,0f);
 			
 			Gl.glTranslatef(Position.X, Position.Y, 0);
 			Gl.glBegin(Gl.GL_TRIANGLE_FAN);
@@ -58,7 +64,7 @@ namespace MagnumHouse
 		
 		public void HitSomething(ThingsToHit _hit, Object _thing) {
 			Dead = true;
-			if (_hit == ThingsToHit.Gangster)
+			if (_hit == ThingsToHit.Gangster && _thing != Magnum.Owner)
 				m_magnum.MadeAKill((IShootable)_thing);
 		}
 		

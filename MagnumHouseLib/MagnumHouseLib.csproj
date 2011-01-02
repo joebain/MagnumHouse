@@ -45,6 +45,10 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Core" />
+    <Reference Include="Tao.FreeGlut, Version=2.4.0.2, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d">
+      <Package>tao-freeglut</Package>
+    </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\SdlDotNet.dll" />
@@ -69,12 +73,16 @@
     <None Include="sounds\land.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="pictures\platformlevel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="pictures\empty_level.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Background.cs" />
-    <Compile Include="BoundingBox.cs" />
     <Compile Include="BumblingThing.cs" />
-    <Compile Include="Floor.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Gangster.cs" />
     <Compile Include="Hero.cs" />
@@ -83,31 +91,117 @@
     <Compile Include="IShootable.cs" />
     <Compile Include="IUpdateable.cs" />
     <Compile Include="Magnum.cs" />
-    <Compile Include="Message.cs" />
     <Compile Include="ObjectHouse.cs" />
     <Compile Include="Phony.cs" />
     <Compile Include="RangeAttribute.cs" />
-    <Compile Include="Screen.cs" />
     <Compile Include="Slug.cs" />
     <Compile Include="Sound.cs" />
-    <Compile Include="Sprite.cs" />
     <Compile Include="SyncList.cs" />
     <Compile Include="Target.cs" />
-    <Compile Include="Text.cs" />
     <Compile Include="Thing2D.cs" />
-    <Compile Include="Tile.cs" />
-    <Compile Include="TileMap.cs" />
     <Compile Include="TileProximity.cs" />
     <Compile Include="UserInput.cs" />
-    <Compile Include="Vector2f.cs" />
-    <Compile Include="Vector2i.cs" />
     <Compile Include="Networking\NetworkClient.cs" />
     <Compile Include="Networking\NetworkHero.cs" />
     <Compile Include="Networking\NetworkServer.cs" />
     <Compile Include="Networking\NetworkUtil.cs" />
+    <Compile Include="Networking\INetworkMessage.cs" />
+    <Compile Include="Networking\GangsterMessage.cs" />
+    <Compile Include="ArrayExtensions.cs" />
+    <Compile Include="Networking\NetworkGangster.cs" />
+    <Compile Include="Screens\Screen.cs" />
+    <Compile Include="Screens\ScreenMessage.cs" />
+    <Compile Include="Screens\TitleScreen.cs" />
+    <Compile Include="Screens\TargetLevel.cs" />
+    <Compile Include="Screens\EndScreen.cs" />
+    <Compile Include="Screens\NetworkLevel.cs" />
+    <Compile Include="Networking\WorldVisage.cs" />
+    <Compile Include="Networking\GangsterVisage.cs" />
+    <Compile Include="Screens\ServerLevel.cs" />
+    <Compile Include="EventExtensions.cs" />
+    <Compile Include="GhostGangster.cs" />
+    <Compile Include="Networking\HelloMessage.cs" />
+    <Compile Include="Networking\SlugMessage.cs" />
+    <Compile Include="NetworkHouse.cs" />
+    <Compile Include="Networking\ClientDetails.cs" />
+    <Compile Include="Networking\ClientGoodbyeMessage.cs" />
+    <Compile Include="Networking\NetworkHouseServer.cs" />
+    <Compile Include="Networking\ClientHelloMessage.cs" />
+    <Compile Include="Networking\MessageCodes.cs" />
+    <Compile Include="Networking\GenericMessage.cs" />
+    <Compile Include="Networking\MessageContents\MessageContent.cs" />
+    <Compile Include="Networking\MessageContents\GangsterMessageContent.cs" />
+    <Compile Include="Networking\MessageContents\SlugMessageContent.cs" />
+    <Compile Include="Networking\MessageContents\ClientHelloMessageContent.cs" />
+    <Compile Include="Networking\MessageContents\ClientGoodbyeMessageContent.cs" />
+    <Compile Include="Networking\MessageContents\HelloMessageContent.cs" />
+    <Compile Include="Networking\MessageContents\GoodbyeMessageContent.cs" />
+    <Compile Include="IObjectCollection.cs" />
+    <Compile Include="IGangsterProvider.cs" />
+    <Compile Include="Screens\PlatformLevel.cs" />
+    <Compile Include="EasyPhony.cs" />
+    <Compile Include="Score.cs" />
+    <Compile Include="GangsterTrail.cs" />
+    <Compile Include="Screens\TrailLevel.cs" />
+    <Compile Include="scenery\Floor.cs" />
+    <Compile Include="scenery\FloorTile.cs" />
+    <Compile Include="scenery\SpikyTile.cs" />
+    <Compile Include="scenery\Tile.cs" />
+    <Compile Include="scenery\TileMap.cs" />
+    <Compile Include="IGrabing.cs" />
+    <Compile Include="gfx\Camera.cs" />
+    <Compile Include="gfx\Sprite.cs" />
+    <Compile Include="gfx\Text.cs" />
+    <Compile Include="animators\IAnimator.cs" />
+    <Compile Include="animators\InverseLogAnimator.cs" />
+    <Compile Include="animators\LinearAnimator.cs" />
+    <Compile Include="animators\LogAnimator.cs" />
+    <Compile Include="Screens\EditorLevel.cs" />
+    <Compile Include="EditorCursor.cs" />
+    <Compile Include="ui\Button.cs" />
+    <Compile Include="ui\TextBox.cs" />
+    <Compile Include="ui\GuiItem.cs" />
+    <Compile Include="Colour.cs" />
+    <Compile Include="Screens\EditorPlayLevel.cs" />
+    <Compile Include="gfx\effects\Effect.cs" />
+    <Compile Include="gfx\events\TextEvent.cs" />
+    <Compile Include="maths\Vector2f.cs" />
+    <Compile Include="maths\Vector2i.cs" />
+    <Compile Include="maths\Vector3f.cs" />
+    <Compile Include="maths\BoundingBox.cs" />
+    <Compile Include="Updateable.cs" />
+    <Compile Include="ui\ResizeableBox.cs" />
+    <Compile Include="scenery\LevelData.cs" />
+    <Compile Include="gfx\events\FadeEvent.cs" />
+    <Compile Include="gfx\events\TimedTrigger.cs" />
+    <Compile Include="gfx\events\SpatialTrigger.cs" />
+    <Compile Include="ui\guisets\GuiSet.cs" />
+    <Compile Include="ui\guisets\OkCancelGuiSet.cs" />
+    <Compile Include="ui\guisets\SpatialEventGuiSet.cs" />
+    <Compile Include="ui\guisets\StandardGuiSet.cs" />
+    <Compile Include="ui\guisets\TimedEventGuiSet.cs" />
+    <Compile Include="ui\guisets\ChooseEffectGuiSet.cs" />
+    <Compile Include="ui\guisets\TextEffectGuiSet.cs" />
+    <Compile Include="gfx\events\Trigger.cs" />
+    <Compile Include="gfx\events\Event.cs" />
+    <Compile Include="gfx\events\description\EventDescription.cs" />
+    <Compile Include="scenery\EventData.cs" />
+    <Compile Include="ui\guisets\EventsGuiSet.cs" />
+    <Compile Include="Assert.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Networking\" />
+    <Folder Include="Screens\" />
+    <Folder Include="Networking\MessageContents\" />
+    <Folder Include="scenery\" />
+    <Folder Include="gfx\" />
+    <Folder Include="animators\" />
+    <Folder Include="ui\" />
+    <Folder Include="gfx\events\" />
+    <Folder Include="gfx\effects\" />
+    <Folder Include="maths\" />
+    <Folder Include="ui\guisets\" />
+    <Folder Include="gfx\events\description\" />
   </ItemGroup>
 </Project>

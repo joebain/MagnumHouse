@@ -5,7 +5,7 @@ using System.IO;
 using Tao.Sdl;
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class Hero : Gangster
 	{
@@ -14,10 +14,13 @@ namespace MagnumHouse
 		Sound jumpSound;
 		Sound landSound;
 		
-		public Hero (UserInput _keys, Magnum _magnum, TileMap _tiles, Game _game) : base (_magnum, _tiles, _game)
+		bool justHitWall = false;
+		
+		public Hero (UserInput _keys, ObjectHouse _house) : base ( _house)
 		{
 			m_keys = _keys;
 			m_magnum.invulnerable = true;
+			Name = "hero";
 			
 			jumpSound = new Sound("sounds/jump.wav");
 			landSound = new Sound("sounds/land.wav");
@@ -25,33 +28,60 @@ namespace MagnumHouse
 		
 		protected override void HitFloor ()
 		{
-			//landSound.Play();
+			landSound.Play();
+		}
+		
+		protected override void HitWallLeft() {
+			justHitWall = true;
+		}
+		
+		protected override void HitWallRight() {
+			justHitWall = true;
+		}
+		
+		protected override void SetColour ()
+		{
+			Gl.glColor3f(0.977f, 0.438f, 0.422f);
+			//Gl.glColor3f(0.977f,0f,0.422f);
 		}
 		
 		protected override void Control(float _delta, IEnumerable<Bumped> _bumps) {
 			
 			//key input
-			if (onFloor && groundTimeCount <= 0) {
-				if (m_keys.IsKeyPressed(Sdl.SDLK_UP) || m_keys.IsKeyPressed(Sdl.SDLK_w)) {
+			if (m_keys.IsKeyPressed(Sdl.SDLK_UP) || m_keys.IsKeyPressed(Sdl.SDLK_w)) {
+				if (onFloor && groundTimeCount <= 0) {
 					m_speed.Y = jumpSpeed;
 					jumpSound.Play();
 				}
+				if (!justHitWall && !onFloor) {
+					if (onWallLeft && wallTimeCount <= 0) {
+						m_speed.Y = jumpSpeed;
+						m_speed.X = jumpSpeed;
+						jumpSound.Play();
+					}
+					if (onWallRight && wallTimeCount <= 0) {
+						m_speed.Y = jumpSpeed;
+						m_speed.X = -jumpSpeed;
+						jumpSound.Play();
+					}
+				}
+			} else if (!onFloor) {
+				justHitWall = false;
 			}
+			
+			
 			if (m_keys.IsKeyPressed(Sdl.SDLK_RIGHT) || m_keys.IsKeyPressed(Sdl.SDLK_d)) {
 				GoRight();
 			}
 			else if (m_keys.IsKeyPressed(Sdl.SDLK_LEFT) || m_keys.IsKeyPressed(Sdl.SDLK_a)) {
 				GoLeft();
 			}
-			
-			//camera
-			m_game.viewOffset = new Vector2f((Game.Width*0.5f)-Position.X, (Game.Height*0.5f)-Position.Y);
 				
 			//deal with gun
 			if (m_keys.IsMouseButtonPressed(Sdl.SDL_BUTTON_LEFT)) {
 				m_magnum.Shoot();
 			}
-			m_magnum.AimAt(m_game.ScreenPxToGameCoords(m_keys.MousePos));
+			m_magnum.AimAt(m_keys.MousePos);
 			//Console.WriteLine("mouse is at: " + m_keys.MousePos.ScreenToGameCoords() + " or " + m_keys.MousePos);
 		}
 	}

@@ -6,17 +6,20 @@ using System.Linq;
 
 using Tao.OpenGl;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
-
-
-	public class ObjectHouse
+	public class ObjectHouse : IObjectCollection, IGangsterProvider
 	{
 		public static bool drawBoundingBoxes;
 		
 		Dictionary<Type, SyncList<Object>> m_things = new Dictionary<Type, SyncList<Object>>();
+		Dictionary<Priority, SyncList<IDrawable>> m_drawables = new Dictionary<Priority, SyncList<IDrawable>>();
 		
 		TileMap m_map;
+		
+		private NetworkHouse networkHouse;
+		List<Type> interceptedTypes = new List<Type>();
+		
 		
 		public ObjectHouse () {
 			m_things[typeof(IDrawable)] = new SyncList<object>();
@@ -30,6 +33,7 @@ namespace MagnumHouse
 			m_things[typeof(IDrawable)] = new SyncList<object>();
 			m_things[typeof(IUpdateable)] = new SyncList<object>();
 		}
+		
 		public void Add<T>(T _addee) {
 			SyncList<Object> list;
 			if (m_things.TryGetValue(typeof(T), out list)) {
@@ -48,8 +52,20 @@ namespace MagnumHouse
 			}
 		}
 		
+		public void SetNetworkHouse(NetworkHouse house) {
+			networkHouse = house;
+		}
+		
+		public void RegisterNetworkType(Type intercept) {
+			interceptedTypes.Add(intercept);
+		}
+		
 		public void AddUpdateable(IUpdateable _updateable) {
-			Add<IUpdateable>(_updateable);
+			if (interceptedTypes.Contains(_updateable.GetType())) {
+				networkHouse.AddUdateable(_updateable);
+			} else {
+				Add<IUpdateable>(_updateable);
+			}
 		}
 		
 		public void RemoveUpdateable(IUpdateable _updateable) {
@@ -57,19 +73,55 @@ namespace MagnumHouse
 		}
 		
 		public void AddDrawable(IDrawable _drawable) {
-			Add<IDrawable>(_drawable);
+			SyncList<IDrawable> list;
+			if (!m_drawables.TryGetValue(_drawable.Priority, out list)) {
+				list = new SyncList<IDrawable>();
+				m_drawables.Add(_drawable.Priority, list);
+			}
+			list.Add(_drawable);
+			list.Process();
 		}
 		
 		public void RemoveDrawable(IDrawable _drawable) {
-			Remove<IDrawable>(_drawable);
+			SyncList<IDrawable> list;
+			if (m_drawables.TryGetValue(_drawable.Priority, out list)) {
+				list.Remove(_drawable);
+			}
 		}
 		
 		private SyncList<object> GetList<T>() {
-			return m_things[typeof(T)];
+			SyncList<object> list;
+			if (!m_things.TryGetValue(typeof(T), out list)) {
+				list = new SyncList<object>();
+			}
+			return list;
+		}
+		
+		private SyncList<IDrawable> GetDrawableList(Priority _priority) {
+			SyncList<IDrawable> list;
+			if (!m_drawables.TryGetValue(_priority, out list)) {
+				list = new SyncList<IDrawable>();
+			}
+			return list;
+		}
+		
+		public void Draw(Layer layer) {
+			Draw(layer, Priority.Back);
+			Draw(layer, Priority.Middle);
+			Draw(layer, Priority.Front);
+		}
+		
+		public void Draw(Layer layer, Priority _priority) {
+			SyncList<IDrawable> list = GetDrawableList(_priority);
+			list.NiftyFor<IDrawable>(
+			_d => {
+				if ((_d.Layer & layer) == _d.Layer)
+					_d.Draw();
+			}, _d => _d.Dead);
 		}
 		
 		public void Draw() {
-			GetList<IDrawable>().NiftyFor<IDrawable>(_d => _d.Draw(), _d => _d.Dead);
+			Draw(Layer.Normal);
 			
 			if (drawBoundingBoxes) {
 				foreach (var thing in GetAllDrawable<IThing2D>()) {
@@ -93,9 +145,13 @@ namespace MagnumHouse
 			UpdateSlugs();
 		}
 		
+		public void Grab() {
+			GetList<IGrabing>().NiftyFor<IGrabing>(_g => _g.Grab(Draw), _g => _g.Dead);
+		}
+		
 		private void UpdateSlugs() {
 			foreach (var slug in GetAllSlugs()) {
-				if (m_map.IsCollision(slug.Position, slug.Size)) {
+				if (m_map.IsCollision(slug.Position, slug.Size) == TileMap.BLOCK) {
 					slug.HitSomething(ThingsToHit.Wall, null);
 				} else if (slug.Position.X > m_map.Width || slug.Position.X < 0
 				           || slug.Position.Y > m_map.Height || slug.Position.Y < 0) {
@@ -105,9 +161,11 @@ namespace MagnumHouse
 					_gangster =>
 					{
 						if (_gangster.Bounds.Overlaps(slug.Bounds)) {
-							slug.HitSomething(ThingsToHit.Gangster, _gangster);
-							_gangster.GotShot(slug);
-							return true;
+							if (_gangster != slug.Magnum.Owner) {
+								slug.HitSomething(ThingsToHit.Gangster, _gangster);
+								_gangster.GotShot(slug);
+								return true;
+							}
 						}
 						return false;
 					},
@@ -143,14 +201,26 @@ namespace MagnumHouse
 			}
 		}
 		
+		public IEnumerable<IDrawable> GetDrawables() {
+			foreach (var kvp in m_drawables) {
+				foreach (var drawable in kvp.Value) {
+					yield return drawable;
+				}
+			}
+		}
+		
 		public IEnumerable<T> GetAllDrawable<T>() {
-			return GetAll<T>(GetList<IDrawable>());
+			return GetAll<T>(GetDrawables());
 		}
 		
 		public void ProcessLists() {
 			foreach (var thing in m_things) {
 				thing.Value.Process();
 			}
+		}
+		
+		public void Die() {
+			GetList<IUpdateable>().NiftyFor<IUpdateable>(_u => _u.Die(), _u => false);
 		}
 	}
 }

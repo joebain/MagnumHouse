@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace MagnumHouse
+namespace MagnumHouseLib
 {
 	public class SyncList<T> : IEnumerable<T>
 	{

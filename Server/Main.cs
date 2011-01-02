@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using MagnumHouseLib;
+using MagnumHouseLib;
 
 namespace Server
 {
@@ -11,7 +12,13 @@ namespace Server
 			Console.WriteLine("server");
 			NetworkServer server = new NetworkServer();
 			server.Start();
-			while(true) {Thread.Sleep(10);}
+			
+			var sl = new ServerLevel(server);
+			var game = new Game();
+			Game.Zoom = 0.2f;
+			game.SetLevels(new [] {sl});
+			game.Setup();
+			game.Run();
 		}
 	}
 }
