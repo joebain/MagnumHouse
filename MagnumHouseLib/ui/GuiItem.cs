@@ -19,11 +19,14 @@ namespace MagnumHouseLib
 		int displayList;
 		public virtual bool Hidden {get; set;}
 		
+		Text label;
+		
 		float timeSinceTouched;
 		
 		//this doesnt need to be a vector but it has to be
 		//*something* for locking to work
 		static object s_hasFocus = new Vector2f();
+		public static object Focused {get{return s_hasFocus;}}
 		
 		static bool GetFocus(object _taker) {
 			if (_taker == null) return false;
@@ -69,6 +72,13 @@ namespace MagnumHouseLib
 			Gl.glEndList();
 		}
 		
+		public void SetLabel(string text) {
+			label = new Text(text);
+			label.PointSize = (int)Text.PointSizes.Ten;
+			label.Position = Position.Clone();
+			label.Position.Y += Size.Y;
+		}
+		
 		public virtual void Die() {
 			m_dead = true;
 			m_keyboard.MouseDown -= MouseClicked;
@@ -89,6 +99,11 @@ namespace MagnumHouseLib
 				backgroundColour.A = 1f;
 			} else {
 				backgroundColour.A = 0.5f;
+			}
+			
+			if (label != null) {
+				label.Position.Y = Position.Y + Size.Y;
+				label.Position.X = Position.X;
 			}
 		}
 		
@@ -112,6 +127,9 @@ namespace MagnumHouseLib
 			Gl.glDisable(Gl.GL_BLEND);
 			
 			Gl.glPopMatrix();
+			
+			if (label != null)
+				label.Draw();
 		}
 		
 		protected virtual void DrawAfter() {

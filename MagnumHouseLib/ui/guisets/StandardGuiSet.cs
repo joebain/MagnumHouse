@@ -9,12 +9,10 @@ namespace MagnumHouseLib
 		Button blockButton;
 		Button floorButton;
 		Button emptyButton;
-		Button saveButton;
-		Button loadButton;
-		Button playButton;
-		Button eventsButton;
 		
-		TextBox filenameBox;
+		Button playButton;
+		Button locationsButton;
+		Button fileButton;
 		
 		int m_selectedTileType = TileMap.EMPTY;
 		public int SelectedTileType {
@@ -37,13 +35,10 @@ namespace MagnumHouseLib
 			floorButton = NewChangeTileTypeButton("Floor", 2, TileMap.FLOOR);
 			emptyButton = NewChangeTileTypeButton("Empty", 3, TileMap.EMPTY);
 			
-			saveButton = NewButton("Save", 5, SaveLevel);
-			loadButton = NewButton("Load", 6, LoadLevel);
-			filenameBox = NewTextBox("Filename", m_editor.filename, 7);
-			
 			playButton = NewButton("Play", 10, PlayLevel);
 			
-			eventsButton = NewButton("Events", 12, EventsMode);
+			fileButton = NewButton("File", 11, FileMode);
+			locationsButton = NewButton("Locations", 12, LocationsMode);
 		}
 		
 		public override void Update (float _delta)
@@ -54,14 +49,18 @@ namespace MagnumHouseLib
 			if (!buttonClicked) {
 				//mouse clicks on tiles
 				Vector2i mouse_pos = m_editor.Cursor.GridPosition;
-				if (m_keyboard.IsMouseButtonPressed(Sdl.SDL_BUTTON_LEFT)) {
+				if (mouse_pos.X >= 0 && mouse_pos.X < m_editor.Size.X &&
+				    mouse_pos.Y >= 0 && mouse_pos.Y < m_editor.Size.Y) {
 					
-					if (tileClicks[mouse_pos.X, mouse_pos.Y] == 0) {
-						tileClicks[mouse_pos.X, mouse_pos.Y] = 1;
-						m_editor.Map.SetTileAt(mouse_pos, SelectedTileType);
+					if (m_keyboard.IsMouseButtonPressed(Sdl.SDL_BUTTON_LEFT)) {
+						
+						if (tileClicks[mouse_pos.X, mouse_pos.Y] == 0) {
+							tileClicks[mouse_pos.X, mouse_pos.Y] = 1;
+							m_editor.Map.SetTileAt(mouse_pos, SelectedTileType);
+						}
+					} else {
+						tileClicks[mouse_pos.X, mouse_pos.Y] = 0;
 					}
-				} else {
-					tileClicks[mouse_pos.X, mouse_pos.Y] = 0;
 				}
 			}
 			else {
@@ -73,18 +72,12 @@ namespace MagnumHouseLib
 			return NewButton(text, pos, () => SelectedTileType = tiletype);
 		}
 		
-		private void EventsMode() {
-			m_editor.ChangeGuiSet(new EventsGuiSet(m_game, m_keyboard, m_editor));
+		private void LocationsMode() {
+			m_editor.ChangeGuiSet(new EditLocationsGuiSet(m_game, m_keyboard, m_editor));
 		}
 		
-		private void SaveLevel() {
-			m_editor.filename = filenameBox.Text;
-			m_editor.Map.Save(filenameBox.Text);
-		}
-		
-		private void LoadLevel() {
-			m_editor.filename = filenameBox.Text;
-			m_editor.Map.Load(filenameBox.Text);
+		private void FileMode() {
+			m_editor.ChangeGuiSet(new FileGuiSet(m_game, m_keyboard, m_editor));
 		}
 		
 		private void PlayLevel() {

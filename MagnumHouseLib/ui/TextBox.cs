@@ -40,7 +40,7 @@ namespace MagnumHouseLib
 			m_keyboard.KeyDown += AddLetter;
 		}
 		
-		public void AddLetter(Sdl.SDL_keysym key) {
+		public virtual void AddLetter(Sdl.SDL_keysym key) {
 			if (!HasFocus) return;
 			if (m_keyboard.KeyIsChar(key)) {
 				Contents.Contents += m_keyboard.KeyToChar(key);

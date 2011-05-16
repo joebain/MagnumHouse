@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Xml.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections.Generic;
 
 namespace MagnumHouseLib
 {
@@ -54,8 +55,7 @@ namespace MagnumHouseLib
 		
 		private LevelData Map;
 		
-		private EventData events = new EventData();
-		public EventData Data {get {return events;}}
+		public LocationData locationData = new LocationData();
 		
 		public TileMap(Vector2i size) {
 			Map = new LevelData(size.Y, size.X);
@@ -114,28 +114,36 @@ namespace MagnumHouseLib
 			}	
 		}
 		
-		public void Save(string filename) {
-			var xf = new BinaryFormatter();
-			var file = File.OpenWrite(filename + ".events");
-			xf.Serialize(file, events);
+		private const string LOCATIONS_EXTENSION = ".locations.xml";
+		private const string MAP_EXTENSION = ".map";
+
+		private void WithNewFile(String filename, Action<FileStream> action) {
+			if (File.Exists(filename)) {
+				File.Delete(filename);
+			}
+			var file = File.OpenWrite(filename);
+			action(file);
 			file.Flush();
 			file.Close();
+		}
+		
+		public void Save(string filename) {
+			
+			var xf = new XmlSerializer(typeof(LocationData));
+			WithNewFile(filename + LOCATIONS_EXTENSION, _file => xf.Serialize(_file, locationData));
 			
 			var bf = new BinaryFormatter();
-			file = File.OpenWrite(filename + ".map");
-			bf.Serialize(file, Map);
-			file.Flush();
-			file.Close();
+			WithNewFile(filename + MAP_EXTENSION, _file => bf.Serialize(_file, Map));
 		}
 		
 		public bool Load(string filename) {
 			bool success = false;
 			try {
-				using (var file = File.OpenRead(filename + ".events")) {	
-					var bf = new BinaryFormatter();
-					events = (EventData)bf.Deserialize(file);
+				using (var file = File.OpenRead(filename + LOCATIONS_EXTENSION)) {	
+					var bf = new XmlSerializer(typeof(LocationData));
+					locationData = (LocationData)bf.Deserialize(file);
 				}
-				using (var file = File.OpenRead(filename + ".map")) {	
+				using (var file = File.OpenRead(filename + MAP_EXTENSION)) {	
 					var bf = new BinaryFormatter();
 					Map = (LevelData)bf.Deserialize(file);
 				}

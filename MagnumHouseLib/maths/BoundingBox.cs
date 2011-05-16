@@ -15,6 +15,13 @@ namespace MagnumHouseLib
 		{
 		}
 		
+		public BoundingBox(Vector2f bottomLeft, Vector2f topRight) {
+			Top = topRight.Y;
+			Bottom = bottomLeft.Y;
+			Left = bottomLeft.X;
+			Right = topRight.X;
+		}
+		
 		public BoundingBox(float _left, float _bottom, float _right, float _top) {
 			Top = _top;
 			Bottom = _bottom;
@@ -27,6 +34,7 @@ namespace MagnumHouseLib
 		
 		public Vector2f TopLeft {get{return new Vector2f(Left, Top);}}
 		public Vector2f BottomRight {get{return new Vector2f(Right, Bottom);}}
+		public Vector2f Centre {get{return new Vector2f((Right + Left)/2, (Top + Bottom)/2);}}
 		public Vector2f Size {get{return new Vector2f(Width, Height);}}
 		
 		public bool Overlaps(BoundingBox _other) {
@@ -62,5 +70,7 @@ namespace MagnumHouseLib
 			Gl.glEnd();
 			Gl.glPopMatrix();
 		}
+		
+		public BoundingBox Clone {get{return new BoundingBox(Left, Bottom, Right, Top);}}
 	}
 }

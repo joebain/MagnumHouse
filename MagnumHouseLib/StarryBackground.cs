@@ -3,7 +3,7 @@ using Tao.OpenGl;
 
 namespace MagnumHouseLib
 {
-	public class Background : IDrawable
+	public class StarryBackground : IDrawable
 	{
 		public Priority Priority {get { return Priority.Middle; } }
 		
@@ -13,7 +13,7 @@ namespace MagnumHouseLib
 		public float starSize = 2.0f;
 		public Layer Layer { get;set; }
 		
-		public Background(Vector2i _size) {
+		public StarryBackground(Vector2i _size) {
 			Layer = Layer.Blurry;
 			Random rand = new Random(42);
 			for (int i = 0 ; i < points.Length ; i++) {

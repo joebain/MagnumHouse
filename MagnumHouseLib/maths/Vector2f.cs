@@ -160,5 +160,13 @@ namespace MagnumHouseLib
 		public Vector2f Clone() {
 			return new Vector2f(X, Y);
 		}
+		
+		public void Clamp(BoundingBox bounds) {
+			if (X > bounds.Right) X = bounds.Right;
+			else if (X < bounds.Left) X = bounds.Left;
+			
+			if (Y < bounds.Bottom) Y = bounds.Bottom;
+			else if (Y > bounds.Top) Y = bounds.Top;
+		}
 	}
 }

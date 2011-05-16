@@ -3,6 +3,7 @@ using System;
 
 namespace MagnumHouseLib
 {
+	[Serializable]
 	public class Colour
 	{
 
@@ -32,6 +33,30 @@ namespace MagnumHouseLib
 		
 		public static Colour Blend(Colour one, Colour two, float level) {
 			return one*(1-level) + two*level;
+		}
+		
+		public static Colour Parse(string text) {
+			Colour colour = new Colour();
+			float[] fVals = new float[4];
+			string[] components = text.Split(new []{','});
+			if (components.Length != 4) return colour;
+			int i = 0;
+			foreach (string component in components) {
+				int iVal = int.Parse(component);
+				if (iVal < 0 | iVal > 255) return colour;
+				fVals[i] = iVal / 255.0f;
+				i ++;
+			}
+			colour.R = fVals[0];
+			colour.G = fVals[1];
+			colour.B = fVals[2];
+			colour.A = fVals[3];
+			return colour;
+		}
+		
+		public override string ToString ()
+		{
+			return String.Format("{0},{1},{2},{3}", (int)(R * 255), (int)(G*255), (int)(B*255), (int)(A*255));
 		}
 	}
 }

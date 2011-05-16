@@ -12,11 +12,12 @@ namespace MagnumHouseLib
 			base (_game, _keyboard, _editor)
 		{
 			Button okButton = new Button(m_keyboard, "OK", m_game.Camera);
-			okButton.Right();
 			okButton.Position = new Vector2f(okButton.Position.X, 1);
+			okButton.Right();
+			Console.WriteLine("ok button pos: {0}", okButton.Position);
 			Button cancelButton = new Button(m_keyboard, "Cancel", m_game.Camera);
-			cancelButton.Right();
 			cancelButton.Position = new Vector2f(cancelButton.Position.X, 3);
+			cancelButton.Right();
 			
 			okButton.Pressed += Ok;
 			cancelButton.Pressed += Cancel;

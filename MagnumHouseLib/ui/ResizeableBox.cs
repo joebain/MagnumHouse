@@ -19,6 +19,15 @@ namespace MagnumHouseLib
 		BoundingBox bottom = new BoundingBox();
 		BoundingBox middle = new BoundingBox();
 		
+		Vector2f grabPos = new Vector2f();
+		
+		public Action<BoundingBox> MoveAction;
+		public Action<BoundingBox> ResizeAction;
+		
+		
+		
+		public BoundingBox Box {get {return Bounds;}}
+		
 		const float bounds = 0.5f;
 		
 		public ResizeableBox (UserInput keyboard, Vector2f size, Camera camera) : base(keyboard, size, camera)
@@ -56,6 +65,7 @@ namespace MagnumHouseLib
 		
 		public void MouseDownHandler(Sdl.SDL_MouseButtonEvent button) {
 			if (button.button == Sdl.SDL_BUTTON_LEFT) {
+				grabPos = m_keyboard.MousePos - Position;
 				if (MouseOnLeft ()) {
 					leftGrab = true;
 				}
@@ -87,23 +97,28 @@ namespace MagnumHouseLib
 		public override void Update (float _delta)
 		{
 			if (middleGrab) {
-				CentreOn(m_keyboard.MousePos);
+				Position = m_keyboard.MousePos - grabPos;
+				if (MoveAction != null) MoveAction(Bounds);
 			}
 			if (rightGrab) {
 				Size.X = m_keyboard.MousePos.X - Position.X;
+				if (ResizeAction != null) ResizeAction(Bounds);
 			}
 			if (leftGrab) {
 				float oldx = Position.X;
 				Position = new Vector2f(m_keyboard.MousePos.X, Position.Y);
 				Size.X += oldx - Position.X;
+				if (ResizeAction != null) ResizeAction(Bounds);
 			}
 			if (bottomGrab) {
 				float oldy = Position.Y;
 				Position = new Vector2f(Position.X, m_keyboard.MousePos.Y);
 				Size.Y += oldy - Position.Y;
+				if (ResizeAction != null) ResizeAction(Bounds);
 			}
 			if (topGrab) {
 				Size.Y = m_keyboard.MousePos.Y - Position.Y;
+				if (ResizeAction != null) ResizeAction(Bounds);
 			}
 			base.Update (_delta);
 		}

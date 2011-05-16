@@ -8,18 +8,12 @@ namespace MagnumHouseLib
 	{
 
 		public Thing2D CameraSubject;
-		public Vector2i ScreenSize;
 		public Vector2f ViewOffset = Game.ScreenSize*0.5f;
 		public Vector2f LastOffset = Game.ScreenSize*0.5f;
 		
-//		public Vector2f Centre {
-//			get {
-//				return ViewOffset;
-//			}
-//			set {
-//				
-//			}
-//		}
+		public BoundingBox Bounds = new BoundingBox(0,0,Game.Width, Game.Height);
+		
+		public Screen CurrentScreen;
 		
 		public void SetPosition() {
 			Gl.glMatrixMode(Gl.GL_PROJECTION);
@@ -46,31 +40,26 @@ namespace MagnumHouseLib
 			
 			if (CameraSubject != null) {
 				centre = CameraSubject.Position;
+			} else if (CurrentScreen != null) {
+				centre = CurrentScreen.Bounds.Centre.Clone();
 			} else {
 				centre = Game.ScreenCentre;
 			}
 			
 			ViewOffset = Game.ScreenSize*0.5f - centre;
 			
-			Vector2i size;
-			if (ScreenSize == null) {
-				size = new Vector2i(Game.ScreenWidth, Game.ScreenHeight);
-			} else {
-				size = ScreenSize;
-			}
+			if (CurrentScreen == null) return ViewOffset;
 			
-			if (ViewOffset.X < -size.X+Game.Width) {
-				ViewOffset.X = -size.X+Game.Width;
-			}
-			else if (ViewOffset.X > 0) {
-				ViewOffset.X = 0;
-			}
-			if (ViewOffset.Y < -size.Y+Game.Height) {
-				ViewOffset.Y = -size.Y+Game.Height;
-			}
-			else if (ViewOffset.Y > 0) {
-				ViewOffset.Y = 0;
-			}
+			Bounds = CurrentScreen.Bounds.Clone;
+			Bounds.Right -= Game.Width;
+			//Bounds.Left += Game.Width/2;
+			Bounds.Top -= Game.Height;
+			//Bounds.Bottom += Game.Height/2;
+			
+			ViewOffset *= -1;
+			ViewOffset.Clamp(Bounds);
+			ViewOffset *= -1;
+			
 			return ViewOffset;
 		}
 		
