@@ -29,17 +29,25 @@ namespace MagnumHouseLib
 			Gl.glVertex2f(m_size.X, m_size.Y);
 			Gl.glEnd();
 			
-			Gl.glColor3f(1f,0f, 0f);
+			Gl.glColor3f(1f,0.6f, 0.6f);
+			Gl.glEnable(Gl.GL_LINE_STIPPLE);
+			
+			//0110 0110 0110 0110
+			Gl.glLineStipple(Tile.Size/4, 0x6666);
 			Gl.glBegin(Gl.GL_LINES);
-			for (int x = 0 ; x <= m_size.X; ++x) {
+			for (int x = 0 ; x <= m_size.X; x += 2) {
 				Gl.glVertex2f(x, 0);
 				Gl.glVertex2f(x, m_size.Y);
 			}
-			for (int y = 0 ; y <= m_size.Y ; ++y) {
+			
+			for (int y = 0 ; y <= m_size.Y ; y += 2) {
 				Gl.glVertex2f(0, y);
 				Gl.glVertex2f(m_size.X, y);
 			}
 			Gl.glEnd();
+			
+			Gl.glLineStipple(1, ~0);
+			Gl.glDisable(Gl.GL_LINE_STIPPLE);
 		}
 	}
 }

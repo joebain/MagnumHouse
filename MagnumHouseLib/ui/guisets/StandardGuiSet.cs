@@ -9,12 +9,10 @@ namespace MagnumHouseLib
 		Button blockButton;
 		Button floorButton;
 		Button emptyButton;
-		Button saveButton;
-		Button loadButton;
+		
 		Button playButton;
 		Button eventsButton;
-		
-		TextBox filenameBox;
+		Button fileButton;
 		
 		int m_selectedTileType = TileMap.EMPTY;
 		public int SelectedTileType {
@@ -37,12 +35,9 @@ namespace MagnumHouseLib
 			floorButton = NewChangeTileTypeButton("Floor", 2, TileMap.FLOOR);
 			emptyButton = NewChangeTileTypeButton("Empty", 3, TileMap.EMPTY);
 			
-			saveButton = NewButton("Save", 5, SaveLevel);
-			loadButton = NewButton("Load", 6, LoadLevel);
-			filenameBox = NewTextBox("Filename", m_editor.filename, 7);
-			
 			playButton = NewButton("Play", 10, PlayLevel);
 			
+			fileButton = NewButton("File", 11, FileMode);
 			eventsButton = NewButton("Events", 12, EventsMode);
 		}
 		
@@ -81,14 +76,8 @@ namespace MagnumHouseLib
 			m_editor.ChangeGuiSet(new EditEventsGuiSet(m_game, m_keyboard, m_editor));
 		}
 		
-		private void SaveLevel() {
-			m_editor.filename = filenameBox.Text;
-			m_editor.Map.Save(filenameBox.Text);
-		}
-		
-		private void LoadLevel() {
-			m_editor.filename = filenameBox.Text;
-			m_editor.Map.Load(filenameBox.Text);
+		private void FileMode() {
+			m_editor.ChangeGuiSet(new FileGuiSet(m_game, m_keyboard, m_editor));
 		}
 		
 		private void PlayLevel() {
