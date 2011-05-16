@@ -46,7 +46,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Core" />
     <Reference Include="Tao.FreeGlut, Version=2.4.0.2, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d">
-      <Package>tao-freeglut</Package>
     </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -187,7 +186,6 @@
     <Compile Include="gfx\events\description\EventDescription.cs" />
     <Compile Include="scenery\EventData.cs" />
     <Compile Include="ui\guisets\EventsGuiSet.cs" />
-    <Compile Include="Assert.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
