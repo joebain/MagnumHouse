@@ -16,7 +16,12 @@ namespace MagnumHouseLib
 		
 		Text label;
 		
+		TextBox locationLabel;
+		
 		int locationCount = 0;
+		
+		Dictionary<ResizeableBox, BoxDescription> boxes2boxes = new Dictionary<ResizeableBox, BoxDescription>();
+		Dictionary<MoveablePoint, PointDescription> points2points = new Dictionary<MoveablePoint, PointDescription>();
 		
 		public EditLocationsGuiSet (Game _game, UserInput _keyboard, EditorLevel _editor) :
 			base (_game, _keyboard, _editor)
@@ -28,13 +33,19 @@ namespace MagnumHouseLib
 			addBoxButton = NewButton("Box", 4, () => AddBox("box"+(locationCount++)));
 			addPointButton = NewButton("Point", 5, () => AddPoint("point"+(locationCount++)));
 			
-			deleteButton = NewButton("Delete", 2, Delete);
+			deleteButton = NewButton("Delete", 3, Delete);
 			
+			locationLabel = NewTextBox("Location label", "", 2);
+			
+			boxes2boxes.Clear();
 			foreach (BoxDescription box in m_editor.Map.locationData.boxes) {
-				makeBox(box.name, box.box);
+				var rBox = makeBox(box.name, box.box);
+				boxes2boxes.Add(rBox, box);
 			}
+			points2points.Clear();
 			foreach (PointDescription point in m_editor.Map.locationData.points) {
-				makePoint(point.name, point.point);
+				var mPoint = makePoint(point.name, point.point);
+				points2points.Add(mPoint, point);
 			}
 		}
 		
@@ -56,6 +67,7 @@ namespace MagnumHouseLib
 		private void AddBox(String title) {
 			var box = makeBox(title);
 			var boxDesc = new BoxDescription(title, box.Box);
+			boxes2boxes.Add(box, boxDesc);
 			m_editor.Map.locationData.boxes.Add(boxDesc);
 			box.MoveAction = _box => boxDesc.box = _box;
 			box.ResizeAction = _box => boxDesc.box = _box;
@@ -77,6 +89,7 @@ namespace MagnumHouseLib
 		private void AddPoint(String title) {
 			var point = makePoint(title);
 			var pointDesc = new PointDescription(title, point.Bounds.Centre);
+			points2points.Add(point, pointDesc);
 			m_editor.Map.locationData.points.Add(pointDesc);
 			point.MoveAction = _point => pointDesc.point = _point;
 		}
@@ -89,8 +102,24 @@ namespace MagnumHouseLib
 			
 			object focused = GuiItem.Focused;
 			if (focused is ResizeableBox) {
-				ResizeableBox eventBox = (ResizeableBox) focused;
-				
+				ResizeableBox rBox = (ResizeableBox) focused;
+				if (boxes2boxes.ContainsKey(rBox)) {
+					BoxDescription bdesc = boxes2boxes[rBox];
+					m_editor.Map.locationData.boxes.Remove(bdesc);
+					rBox.Die();
+					//items.Remove(rBox);
+					boxes2boxes.Remove(rBox);
+				}
+			}
+			else if (focused is MoveablePoint) {
+				MoveablePoint mPoint = (MoveablePoint) focused;
+				if (points2points.ContainsKey(mPoint)) {
+					PointDescription pdesc = points2points[mPoint];
+					m_editor.Map.locationData.points.Remove(pdesc);
+					mPoint.Die();
+					//items.Remove(rBox);
+					points2points.Remove(mPoint);
+				}
 			}
 		}
 	}
