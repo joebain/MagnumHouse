@@ -34,7 +34,16 @@ namespace MagnumHouseLib
 		
 		public Vector2f TopLeft {get{return new Vector2f(Left, Top);}}
 		public Vector2f BottomRight {get{return new Vector2f(Right, Bottom);}}
-		public Vector2f Centre {get{return new Vector2f((Right + Left)/2, (Top + Bottom)/2);}}
+		public Vector2f Centre {
+			get{return new Vector2f((Right + Left)/2, (Top + Bottom)/2);}
+			set{
+				Vector2f offset = value - Centre;
+				Right += offset.X;
+				Left += offset.X;
+				Top += offset.Y;
+				Bottom += offset.Y;
+			}
+		}
 		public Vector2f Size {get{return new Vector2f(Width, Height);}}
 		
 		public bool Overlaps(BoundingBox _other) {

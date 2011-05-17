@@ -202,6 +202,7 @@
     <Compile Include="scenery\LocationData.cs" />
     <Compile Include="gfx\events\description\PointDescription.cs" />
     <Compile Include="gfx\events\description\BoxDescription.cs" />
+    <Compile Include="ui\MoveablePoint.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

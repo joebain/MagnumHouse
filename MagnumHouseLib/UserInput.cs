@@ -54,6 +54,13 @@ namespace MagnumHouseLib
 			m_mousePos = m_game.ScreenPxToGameCoords(screenMousePos);
 		}
 		
+		public Boolean WindowHasFocus {
+			get {
+				byte state = Sdl.SDL_GetAppState ();
+				return (state & Sdl.SDL_APPMOUSEFOCUS) != 0 && (state & Sdl.SDL_APPINPUTFOCUS) != 0 && (state & Sdl.SDL_APPACTIVE) != 0;
+			}
+		}
+		
 		public Action<Sdl.SDL_keysym> KeyDown;
 		public Action<Sdl.SDL_keysym> KeyUp;
 		public Action<Sdl.SDL_MouseButtonEvent> MouseDown;

@@ -86,8 +86,9 @@ namespace MagnumHouseLib
 			}
 			
 			//mouse moves the camera at edge
-			if (Math.Abs(m_keyboard.MousePos.X - cameraSubject.Position.X) > Game.Width/2 - 0.2f ||
-			    Math.Abs(m_keyboard.MousePos.Y - cameraSubject.Position.Y) > Game.Height/2 - 0.2f) {
+			if (m_keyboard.WindowHasFocus &&
+			    (Math.Abs (m_keyboard.MousePos.X - cameraSubject.Position.X) > Game.Width/2 - 0.4f ||
+			     Math.Abs (m_keyboard.MousePos.Y - cameraSubject.Position.Y) > Game.Height/2 - 0.4f)) {
 				Vector2f move = (m_keyboard.MousePos - cameraSubject.Position);
 				move.Cap(cameraSpeed*_delta);
 				cameraSubject.Position += move;
