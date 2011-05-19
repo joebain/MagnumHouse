@@ -20,6 +20,9 @@ namespace MagnumHouseLib
 		
 		int locationCount = 0;
 		
+		object lastFocusedDescription = null;
+		GuiItem lastFocusedGuiItem = null;
+		
 		Dictionary<ResizeableBox, BoxDescription> boxes2boxes = new Dictionary<ResizeableBox, BoxDescription>();
 		Dictionary<MoveablePoint, PointDescription> points2points = new Dictionary<MoveablePoint, PointDescription>();
 		
@@ -28,12 +31,12 @@ namespace MagnumHouseLib
 		{
 			exitButton = NewButton("Back", 0, Exit);
 			
-			label = NewLabel("Add:", 6);
+			label = NewLabel("Add:", 8);
 			
-			addBoxButton = NewButton("Box", 4, () => AddBox("box"+(locationCount++)));
-			addPointButton = NewButton("Point", 5, () => AddPoint("point"+(locationCount++)));
+			addBoxButton = NewButton("Box", 7, () => AddBox("box"+(locationCount++)));
+			addPointButton = NewButton("Point", 6, () => AddPoint("point"+(locationCount++)));
 			
-			deleteButton = NewButton("Delete", 3, Delete);
+			deleteButton = NewButton("Delete", 4, Delete);
 			
 			locationLabel = NewTextBox("Location label", "", 2);
 			
@@ -107,7 +110,6 @@ namespace MagnumHouseLib
 					BoxDescription bdesc = boxes2boxes[rBox];
 					m_editor.Map.locationData.boxes.Remove(bdesc);
 					rBox.Die();
-					//items.Remove(rBox);
 					boxes2boxes.Remove(rBox);
 				}
 			}
@@ -117,8 +119,42 @@ namespace MagnumHouseLib
 					PointDescription pdesc = points2points[mPoint];
 					m_editor.Map.locationData.points.Remove(pdesc);
 					mPoint.Die();
-					//items.Remove(rBox);
 					points2points.Remove(mPoint);
+				}
+			}
+		}
+		
+		public override void Update(float _delta)
+		{
+			base.Update(_delta);
+			object focused = GuiItem.Focused;
+			if (focused is ResizeableBox) {
+				ResizeableBox rBox = (ResizeableBox) focused;
+				lastFocusedGuiItem = rBox;
+				if (boxes2boxes.ContainsKey(rBox)) {
+					BoxDescription bdesc = boxes2boxes[rBox];
+					lastFocusedDescription = bdesc;
+					locationLabel.Text = bdesc.name;
+				}
+			} else if (focused is MoveablePoint) {
+				MoveablePoint mPoint = (MoveablePoint) focused;
+				lastFocusedGuiItem = mPoint;
+				if (points2points.ContainsKey(mPoint)) {
+					PointDescription pdesc = points2points[mPoint];
+					lastFocusedDescription = pdesc;
+					locationLabel.Text = pdesc.name;
+				}
+			}
+			
+			if (lastFocusedDescription != null) {
+				if (lastFocusedDescription is BoxDescription) {
+					((BoxDescription)lastFocusedDescription).name = locationLabel.Text;
+				}
+				if (lastFocusedDescription is PointDescription) {
+					((PointDescription)lastFocusedDescription).name = locationLabel.Text;
+				}
+				if (lastFocusedGuiItem != null) {
+					lastFocusedGuiItem.SetLabel(locationLabel.Text);
 				}
 			}
 		}

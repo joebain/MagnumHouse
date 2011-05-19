@@ -60,7 +60,7 @@ namespace MagnumHouseLib
 			Contents.Draw();
 		}
 		
-		public void Die ()
+		public override void Die ()
 		{
 			base.Die();
 			if (m_label != null) m_label.Die();
