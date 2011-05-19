@@ -64,34 +64,34 @@ namespace MagnumHouseLib
 			endzone = m_tilemap.locationData.end.box;
 			
 			// fx
-//			fadingEffect
-//				= new Effect(
-//				    new Vector2i(Game.SmallScreenWidth/2, Game.SmallScreenHeight/2),
-//					new Vector2i(Game.ScreenWidth, Game.ScreenHeight),
-//				    new Vector2i(Game.Width, Game.Height)){ 
-//				CaptureLayer = Layer.Normal,
-//				Layer = Layer.FX,
-//				Priority = Priority.Front,
-//				Scaling = Sprite.ScaleType.Pixelly
-//			};
-//
-//			fadingEffect.SetHUD(_game.Camera);
-//			fadingEffect.SetFading(1f, new Colour(0,0,0,1), new Colour(0,0,0,0));
-//			fadingEffect.SetPixelling(new InverseLogAnimator(0.5f), 
-//			                             new Vector2i(2, 2),
-//			                             fadingEffect.CaptureSize);
-//			fadingEffect.SetBackground(new Colour(0,0,0,1f));
-//			m_house.AddDrawable(fadingEffect);
-//			m_house.AddUpdateable(fadingEffect);
-//			m_house.Add<IGrabing>(fadingEffect);
-//			
-//			welcome_message = new Text("Welcome to the Magnum House...");
-//			welcome_message.SetHUD(m_game.Camera);
-//			welcome_message.CentreOn(Game.Size.ToF()/2);
-//			welcome_message.Priority = Priority.Front;
-//			welcome_message.Layer = Layer.FX;
-//			welcome_message.Transparency = 0f;
-//			m_house.AddDrawable(welcome_message);
+			fadingEffect
+				= new Effect(
+				    new Vector2i(Game.SmallScreenWidth/2, Game.SmallScreenHeight/2),
+					new Vector2i(Game.ScreenWidth, Game.ScreenHeight),
+				    new Vector2i(Game.Width, Game.Height)){ 
+				CaptureLayer = Layer.Normal,
+				Layer = Layer.FX,
+				Priority = Priority.Front,
+				Scaling = Sprite.ScaleType.Pixelly
+			};
+
+			fadingEffect.SetHUD(_game.Camera);
+			fadingEffect.SetFading(1f, new Colour(0,0,0,1), new Colour(0,0,0,0));
+			fadingEffect.SetPixelling(new InverseLogAnimator(0.5f), 
+			                             new Vector2i(2, 2),
+			                             fadingEffect.CaptureSize);
+			fadingEffect.SetBackground(new Colour(0,0,0,1f));
+			m_house.AddDrawable(fadingEffect);
+			m_house.AddUpdateable(fadingEffect);
+			m_house.Add<IGrabing>(fadingEffect);
+			
+			welcome_message = new Text("Welcome to the Magnum House...");
+			welcome_message.SetHUD(m_game.Camera);
+			welcome_message.CentreOn(Game.Size.ToF()/2);
+			welcome_message.Priority = Priority.Front;
+			welcome_message.Layer = Layer.FX;
+			welcome_message.Transparency = 0f;
+			m_house.AddDrawable(welcome_message);
 		}
 		
 		public override void Update (float _delta)
@@ -99,32 +99,32 @@ namespace MagnumHouseLib
 			base.Update (_delta);
 			
 			// end zone
-//			if (endzone.Overlaps(gangsterNo1.Bounds)) {
-//				winTimer = 1;
-//				fadingEffect.SetBackground(new Colour(0,0,0,0));
-//				fadingEffect.SetFading(1f, new Colour(0,0,0,0), new Colour(0,0,0,1));
-//				fadingEffect.SetPixelling(new InverseLogAnimator(0.5f), 
-//				                             new Vector2i(2, 2),
-//				                             fadingEffect.CaptureSize);
-//				m_house.AddDrawable(fadingEffect);
-//				m_house.AddUpdateable(fadingEffect);
-//				m_house.Add<IGrabing>(fadingEffect);
-//			}
-//			if (winTimer > 0 && winTimer <= 2) {
-//				winTimer += _delta;	
-//			} else if (winTimer > 2) {
-//				Exit(new ScreenMessage(){Message = "See you again soon."});
-//			}
-//			if (startTimer <= 2) {
-//				if (startTimer <= 1) welcome_message.Transparency += _delta;
-//				startTimer += _delta;
-//			} else if (startTimer <= 3) {
-//				if (!fadingEffect.Dead) fadingEffect.Die();
-//				welcome_message.Transparency -= _delta;
-//				startTimer += _delta;
-//			} else {
-//				welcome_message.Die();
-//			}
+			if (endzone.Overlaps(gangsterNo1.Bounds)) {
+				winTimer = 1;
+				fadingEffect.SetBackground(new Colour(0,0,0,0));
+				fadingEffect.SetFading(1f, new Colour(0,0,0,0), new Colour(0,0,0,1));
+				fadingEffect.SetPixelling(new InverseLogAnimator(0.5f), 
+				                             new Vector2i(2, 2),
+				                             fadingEffect.CaptureSize);
+				m_house.AddDrawable(fadingEffect);
+				m_house.AddUpdateable(fadingEffect);
+				m_house.Add<IGrabing>(fadingEffect);
+			}
+			if (winTimer > 0 && winTimer <= 2) {
+				winTimer += _delta;	
+			} else if (winTimer > 2) {
+				Exit(new ScreenMessage(){Message = "See you again soon."});
+			}
+			if (startTimer <= 2) {
+				if (startTimer <= 1) welcome_message.Transparency += _delta;
+				startTimer += _delta;
+			} else if (startTimer <= 3) {
+				if (!fadingEffect.Dead) fadingEffect.Die();
+				welcome_message.Transparency -= _delta;
+				startTimer += _delta;
+			} else {
+				welcome_message.Die();
+			}
 		}
 	}
 }
