@@ -26,6 +26,9 @@ namespace MagnumHouseLib
 		Dictionary<ResizeableBox, BoxDescription> boxes2boxes = new Dictionary<ResizeableBox, BoxDescription>();
 		Dictionary<MoveablePoint, PointDescription> points2points = new Dictionary<MoveablePoint, PointDescription>();
 		
+		public const string endzone = "endzone";
+		public const string startpoint = "startpoint";
+
 		public EditLocationsGuiSet (Game _game, UserInput _keyboard, EditorLevel _editor) :
 			base (_game, _keyboard, _editor)
 		{
@@ -35,11 +38,21 @@ namespace MagnumHouseLib
 			
 			addBoxButton = NewButton("Box", 7, () => AddBox("box"+(locationCount++)));
 			addPointButton = NewButton("Point", 6, () => AddPoint("point"+(locationCount++)));
+			setEndLocationButton = NewButton("End zone", 10, () => AddBox(endzone));
+			setStartLocationButton = NewButton("StartPoint", 11, () => AddPoint(startpoint));
 			
 			deleteButton = NewButton("Delete", 4, Delete);
 			
 			locationLabel = NewTextBox("Location label", "", 2);
 			
+			BoxDescription endzoneDesc = m_editor.Map.locationData.end;
+			if (endzoneDesc != null && endzoneDesc.box != null) {
+				makeBox(endzoneDesc.name, endzoneDesc.box);
+			}
+			PointDescription startpointDesc = m_editor.Map.locationData.start;
+			if (startpointDesc != null &&  startpointDesc.point != null) {
+				makePoint(startpointDesc.name, startpointDesc.point);
+			}
 			boxes2boxes.Clear();
 			foreach (BoxDescription box in m_editor.Map.locationData.boxes) {
 				var rBox = makeBox(box.name, box.box);
@@ -70,8 +83,12 @@ namespace MagnumHouseLib
 		private void AddBox(String title) {
 			var box = makeBox(title);
 			var boxDesc = new BoxDescription(title, box.Box);
-			boxes2boxes.Add(box, boxDesc);
-			m_editor.Map.locationData.boxes.Add(boxDesc);
+			if (boxDesc.name == endzone) {
+				m_editor.Map.locationData.end = boxDesc;
+			} else {
+				boxes2boxes.Add(box, boxDesc);
+				m_editor.Map.locationData.boxes.Add(boxDesc);	
+			}
 			box.MoveAction = _box => boxDesc.box = _box;
 			box.ResizeAction = _box => boxDesc.box = _box;
 		}
@@ -92,8 +109,12 @@ namespace MagnumHouseLib
 		private void AddPoint(String title) {
 			var point = makePoint(title);
 			var pointDesc = new PointDescription(title, point.Bounds.Centre);
-			points2points.Add(point, pointDesc);
-			m_editor.Map.locationData.points.Add(pointDesc);
+			if (pointDesc.name == startpoint) {
+				m_editor.Map.locationData.start = pointDesc;
+			} else {
+				points2points.Add(point, pointDesc);
+				m_editor.Map.locationData.points.Add(pointDesc);
+			}
 			point.MoveAction = _point => pointDesc.point = _point;
 		}
 		
@@ -148,10 +169,12 @@ namespace MagnumHouseLib
 			
 			if (lastFocusedDescription != null) {
 				if (lastFocusedDescription is BoxDescription) {
-					((BoxDescription)lastFocusedDescription).name = locationLabel.Text;
+					var desc = ((BoxDescription)lastFocusedDescription);
+					desc.name = locationLabel.Text;	
 				}
 				if (lastFocusedDescription is PointDescription) {
-					((PointDescription)lastFocusedDescription).name = locationLabel.Text;
+					var desc = ((PointDescription)lastFocusedDescription);
+					desc.name = locationLabel.Text;
 				}
 				if (lastFocusedGuiItem != null) {
 					lastFocusedGuiItem.SetLabel(locationLabel.Text);

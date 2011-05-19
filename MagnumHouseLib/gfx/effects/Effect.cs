@@ -33,7 +33,7 @@ namespace MagnumHouseLib
 		IAnimator pixelling_speed;
 		bool pixelling;
 		bool draw_background;
-		float[] bg_colour;
+		Colour bg_colour;
 		
 		Vector2f cameraViewOffset = new Vector2f();
 		
@@ -99,7 +99,7 @@ namespace MagnumHouseLib
 			end_pixelling_dim = end_dim;
 		}
 		
-		public void SetBackground(float[] colour) {
+		public void SetBackground(Colour colour) {
 			draw_background = true;
 			bg_colour = colour;
 		}
@@ -189,12 +189,12 @@ namespace MagnumHouseLib
 			}
 		}
 		
-		private void DrawColouredRectangle(float[] colour) {
+		private void DrawColouredRectangle(Colour colour) {
 			Gl.glBlendFunc(Gl.GL_SRC_ALPHA,Gl.GL_ONE_MINUS_SRC_ALPHA);
 				Gl.glEnable(Gl.GL_BLEND);
 				Gl.glPushMatrix();
 				
-				Gl.glColor4fv(colour);
+				Gl.glColor4fv(colour.Array);
 			
 				Gl.glTranslatef(s_sprite.Position.X + s_sprite.Size.X*0.5f, s_sprite.Position.Y + s_sprite.Size.Y*0.5f, 0);
 				
@@ -227,7 +227,7 @@ namespace MagnumHouseLib
 			//draw fade
 			if (fading) {
 				DrawColouredRectangle(
-				    Colour.Blend(start_fade_colour, end_fade_colour, fade_level).Array
+				    Colour.Blend(start_fade_colour, end_fade_colour, fade_level)
 				);
 			}
 		}

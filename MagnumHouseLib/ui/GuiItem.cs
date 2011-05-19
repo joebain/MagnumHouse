@@ -74,7 +74,7 @@ namespace MagnumHouseLib
 		
 		public void SetLabel(string text) {
 			label = new Text(text);
-			label.PointSize = (int)Text.PointSizes.Ten;
+			label.PointSize = (int)Text.PointSizes.Sixteen;
 			label.Position = Position.Clone();
 			label.Position.Y += Size.Y;
 		}

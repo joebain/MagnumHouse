@@ -100,7 +100,8 @@ namespace MagnumHouseLib
 				List<Screen> screens = new List<Screen>();
 				screens.Add(new TitleScreen());
 				//screens.Add(new TrailLevel());
-				screens.Add(new PlatformLevel("pictures/platformlevel.png"));
+				//screens.Add(new PlatformLevel("pictures/platformlevel.png"));
+				screens.Add(new Level1());
 				//screens.Add(new NetworkLevel());
 				screens.Add(new EndScreen());
 				m_screens = screens;

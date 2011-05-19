@@ -8,6 +8,8 @@ namespace MagnumHouseLib
 	{
 		public List<BoxDescription> boxes = new List<BoxDescription>();
 		public List<PointDescription> points = new List<PointDescription>();
+		public PointDescription start = new PointDescription();
+		public BoxDescription end = new BoxDescription();
 	}
 }
 

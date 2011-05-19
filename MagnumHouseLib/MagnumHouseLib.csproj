@@ -203,6 +203,7 @@
     <Compile Include="gfx\events\description\PointDescription.cs" />
     <Compile Include="gfx\events\description\BoxDescription.cs" />
     <Compile Include="ui\MoveablePoint.cs" />
+    <Compile Include="Screens\WorldOne\Level1.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -218,5 +219,6 @@
     <Folder Include="maths\" />
     <Folder Include="ui\guisets\" />
     <Folder Include="gfx\events\description\" />
+    <Folder Include="Screens\WorldOne\" />
   </ItemGroup>
 </Project>
