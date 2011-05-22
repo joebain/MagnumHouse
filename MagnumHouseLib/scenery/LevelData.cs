@@ -12,6 +12,7 @@ namespace MagnumHouseLib
 //		
 //		[XmlIgnore]
 		public int[,] Map;
+		public float[,] DepthMap;
 		
 //		[XmlElement("Map")]
 //		public int[] FlatMap
@@ -46,6 +47,7 @@ namespace MagnumHouseLib
 		public LevelData (int width, int height)
 		{
 			Map = new int[height, width];
+			DepthMap = new int[height, width*2];
 		}
 		
 		public LevelData (int [,] map) {
@@ -56,8 +58,15 @@ namespace MagnumHouseLib
 			return Map[y, x];
 		}
 		
+		public float GetDepth(int x, int y, int half) {
+			return DepthMap[y, x*2 + half];
+		}
+		
 		public void Set(int x, int y, int val) {
 			Map[y,x] = val;
 		}
+		
+		public void setDepth(int x, int y, int half, float val) {
+			DepthMap[y,x*2+half] = val;
 	}
 }

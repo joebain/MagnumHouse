@@ -44,7 +44,7 @@ namespace MagnumHouseLib
 			}
 		}
 		
-		public float Transparency = 1f;
+		public float Transparency { get { return Colour.A;} set { Colour.A = value; }}
 		
 		public Text () : this("") {
 		}

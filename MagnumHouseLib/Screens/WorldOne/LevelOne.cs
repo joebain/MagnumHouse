@@ -48,6 +48,7 @@ namespace MagnumHouseLib
 			m_house = new ObjectHouse(m_tilemap);
 			
 			StarryBackground bg = new StarryBackground(m_tilemap.Size);
+			bg.Layer = Layer.Pixelly;
 			m_house.AddDrawable(bg);
 			
 			gangsterNo1 = new Hero(m_keyboard, m_house);
@@ -60,6 +61,7 @@ namespace MagnumHouseLib
 			
 			m_tilemap.Create(m_house, _game);
 			m_house.AddDrawable(m_tilemap);
+			m_tilemap.Priority = Priority.Middle;
 			
 			endzone = m_tilemap.locationData.end.box;
 			
@@ -73,10 +75,10 @@ namespace MagnumHouseLib
 				    new Vector2i(Game.Width, Game.Height)){ 
 				CaptureLayer = Layer.Pixelly,
 				Layer = Layer.FX,
-				Priority = Priority.Front,
+				Priority = Priority.Back,
 				Scaling = Sprite.ScaleType.Pixelly
 			};
-			fadingEffect.SetHUD(_game.Camera);
+			pixellyEffect.SetHUD(_game.Camera);
 			m_house.AddDrawable(pixellyEffect);
 			m_house.AddUpdateable(pixellyEffect);
 			m_house.Add<IGrabing>(pixellyEffect);
@@ -84,32 +86,27 @@ namespace MagnumHouseLib
 			// fading
 			fadingEffect
 				= new Effect(
-				    new Vector2i(Game.SmallScreenWidth/2, Game.SmallScreenHeight/2),
+				    new Vector2i(Game.ScreenWidth, Game.ScreenHeight),
 					new Vector2i(Game.ScreenWidth, Game.ScreenHeight),
 				    new Vector2i(Game.Width, Game.Height)){ 
-				CaptureLayer = Layer.All,
-				Layer = Layer.FX,
-				Priority = Priority.Front,
-				Scaling = Sprite.ScaleType.Pixelly
+				CaptureLayer = Layer.Blurry | Layer.Pixelly | Layer.Normal | Layer.FX,
+				Layer = Layer.Fade,
+				Priority = Priority.Front
 			};
 
 			fadingEffect.SetHUD(_game.Camera);
 			fadingEffect.SetFading(1f, new Colour(0,0,0,1), new Colour(0,0,0,0));
-//			fadingEffect.SetPixelling(new InverseLogAnimator(0.5f), 
-//			                             new Vector2i(2, 2),
-//			                             fadingEffect.CaptureSize);
 			fadingEffect.SetBackground(new Colour(0,0,0,1f));
 			m_house.AddDrawable(fadingEffect);
 			m_house.AddUpdateable(fadingEffect);
 			m_house.Add<IGrabing>(fadingEffect);
-			
 			
 			// messages
 			welcome_message = new Text("Welcome to the Magnum House...");
 			welcome_message.SetHUD(m_game.Camera);
 			welcome_message.CentreOn(Game.Size.ToF()/2);
 			welcome_message.Priority = Priority.Front;
-			welcome_message.Layer = Layer.FX;
+			welcome_message.Layer = Layer.Normal;
 			welcome_message.Transparency = 0f;
 			m_house.AddDrawable(welcome_message);
 		}
@@ -118,14 +115,13 @@ namespace MagnumHouseLib
 		{
 			base.Update (_delta);
 			
-			// end zone
+			// update tile map depths
+			m_tilemap.GetMap().setDepth();
+			
+			// end game
 			if (endzone.Overlaps(gangsterNo1.Bounds)) {
 				winTimer = 1;
-				fadingEffect.SetBackground(new Colour(0,0,0,0));
 				fadingEffect.SetFading(1f, new Colour(0,0,0,0), new Colour(0,0,0,1));
-				fadingEffect.SetPixelling(new InverseLogAnimator(0.5f), 
-				                             new Vector2i(2, 2),
-				                             fadingEffect.CaptureSize);
 				m_house.AddDrawable(fadingEffect);
 				m_house.AddUpdateable(fadingEffect);
 				m_house.Add<IGrabing>(fadingEffect);
@@ -135,12 +131,22 @@ namespace MagnumHouseLib
 			} else if (winTimer > 2) {
 				Exit(new ScreenMessage(){Message = "See you again soon."});
 			}
-			if (startTimer <= 2) {
-				if (startTimer <= 1) welcome_message.Transparency += _delta;
-				startTimer += _delta;
-			} else if (startTimer <= 3) {
-				if (!fadingEffect.Dead) fadingEffect.Die();
-				welcome_message.Transparency -= _delta;
+			
+			// start game
+			if (startTimer <= 5) {
+				if (startTimer <= 1) {
+					//fade in world (we dont need to do this manually)
+				}
+				else if (startTimer <= 2)  {
+					//kill fade effect
+					if (!fadingEffect.Dead) fadingEffect.Die();
+					// fade in message
+					welcome_message.Transparency += _delta;
+				}
+				else if (startTimer <= 4) {
+					// fade out message
+					welcome_message.Transparency -= _delta/2;
+				}
 				startTimer += _delta;
 			} else {
 				welcome_message.Die();

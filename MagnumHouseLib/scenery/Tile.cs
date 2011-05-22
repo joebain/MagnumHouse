@@ -25,6 +25,10 @@ namespace MagnumHouseLib
 		}
 		
 		public static void Draw(Vector2i pos) {
+			Draw(pos, 0, 0);
+		}
+		
+		public static void Draw(Vector2i pos, float depth1, float depth2) {
 			Gl.glPushMatrix();
 			
 			Gl.glTranslatef(pos.X, pos.Y, 0);
@@ -38,10 +42,10 @@ namespace MagnumHouseLib
 			
 			Gl.glBegin(Gl.GL_TRIANGLE_STRIP);
 			
-			Gl.glVertex2f(0, 0);
-			Gl.glVertex2f(0.9f, 0);
-			Gl.glVertex2f(0, 0.9f);
-			Gl.glVertex2f(0.9f, 0.9f);
+			Gl.glVertex3f(0, 0, depth1);
+			Gl.glVertex3f(1f, 0, 0);
+			Gl.glVertex3f(0, 1f, 0);
+			Gl.glVertex3f(1f, 1f, depth2);
 			
 			Gl.glEnd();
 			Gl.glPopMatrix();

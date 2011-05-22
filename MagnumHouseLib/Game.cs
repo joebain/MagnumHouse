@@ -16,8 +16,8 @@ namespace MagnumHouseLib
 {
 	public class Game
 	{
-		public const int ScreenWidth = 1024;
-		public const int ScreenHeight = 800;
+		public const int ScreenWidth = 400;
+		public const int ScreenHeight = 320;
 		
 		
 		public const int bg_pixel_size = 2;
@@ -180,6 +180,7 @@ namespace MagnumHouseLib
 				m_screens.First().House.Draw(Layer.Normal);
 				m_screens.First().House.Draw(Layer.FX, Priority.Middle);
 				m_screens.First().House.Draw(Layer.FX, Priority.Front);
+				m_screens.First().House.Draw(Layer.Fade);
 				
 				Sdl.SDL_GL_SwapBuffers();
 				

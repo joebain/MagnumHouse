@@ -11,7 +11,8 @@ namespace MagnumHouseLib
 	public class TileMap : IDrawable
 	{
 		public Layer Layer { get { return Layer.Normal;}}
-		public Priority Priority { get { return Priority.Middle;}}
+		private Priority m_priority = Priority.Middle;
+		public Priority Priority { get { return m_priority;} set { m_priority = value; }}
 		
 		public bool Dead {get { return m_dead;}}
 		
@@ -53,7 +54,7 @@ namespace MagnumHouseLib
 		};
 		
 		
-		private LevelData Map;
+		public LevelData Map;
 		
 		public LocationData locationData = new LocationData();
 		
@@ -236,6 +237,10 @@ namespace MagnumHouseLib
 			return EMPTY;
 		}
 		
+		public LevelData GetMap() {
+			return Map;
+		}
+		
 		public int GetMap(int _x, int _y) {
 			if (_x >= Width) return 0;
 			else if (_x < 0) return 0;
@@ -248,12 +253,12 @@ namespace MagnumHouseLib
 		public void Draw() {
 			for (int x = 0 ; x < Width ; x++) {
 				for (int y = 0 ; y < Height ; y++) {
-					DrawTile(Map.Get(x,y), new Vector2i(x, (Height-1)-y));
+					DrawTile(Map.Get(x,y), Map.GetDepth(x,y,0), Map.GetDepth(x,y,1), new Vector2i(x, (Height-1)-y));
 				}
 			}
 		}
 		
-		private void DrawTile(int tile, Vector2i pos) {
+		private void DrawTile(int tile, float depth1, float depth2, Vector2i pos) {
 			switch (tile) {
 			case BLOCK:
 				Tile.Draw(pos);
