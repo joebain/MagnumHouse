@@ -5,7 +5,7 @@ using Tao.Sdl;
 
 namespace MagnumHouseLib
 {
-	public class Level1 : Screen
+	public class LevelOne : Screen
 	{
 		protected Gangster gangsterNo1;
 		
@@ -19,7 +19,7 @@ namespace MagnumHouseLib
 		float startTimer;
 		float winTimer;
 		
-		private Effect pixelly_fx_buffer;
+		private Effect pixellyEffect;
 		private Effect blurry_fx_buffer;
 		private Effect death_fx_buffer;
 		private Effect death_fx_buffer2;
@@ -28,7 +28,7 @@ namespace MagnumHouseLib
 		Text welcome_message;
 		BoundingBox endzone;
 		
-		public Level1 ()
+		public LevelOne ()
 		{
 		}
 		
@@ -64,12 +64,30 @@ namespace MagnumHouseLib
 			endzone = m_tilemap.locationData.end.box;
 			
 			// fx
+			
+			// pixelly
+			pixellyEffect
+				= new Effect(
+				    new Vector2i(Game.SmallScreenWidth/2, Game.SmallScreenHeight/2),
+					new Vector2i(Game.ScreenWidth, Game.ScreenHeight),
+				    new Vector2i(Game.Width, Game.Height)){ 
+				CaptureLayer = Layer.Pixelly,
+				Layer = Layer.FX,
+				Priority = Priority.Front,
+				Scaling = Sprite.ScaleType.Pixelly
+			};
+			fadingEffect.SetHUD(_game.Camera);
+			m_house.AddDrawable(pixellyEffect);
+			m_house.AddUpdateable(pixellyEffect);
+			m_house.Add<IGrabing>(pixellyEffect);
+			
+			// fading
 			fadingEffect
 				= new Effect(
 				    new Vector2i(Game.SmallScreenWidth/2, Game.SmallScreenHeight/2),
 					new Vector2i(Game.ScreenWidth, Game.ScreenHeight),
 				    new Vector2i(Game.Width, Game.Height)){ 
-				CaptureLayer = Layer.Normal,
+				CaptureLayer = Layer.All,
 				Layer = Layer.FX,
 				Priority = Priority.Front,
 				Scaling = Sprite.ScaleType.Pixelly
@@ -77,14 +95,16 @@ namespace MagnumHouseLib
 
 			fadingEffect.SetHUD(_game.Camera);
 			fadingEffect.SetFading(1f, new Colour(0,0,0,1), new Colour(0,0,0,0));
-			fadingEffect.SetPixelling(new InverseLogAnimator(0.5f), 
-			                             new Vector2i(2, 2),
-			                             fadingEffect.CaptureSize);
+//			fadingEffect.SetPixelling(new InverseLogAnimator(0.5f), 
+//			                             new Vector2i(2, 2),
+//			                             fadingEffect.CaptureSize);
 			fadingEffect.SetBackground(new Colour(0,0,0,1f));
 			m_house.AddDrawable(fadingEffect);
 			m_house.AddUpdateable(fadingEffect);
 			m_house.Add<IGrabing>(fadingEffect);
 			
+			
+			// messages
 			welcome_message = new Text("Welcome to the Magnum House...");
 			welcome_message.SetHUD(m_game.Camera);
 			welcome_message.CentreOn(Game.Size.ToF()/2);

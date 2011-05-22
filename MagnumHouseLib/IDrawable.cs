@@ -2,9 +2,9 @@ using System;
 
 namespace MagnumHouseLib
 {
-	[Flags]
+	//[Flags]
 	public enum Layer {
-		Pixelly, Normal, Blurry, FX
+		Pixelly = 1<<0, Normal = 1<<1, Blurry = 1<<2, FX = 1<<3, All = ~0
 	}
 	
 	public enum Priority {
